@@ -5,7 +5,11 @@ module.exports = {
     "./templates/**/*.html.twig",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'nav-purple': '#475398',
+      },
+    },
   },
   plugins: [],
 }
