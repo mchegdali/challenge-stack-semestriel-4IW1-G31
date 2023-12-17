@@ -25,11 +25,10 @@ class Quote
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customerId = null;
 
-    #[ORM\Column]
-    private ?bool $is_draft = null;
+    #[ORM\ManyToOne(inversedBy: 'quotes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?QuoteStatus $status = null;
 
-    #[ORM\Column]
-    private ?bool $is_validated = null;
 
     public function __construct()
     {
@@ -90,27 +89,16 @@ class Quote
         return $this;
     }
 
-    public function isIsDraft(): ?bool
+    public function getStatus(): ?QuoteStatus
     {
-        return $this->is_draft;
+        return $this->status;
     }
 
-    public function setIsDraft(bool $is_draft): static
+    public function setStatus(?QuoteStatus $status): static
     {
-        $this->is_draft = $is_draft;
+        $this->status = $status;
 
         return $this;
     }
 
-    public function isIsValidated(): ?bool
-    {
-        return $this->is_validated;
-    }
-
-    public function setIsValidated(bool $is_validated): static
-    {
-        $this->is_validated = $is_validated;
-
-        return $this;
-    }
 }
