@@ -18,24 +18,28 @@ class QuoteItem
 
     #[ORM\ManyToOne(inversedBy: 'quoteItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Quote $quoteId = null;
+    private ?Quote $quote = null;
 
     #[ORM\Column]
     private ?int $quantity = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Service $service = null;
 
     public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-    public function getQuoteId(): ?Quote
+    public function getQuote(): ?Quote
     {
-        return $this->quoteId;
+        return $this->quote;
     }
 
-    public function setQuoteId(?Quote $quoteId): static
+    public function setQuote(?Quote $quote): static
     {
-        $this->quoteId = $quoteId;
+        $this->quote = $quote;
 
         return $this;
     }
@@ -48,6 +52,18 @@ class QuoteItem
     public function setQuantity(int $quantity): static
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): static
+    {
+        $this->service = $service;
 
         return $this;
     }

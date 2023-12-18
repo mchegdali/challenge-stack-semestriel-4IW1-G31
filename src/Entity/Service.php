@@ -24,7 +24,7 @@ class Service
 
     #[ORM\ManyToOne(inversedBy: 'services')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Tax $taxId = null;
+    private ?Tax $tax = null;
 
     public function getId(): ?Uuid
     {
@@ -62,14 +62,14 @@ class Service
         return $this;
     }
 
-    public function getTaxId(): ?Tax
+    public function getTax(): ?Tax
     {
-        return $this->taxId;
+        return $this->tax;
     }
 
-    public function setTaxId(?Tax $taxId): static
+    public function setTax(?Tax $tax): static
     {
-        $this->taxId = $taxId;
+        $this->tax = $tax;
 
         return $this;
     }

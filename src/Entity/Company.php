@@ -2,62 +2,53 @@
 
 namespace App\Entity;
 
-use App\Repository\CustomerRepository;
+use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer
+#[ORM\Entity(repositoryClass: CompanyRepository::class)]
+class Company
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?int $id = null;
+    private ?Uuid $id = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    private ?string $company_number = null;
+
+    #[ORM\Column(length: 255)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 255)]
     private ?string $postal_code = null;
 
     #[ORM\Column(length: 255)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $customer_number = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
-
-    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Quote::class, orphanRemoval: true)]
-    private Collection $quotes;
-
-    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Invoice::class)]
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Invoice::class)]
     private Collection $invoices;
+
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Quote::class, orphanRemoval: true)]
+    private Collection $quotes;
 
     public function __construct()
     {
-        $this->quotes = new ArrayCollection();
         $this->invoices = new ArrayCollection();
+        $this->quotes = new ArrayCollection();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setId(Uuid $id): static
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -68,6 +59,18 @@ class Customer
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCompanyNumber(): ?string
+    {
+        return $this->company_number;
+    }
+
+    public function setCompanyNumber(string $company_number): static
+    {
+        $this->company_number = $company_number;
 
         return $this;
     }
@@ -108,26 +111,32 @@ class Customer
         return $this;
     }
 
-    public function getCustomerNumber(): ?string
+    /**
+     * @return Collection<int, Invoice>
+     */
+    public function getInvoices(): Collection
     {
-        return $this->customer_number;
+        return $this->invoices;
     }
 
-    public function setCustomerNumber(string $customer_number): static
+    public function addInvoice(Invoice $invoice): static
     {
-        $this->customer_number = $customer_number;
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setCompany($this);
+        }
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function removeInvoice(Invoice $invoice): static
     {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getCompany() === $this) {
+                $invoice->setCompany(null);
+            }
+        }
 
         return $this;
     }
@@ -144,7 +153,7 @@ class Customer
     {
         if (!$this->quotes->contains($quote)) {
             $this->quotes->add($quote);
-            $quote->setCustomer($this);
+            $quote->setCompany($this);
         }
 
         return $this;
@@ -154,38 +163,8 @@ class Customer
     {
         if ($this->quotes->removeElement($quote)) {
             // set the owning side to null (unless already changed)
-            if ($quote->getCustomer() === $this) {
-                $quote->setCustomer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Invoice>
-     */
-    public function getInvoices(): Collection
-    {
-        return $this->invoices;
-    }
-
-    public function addInvoice(Invoice $invoice): static
-    {
-        if (!$this->invoices->contains($invoice)) {
-            $this->invoices->add($invoice);
-            $invoice->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvoice(Invoice $invoice): static
-    {
-        if ($this->invoices->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
-            if ($invoice->getCustomer() === $this) {
-                $invoice->setCustomer(null);
+            if ($quote->getCompany() === $this) {
+                $quote->setCompany(null);
             }
         }
 

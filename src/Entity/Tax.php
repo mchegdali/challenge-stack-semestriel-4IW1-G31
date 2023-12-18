@@ -21,7 +21,7 @@ class Tax
     #[ORM\Column]
     private ?float $value = null;
 
-    #[ORM\OneToMany(mappedBy: 'taxId', targetEntity: Service::class)]
+    #[ORM\OneToMany(mappedBy: 'tax', targetEntity: Service::class)]
     private Collection $services;
 
     public function __construct()
@@ -65,7 +65,7 @@ class Tax
     {
         if (!$this->services->contains($service)) {
             $this->services->add($service);
-            $service->setTaxId($this);
+            $service->setTax($this);
         }
 
         return $this;
@@ -75,8 +75,8 @@ class Tax
     {
         if ($this->services->removeElement($service)) {
             // set the owning side to null (unless already changed)
-            if ($service->getTaxId() === $this) {
-                $service->setTaxId(null);
+            if ($service->getTax() === $this) {
+                $service->setTax(null);
             }
         }
 

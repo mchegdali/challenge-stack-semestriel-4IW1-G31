@@ -18,12 +18,12 @@ class Quote
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'quoteId', targetEntity: QuoteItem::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'quote', targetEntity: QuoteItem::class, orphanRemoval: true)]
     private Collection $quoteItems;
 
     #[ORM\ManyToOne(inversedBy: 'quotes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Customer $customerId = null;
+    private ?Customer $customer = null;
 
     #[ORM\ManyToOne(inversedBy: 'quotes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -31,6 +31,10 @@ class Quote
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'quotes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Company $company = null;
 
 
     public function __construct()
@@ -62,7 +66,7 @@ class Quote
     {
         if (!$this->quoteItems->contains($quoteItem)) {
             $this->quoteItems->add($quoteItem);
-            $quoteItem->setQuoteId($this);
+            $quoteItem->setQuote($this);
         }
 
         return $this;
@@ -72,22 +76,22 @@ class Quote
     {
         if ($this->quoteItems->removeElement($quoteItem)) {
             // set the owning side to null (unless already changed)
-            if ($quoteItem->getQuoteId() === $this) {
-                $quoteItem->setQuoteId(null);
+            if ($quoteItem->getQuote() === $this) {
+                $quoteItem->setQuote(null);
             }
         }
 
         return $this;
     }
 
-    public function getCustomerId(): ?Customer
+    public function getCustomer(): ?Customer
     {
-        return $this->customerId;
+        return $this->customer;
     }
 
-    public function setCustomerId(?Customer $customerId): static
+    public function setCustomer(?Customer $customer): static
     {
-        $this->customerId = $customerId;
+        $this->customer = $customer;
 
         return $this;
     }
@@ -112,6 +116,18 @@ class Quote
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }
