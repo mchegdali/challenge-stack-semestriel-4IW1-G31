@@ -29,6 +29,9 @@ class Quote
     #[ORM\JoinColumn(nullable: false)]
     private ?QuoteStatus $status = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
 
     public function __construct()
     {
@@ -97,6 +100,18 @@ class Quote
     public function setStatus(?QuoteStatus $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
