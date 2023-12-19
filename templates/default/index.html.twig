@@ -3,10 +3,13 @@
 {% block title %}Plumbill{% endblock %}
 
 {% block body %}
-    {% include '_components/_navbar.html.twig' %}
-    {% include '_components/_loginForm.html.twig' %}
-    {% include '_components/_registerForm.html.twig' %}
-    {% include '_components/_devisForm.html.twig' %}
-    {% include '_components/_devisList.html.twig' %}
-    {% include '_components/_widgetFactureOuverte.html.twig' %}
+{#    {% include 'components/Navbar.html.twig' %}#}
+    <div class="items-center h-screen flex justify-center bg-white">
+        {% include 'components/LoginForm.html.twig' %}
+    </div>
+
+{#    {% include 'components/RegisterForm.html.twig' %}#}
+{#    {% include 'components/QuoteForm.html.twig' %}#}
+{#    {% include 'components/QuoteList.html.twig' %}#}
+{#    {% include 'components/WidgetOpenInvoice.html.twig' %}#}
 {% endblock %}
