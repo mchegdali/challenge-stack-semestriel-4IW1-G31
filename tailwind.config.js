@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       colors: {
         'nav-purple': '#475398',
+        'button-color': '#556CBB'
       },
     },
   },
