@@ -1,37 +1,40 @@
-<div class="bg-white flex flex-col justify-center items-center gap-6">
+<div class="bg-white flex flex-col justify-center items-center gap-6 p-4 sm:rounded-lg sm:shadow-xl">
 	<div class="flex flex-col items-center gap-6">
 		<h1 class="font-bold text-3xl ">Inscription</h1>
 	</div>
 
 	<div class="flex flex-col w-full gap-3">
 
+
+		{% for flash_error in app.flashes('verify_email_error') %}
+			<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+		{% endfor %}
+
+		{% if app.request.method == 'POST' %}
+			{% for error in registrationForm.vars.errors %}
+				<div class="alert alert-danger" role="alert">{{ error.message }}</div>
+			{% endfor %}
+		{% endif %}
+
+		{{ form_start(registrationForm) }}
 		<div class="flex-col gap-1 w-full">
-			<label for="username" class="text-base">Mail</label>
-			<input type="text" id="email" class="border-2 w-full p-2" placeholder="exemple@mail.com">
+			{{ form_label(registrationForm.email, 'Mail', {'label_attr': {'class': 'text-base'}}) }}
+			{{ form_widget(registrationForm.email, {'attr': {'class': 'border-2 w-full p-2', 'placeholder': 'exemple@mail.com'}}) }}
 		</div>
 
 		<div class="flex flex-col gap-1 w-full">
-			<label for="password" class="text-base">Mot de passe</label>
-			<input type="password" id="password" class="border-2 w-full p-2" placeholder="Mot de passe">
+			{{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'text-base'}}) }}
+			{{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'border-2 w-full p-2', 'placeholder': 'Mot de passe'}}) }}
 		</div>
 
-		<div class="flex flex-col gap-1 w-full">
-			<label for="password" class="text-base">Confirmer mot de passe</label>
-			<input type="password" id="password" class="border-2 w-full p-2" placeholder="Confirmer mot de passe">
-		</div>
+		{{ form_row(registrationForm.agreeTerms) }}
 
-
-		<div class="flex flex-row justify-center items-center flex-1 gap-3">
-			<button class="w-full text-white bg-button-color p-1.5 border border-button-color rounded-lg" type="submit">
-				S’inscrire
-			</button>
-		</div>
-
-		<div class="">
-
-			<a href="">Vous avez déjà un compte ?</a>
-		</div>
+		<button type="submit" class="w-full text-white bg-button-color p-1.5 border border-button-color rounded-lg">S’inscrire</button>
+		{{ form_end(registrationForm) }}
 
 	</div>
+
+	<a href="">Vous avez déjà un compte ?</a>
+
 
 </div>
