@@ -13,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 class TaxController extends AbstractController
 {
-    #[Route('/taxs', name: 'create_tax')]
+    #[Route('/tax', name: 'create_tax')]
     public function createTax(Request $request, PersistenceManagerRegistry $doctrine): Response
     {
         $tax = new Tax();

@@ -11,13 +11,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
-class Serviceontroller extends AbstractController
+class ServiceController extends AbstractController
 {
     #[Route('/service', name: 'app_service')]
-    public function createTax(Request $request, PersistenceManagerRegistry $doctrine): Response
+    public function createService(Request $request, PersistenceManagerRegistry $doctrine): Response
     {
         $service = new Service();
-        $form = $this->createForm(ServiceType::class, $tax);
+        $form = $this->createForm(ServiceType::class, $service);
 
         $form->handleRequest($request);
 
@@ -27,11 +27,9 @@ class Serviceontroller extends AbstractController
             $em->flush();
         }
 
-        $services = $doctrine->getManager()->getRepository(Service::class)->findAll();
-
-        return $this->render('default/tax.html.twig', [
+       
+        return $this->render('default/service.html.twig', [
             'form' => $form->createView(),
-            'services' => $services,
         ]);
     }
     
