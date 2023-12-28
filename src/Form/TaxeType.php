@@ -14,15 +14,13 @@ class TaxeType extends AbstractType
     {
         $builder
             ->add('value', NumberType::class, [
-                'label' => 'Tax Value', // Définit le libellé du champ
+                'label' => false,
                 'attr' => [
-                    'class' => 'form-control', // Ajoute une classe pour Bootstrap
-                    'placeholder' => 'Enter tax value', // Ajoute un placeholder
+                    'placeholder' => 'Entrer une taxe',
                 ],
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'Add', // Texte du bouton de soumission
-                'attr' => ['class' => 'btn btn-primary mt-3'], // Ajoute des classes pour le style Bootstrap
+                'label' => 'Ajouter',
             ]);
     }
 

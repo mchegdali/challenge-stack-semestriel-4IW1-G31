@@ -19,12 +19,11 @@ class ServiceType extends AbstractType
             ->add('tax', EntityType::class, [
                 'class' => 'App\Entity\Tax',
                 'choice_label' => 'value',
-                'placeholder' => 'Choose an option',
+                'placeholder' => 'Entrer un produit',
             ])
-            // Ajouter un bouton de soumission
+      
             ->add('save', SubmitType::class, [
-                'label' => 'Save', // Libellé du bouton
-                'attr' => ['class' => 'btn btn-primary'], // Classes CSS pour le style du bouton (facultatif)
+                'label' => 'Ajouter',
             ]);
     }
 
