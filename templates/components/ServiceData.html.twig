@@ -2,10 +2,11 @@
     <ul>
         <li class='flex justify-between'>
             <div class='flex gap-2 items-center'>
-                <div class='w-2 h-2 bg-blue-500 rounded-full'></div>
+                <div class='w-2 h-2 bg-darkPurple rounded-full'></div>
                 <p>{{ service.name }}</p>
                 <p>{{ service.price }} €</p>
             </div>
+			<a href="{{ path('update_service', {'id': service.id}) }}">Modifier</a>
             <a href="{{ path('delete_service', {'id': service.id}) }}">Supprimer</a>
         </li>
     </ul>
