@@ -44,5 +44,24 @@ class ServiceController extends AbstractController
     
         return $this->redirectToRoute('app_service');
     }
+
+    #[Route('/service/{id}/update', name: 'update_service')]
+    public function updateService(Request $request, PersistenceManagerRegistry $doctrine, Service $service): Response
+    {
+        $form = $this->createForm(ServiceType::class, $service);
+    
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $doctrine->getManager();
+            $entityManager->flush();
+    
+            return $this->redirectToRoute('app_service');
+        }
+    
+        return $this->render('default/UpdateService.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
     
 }
