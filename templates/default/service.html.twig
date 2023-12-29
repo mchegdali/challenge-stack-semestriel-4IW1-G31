@@ -4,7 +4,9 @@
 {% endblock %}
 
 {% block body %}
-	{{ form_start(form) }}
-	{{ form_widget(form) }}
-	{{ form_end(form) }}
+	{% include 'components/ServiceHeader.html.twig' %}
+	{% for service in services %}
+		{% include 'components/ServiceData.html.twig' %}
+	{% endfor %}
+	
 {% endblock %}

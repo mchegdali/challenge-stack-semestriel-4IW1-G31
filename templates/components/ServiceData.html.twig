@@ -1,0 +1,12 @@
+<div class="bg-white p-6 border-b-2 border-gray">
+    <ul>
+        <li class='flex justify-between'>
+            <div class='flex gap-2 items-center'>
+                <div class='w-2 h-2 bg-blue-500 rounded-full'></div>
+                <p>{{ service.name }}</p>
+                <p>{{ service.price }} €</p>
+            </div>
+            <a href="{{ path('delete_service', {'id': service.id}) }}">Supprimer</a>
+        </li>
+    </ul>
+</div>

@@ -27,10 +27,22 @@ class ServiceController extends AbstractController
             $em->flush();
         }
 
-       
+        $services = $doctrine->getManager()->getRepository(Service::class)->findAll();
+
         return $this->render('default/service.html.twig', [
             'form' => $form->createView(),
+            'services' => $services,
         ]);
+    }
+
+    #[Route('/service/{id}/delete', name: 'delete_service')]
+    public function deleteTax(Request $request, PersistenceManagerRegistry $doctrine, Service $service): Response
+    {
+        $em = $doctrine->getManager();
+        $em->remove($service);
+        $em->flush();
+    
+        return $this->redirectToRoute('app_service');
     }
     
 }

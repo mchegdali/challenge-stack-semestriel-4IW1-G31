@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Tax;
-use App\Form\TaxeType;
+use App\Form\TaxType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,7 @@ class TaxController extends AbstractController
     public function createTax(Request $request, PersistenceManagerRegistry $doctrine): Response
     {
         $tax = new Tax();
-        $form = $this->createForm(TaxeType::class, $tax);
+        $form = $this->createForm(TaxType::class, $tax);
 
         $form->handleRequest($request);
 
@@ -27,11 +27,11 @@ class TaxController extends AbstractController
             $em->flush();
         }
 
-        $taxes = $doctrine->getManager()->getRepository(Tax::class)->findAll();
+        $taxs = $doctrine->getManager()->getRepository(Tax::class)->findAll();
 
         return $this->render('default/tax.html.twig', [
             'form' => $form->createView(),
-            'taxs' => $taxes,
+            'taxs' => $taxs,
         ]);
     }
 
@@ -42,7 +42,6 @@ class TaxController extends AbstractController
         $em->remove($tax);
         $em->flush();
     
-        // Redirection vers la page listant les taxes après la suppression
         return $this->redirectToRoute('create_tax');
     }
     
