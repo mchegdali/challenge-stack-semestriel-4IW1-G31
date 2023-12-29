@@ -10,8 +10,8 @@ module.exports = {
         'button-color': '#556CBB',
       },
       gridTemplateColumns: {
-        subgrid: 'subgrid',
         'quote-items': '3fr 0.5fr 0.5fr 1fr',
+        'quote-list': '2fr 2fr 1fr',
       },
       fontFamily: {
         heading: ['"Orienta", sans-serif', ...defaultTheme.fontFamily.sans],
@@ -19,5 +19,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms'),],
 }
