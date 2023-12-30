@@ -7,18 +7,30 @@ use App\Repository\QuoteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 
 #[Route('/quotes', name: 'quote_')]
 class QuoteController extends AbstractController
 {
     #[Route('', name: 'index', methods: "get")]
-    public function index(QuoteRepository $quoteRepository): Response
-    {
-
+    public function index(
+        QuoteRepository $quoteRepository,
+        #[MapQueryParameter] ?array $status,
+        #[MapQueryParameter] ?string $text,
+    ): Response {
         $form = $this->createForm(QuoteSearchType::class);
 
+        if ((!isset($status) || count($status) == 0) && (!isset($text)  || strlen($text) == 0)) {
+            $quotes = $quoteRepository->findAll();
+        } else {
+            $quotes = $quoteRepository->findBySearch([
+                "status" => $status,
+                "text" => $text,
+            ]);
+        }
+
         return $this->render('quote/index.html.twig', [
-            'quotes' => $quoteRepository->findAll(),
+            'quotes' => $quotes,
             "searchForm" => $form
         ]);
     }

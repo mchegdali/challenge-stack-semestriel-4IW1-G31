@@ -21,28 +21,35 @@ class QuoteRepository extends ServiceEntityRepository
         parent::__construct($registry, Quote::class);
     }
 
-//    /**
-//     * @return Quote[] Returns an array of Quote objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('q')
-//            ->andWhere('q.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('q.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Quote[] Returns an array of Quote objects
+     */
+    public function findBySearch(array $criteria): array
+    {
+        $qb = $this->createQueryBuilder('q')
+            ->leftJoin('q.customer', 'c')
+            ->leftJoin('q.status', 's');
 
-//    public function findOneBySomeField($value): ?Quote
-//    {
-//        return $this->createQueryBuilder('q')
-//            ->andWhere('q.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if (isset($criteria['text']) && !empty($criteria['text'])) {
+            $qb
+                ->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->like("c.customer_name", ":text"),
+                        $qb->expr()->like("q.quote_number", ":text")
+                    )
+                )
+                ->setParameter('text', '%' . $criteria['text'] . '%');
+        }
+
+        if (isset($criteria['status']) && !empty($criteria['status'])) {
+            $qb
+                ->andWhere(
+                    $qb->expr()->in("s.id", ":status")
+                )
+                ->setParameter('status', $criteria['status']);
+        }
+
+
+        return $qb->getQuery()->getResult();
+    }
 }

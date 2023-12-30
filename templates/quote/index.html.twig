@@ -10,26 +10,28 @@
 		<header class="mb-2 p-1">
 			<h1 class="font-bold text-3xl">Liste des devis</h1>
 		</header>
-		<section>
+		<section class="mb-2 p-1 bg-white shadow-sm">
 			<details>
 				<summary class="font-bold">Filtres</summary>
-				{{ form(searchForm, {'method': 'GET'}) }}
-				<button type="submit">Filtrer</button>
+				{{ form(searchForm, {'method': 'GET' }) }}
+				<button type="submit" class="bg-blue-800 text-white px-2 py-1 rounded">Filtrer</button>
 			</details>
 		</section>
-		<section class="grid grid-cols-quote-list gap-x-2 gap-y-4">
+		<section class="grid grid-cols-quote-list gap-x-2 gap-y-4 p-2 bg-white shadow-sm">
 			<div class="grid grid-cols-subgrid gap-2 col-span-3">
 				<span class="text-sm font-bold">N° devis</span>
 				<span class="text-sm font-bold">Client</span>
 				<span class="text-sm font-bold justify-self-end">Montant</span>
 			</div>
-			{% for item in [0, 1, 2] %}
-				<div class="grid grid-cols-subgrid gap-2 col-span-3 p-2 bg-white shadow-sm place-items-baseline">
-					<span class="text-sm">2023-123456789-1</span>
-					<span class="text-sm">Jean-Michel Client</span>
+			{% for quote in quotes %}
+				<div class="grid grid-cols-subgrid gap-2 col-span-3">
+					<span class="text-sm">{{ quote.quote_number}}</span>
+					<span class="text-sm">{{ quote.customer.getName()}}</span>
 					<span class="text-sm justify-self-end">990,00€</span>
 				</div>
 			{% endfor %}
 		</section>
 	</main>
 {% endblock %}
+
+

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231229182220 extends AbstractMigration
+final class Version20231230121713 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,6 +20,7 @@ final class Version20231229182220 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE SEQUENCE quote_status_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE company (id UUID NOT NULL, name VARCHAR(255) NOT NULL, company_number VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, postal_code VARCHAR(255) NOT NULL, city VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN company.id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE customer (id UUID NOT NULL, name VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, postal_code VARCHAR(10) NOT NULL, city VARCHAR(255) NOT NULL, customer_number VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
@@ -37,13 +38,12 @@ final class Version20231229182220 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN invoice_item.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN invoice_item.invoice_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN invoice_item.service_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE quote (id UUID NOT NULL, customer_id UUID NOT NULL, status_id UUID NOT NULL, company_id UUID NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE quote (id UUID NOT NULL, customer_id UUID NOT NULL, status_id INT NOT NULL, company_id UUID NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, quote_number VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_6B71CBF49395C3F3 ON quote (customer_id)');
         $this->addSql('CREATE INDEX IDX_6B71CBF46BF700BD ON quote (status_id)');
         $this->addSql('CREATE INDEX IDX_6B71CBF4979B1AD6 ON quote (company_id)');
         $this->addSql('COMMENT ON COLUMN quote.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN quote.customer_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN quote.status_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN quote.company_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN quote.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('CREATE TABLE quote_item (id UUID NOT NULL, quote_id UUID NOT NULL, service_id UUID NOT NULL, quantity INT NOT NULL, PRIMARY KEY(id))');
@@ -52,8 +52,7 @@ final class Version20231229182220 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN quote_item.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN quote_item.quote_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN quote_item.service_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE quote_status (id UUID NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('COMMENT ON COLUMN quote_status.id IS \'(DC2Type:uuid)\'');
+        $this->addSql('CREATE TABLE quote_status (id INT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE service (id UUID NOT NULL, tax_id UUID NOT NULL, name VARCHAR(255) NOT NULL, price DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_E19D9AD2B2A824D8 ON service (tax_id)');
         $this->addSql('COMMENT ON COLUMN service.id IS \'(DC2Type:uuid)\'');
@@ -94,6 +93,7 @@ final class Version20231229182220 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         // $this->addSql('CREATE SCHEMA public');
+        $this->addSql('DROP SEQUENCE quote_status_id_seq CASCADE');
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_906517449395C3F3');
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_90651744979B1AD6');
         $this->addSql('ALTER TABLE invoice_item DROP CONSTRAINT FK_1DDE477B2989F1FD');
