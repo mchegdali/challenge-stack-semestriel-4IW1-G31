@@ -5,8 +5,12 @@
 
 {% block body %}
 	{% include 'components/ServiceHeader.html.twig' %}
+
+	<h1 class='px-6 font-bold'>Liste des services</h1>
 	{% for service in services %}
 		{% include 'components/ServiceData.html.twig' %}
 	{% endfor %}
+
+
 	
 {% endblock %}

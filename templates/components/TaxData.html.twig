@@ -1,16 +1,17 @@
-<div class="bg-white  p-6 border-b-2 border-gray">
-	<ul>
-		<li class='flex justify-between'>
-
-
-			<div class='flex gap-2 items-center'>
-				<div class='w-2 h-2 bg-darkPurple rounded-full'></div>
-				<p>{{tax.value}}
-					%</p>
-			</div>
-
-
-			<a href="{{ path('delete_tax', {'id': tax.id}) }}">Supprimer</a>
-		</li>
-	</ul>
+<div class="bg-white p-6 mx-6 my-2 rounded-lg flex flex-col">
+	<div class='flex gap-2 justify-between items-center'>
+		<div>
+			<p class=''>Taxe de {{ tax.value }}%</p>
+		</div>
+		<div>
+			<a href="{{ path('update_tax', {'id': tax.id}) }}" class='text-darkPurple'>
+				<i class="material-icons">edit</i>
+			</a>
+			<a href="{{ path('delete_tax', {'id': tax.id}) }}" class='text-red-500'>
+				<i class="material-icons">delete</i>
+			</a>
+		</div>
+	</div>
 </div>
+
+		
