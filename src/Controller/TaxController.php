@@ -35,7 +35,7 @@ class TaxController extends AbstractController
         ]);
     }
 
-    #[Route('/taxs/{id}/delete', name: 'delete_tax')]
+    #[Route('/tax/{id}/delete', name: 'delete_tax')]
     public function deleteTax(Request $request, PersistenceManagerRegistry $doctrine, Tax $tax): Response
     {
         $em = $doctrine->getManager();
@@ -43,6 +43,25 @@ class TaxController extends AbstractController
         $em->flush();
     
         return $this->redirectToRoute('create_tax');
+    }
+
+    #[Route('/tax/{id}/update', name: 'update_tax')]
+    public function updateTax(Request $request, PersistenceManagerRegistry $doctrine, Tax $tax): Response
+    {
+        $form = $this->createForm(TaxType::class, $tax);
+    
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $doctrine->getManager();
+            $entityManager->flush();
+    
+            return $this->redirectToRoute('create_tax');
+        }
+    
+        return $this->render('default/UpdateTax.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
     
 }
