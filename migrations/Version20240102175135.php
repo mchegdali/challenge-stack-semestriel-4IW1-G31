@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231230121713 extends AbstractMigration
+final class Version20240102175135 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,6 +21,7 @@ final class Version20231230121713 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE quote_status_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE tax_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE company (id UUID NOT NULL, name VARCHAR(255) NOT NULL, company_number VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, postal_code VARCHAR(255) NOT NULL, city VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN company.id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE customer (id UUID NOT NULL, name VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, postal_code VARCHAR(10) NOT NULL, city VARCHAR(255) NOT NULL, customer_number VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
@@ -53,12 +54,10 @@ final class Version20231230121713 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN quote_item.quote_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN quote_item.service_id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE quote_status (id INT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE service (id UUID NOT NULL, tax_id UUID NOT NULL, name VARCHAR(255) NOT NULL, price DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE service (id UUID NOT NULL, tax_id INT NOT NULL, name VARCHAR(255) NOT NULL, price DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_E19D9AD2B2A824D8 ON service (tax_id)');
         $this->addSql('COMMENT ON COLUMN service.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN service.tax_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE tax (id UUID NOT NULL, value DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('COMMENT ON COLUMN tax.id IS \'(DC2Type:uuid)\'');
+        $this->addSql('CREATE TABLE tax (id INT NOT NULL, value DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('COMMENT ON COLUMN "user".id IS \'(DC2Type:uuid)\'');
@@ -92,8 +91,9 @@ final class Version20231230121713 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        // $this->addSql('CREATE SCHEMA public');
+        $this->addSql('CREATE SCHEMA public');
         $this->addSql('DROP SEQUENCE quote_status_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE tax_id_seq CASCADE');
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_906517449395C3F3');
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_90651744979B1AD6');
         $this->addSql('ALTER TABLE invoice_item DROP CONSTRAINT FK_1DDE477B2989F1FD');
