@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tax
+{% endblock %}
+
+{% block body %}
+	{% include 'components/TaxHeader.html.twig' %}
+	{% for tax in taxs %}
+		{% include 'components/TaxData.html.twig' %}
+	{% endfor %}
+{% endblock %}
