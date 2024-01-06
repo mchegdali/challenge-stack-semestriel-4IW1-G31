@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Client
+{% endblock %}
+
+{% block body %}
+	{% include 'components/CustomerHeader.html.twig' %}
+
+	<h1 class='px-6 font-bold'>Liste des clients</h1>
+	{% for customer in customers %}
+		{% include 'components/CustomerData.html.twig' %}
+	{% endfor %}
+{% endblock %}	

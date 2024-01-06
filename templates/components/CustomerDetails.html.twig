@@ -1,0 +1,80 @@
+<div class="bg-white p-6 mx-6 my-2 rounded-lg flex flex-col">
+	<div class='flex gap-2 justify-between'>
+		<div class='flex gap-2 flex-col '>
+			<p class=''>Nom
+				{{ customer.name }}
+			</p>
+			<p class=''>Adresse
+				{{ customer.address }}
+			</p>
+			<p class=''>Ville
+				{{ customer.city }}
+			</p>
+			{# <p class=''>Code Postale
+				{{ customer.postal_code }}
+			</p> #}
+				<p class=''>Email
+				{{ customer.email }}
+			</p>
+
+			
+		</div>
+		<div>
+			<a href="#" onclick="openModal(event)" class='text-darkPurple '>
+				<i class="material-icons">edit</i>
+			</a>
+		</div>
+
+	<!-- Modale -->
+		<div id="myModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+			<div class="bg-white p-8 rounded shadow-lg">
+				<h2 class="text-lg font-bold mb-4">Modifier les informations</h2>
+				{{ form_start(form, {'attr': {'class': 'flex flex-col items-center w-full gap-4'}}) }}
+				{{ form_row(form.name, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
+				{{ form_row(form.email, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
+				{{ form_row(form.customer_number, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
+				{{ form_row(form.address, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
+				{{ form_row(form.postal_code, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
+				{{ form_row(form.city, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
+				<span class='flex gap-4 justify-end w-full'>
+					{{ form_row(form.save, {'attr': {'class': 'rounded px-4 py-2 flex-1 bg-darkPurple font-bold text-white'}}) }}
+					<button onclick="closeModal()" class="bg-white flex-1 text-darkPurple font-bold p-2 rounded border border-darkPurple">
+						Fermer
+					</button>
+				</span>
+
+				{{ form_end(form) }}
+
+			</div>
+
+		</div>
+
+		<script>
+			// Récupérer la modale et le bouton de fermeture
+			const modal = document.getElementById("myModal");
+
+			// Fonction pour ouvrir la modale
+			function openModal() {
+			modal.classList.remove("hidden");
+			}
+
+			// Fonction pour fermer la modale
+			function closeModal() {
+			modal.classList.add("hidden");
+			}
+
+			// Fermer la modale en cliquant à l'extérieur
+			window.onclick = function (event) {
+			if (event.target === modal) {
+			closeModal();
+			}
+			};
+
+			// Fermer la modale en cliquant sur le bouton de fermeture
+			closeButton.onclick = function () {
+			closeModal();
+			};
+		</script>
+
+	</div>
+</div>
