@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        'darkPurple': '#475398',
         'nav-purple': '#475398',
         'button-color': '#556CBB',
         blue: {
