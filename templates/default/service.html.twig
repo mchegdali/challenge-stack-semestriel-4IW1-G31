@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Service
+{% endblock %}
+
+{% block body %}
+	{% include 'components/ServiceHeader.html.twig' %}
+	{% for service in services %}
+		{% include 'components/ServiceData.html.twig' %}
+	{% endfor %}
+	
+{% endblock %}

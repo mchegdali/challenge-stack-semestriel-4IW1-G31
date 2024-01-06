@@ -36,6 +36,9 @@ class Quote
     #[ORM\JoinColumn(nullable: false)]
     private ?Company $company = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $quoteNumber = null;
+
 
     public function __construct()
     {
@@ -131,7 +134,19 @@ class Quote
 
         return $this;
     }
+  
+    public function getQuoteNumber(): ?string
+    {
+        return $this->quoteNumber;
+    }
 
+    public function setQuoteNumber(string $quoteNumber): static
+    {
+        $this->quoteNumber = $quoteNumber;
+
+        return $this;
+    }
+  
     public function getTotalTTC()
     {
         $total = 0;

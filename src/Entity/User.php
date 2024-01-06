@@ -5,19 +5,21 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?int $id = null;
+    private ?Uuid $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
@@ -33,6 +35,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     private ?Company $company = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     public function getId(): ?Uuid
     {
@@ -112,6 +117,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCompany(?Company $company): static
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

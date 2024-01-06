@@ -16,7 +16,7 @@ class Tax
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?int $id = null;
+    private ?Uuid $id = null;
 
     #[ORM\Column]
     private ?float $value = null;
@@ -29,12 +29,12 @@ class Tax
         $this->services = new ArrayCollection();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(Uuid $id): static
+    public function setId(int $id): static
     {
         $this->id = $id;
 
