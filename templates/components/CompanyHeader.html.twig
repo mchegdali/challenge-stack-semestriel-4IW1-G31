@@ -1,11 +1,11 @@
 <div class="flex flex-col rounded-b-2xl w-screen">
-	<h1 class='text-2xl font-bold px-6 pt-6'>Service</h1>
+	<h1 class='text-2xl font-bold px-6 pt-6'>Entreprise</h1>
 	<div class='p-6 flex justify-center items-center'>
 		<div class='bg-white p-6 w-full flex flex-col justify-center rounded-lg gap-4'>
-			<p>Ajouter un service</p>
+			<p>Ajouter une entreprise</p>
 			<button onclick="openModal()" class="bg-darkPurple text-white font-bold py-2 px-4 rounded w-full items-center flex justify-center gap-2">
 				<p>
-					Ajouter un service
+					Ajouter une entreprise
 				</p>
 				<i class="material-icons">add</i>
 			</button>
@@ -17,8 +17,10 @@
 				<h2 class="text-lg font-bold mb-4">Ajout d'un service</h2>
 				{{ form_start(form, {'attr': {'class': 'flex flex-col items-center w-full gap-4'}}) }}
 				{{ form_row(form.name, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
-				{{ form_row(form.price, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
-				{{ form_row(form.tax, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
+				{{ form_row(form.company_number, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
+				{{ form_row(form.address, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
+				{{ form_row(form.postal_code, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
+				{{ form_row(form.city, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
 				<span class='flex gap-4 justify-end w-full'>
 					{{ form_row(form.save, {'attr': {'class': 'rounded px-4 py-2 flex-1 bg-darkPurple font-bold text-white'}}) }}
 					<button onclick="closeModal()" class="bg-white flex-1 text-darkPurple font-bold p-2 rounded border border-darkPurple">
