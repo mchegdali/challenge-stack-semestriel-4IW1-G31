@@ -14,7 +14,7 @@ class QuoteItem
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?int $id = null;
+    private ?Uuid $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'quoteItems')]
     #[ORM\JoinColumn(nullable: false)]

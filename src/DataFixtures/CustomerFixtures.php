@@ -13,7 +13,7 @@ class CustomerFixtures extends Fixture
     {
         $faker = Factory::create();
 
-        for ($i = 0; $i < 100; $i++) { //100 clients générés
+        for ($i = 0; $i < 10; $i++) { //10 clients générés
             $customer = new Customer();
 
             $customer->setName($faker->name);

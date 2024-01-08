@@ -25,8 +25,8 @@
 			</div>
 			{% for quote in quotes %}
 				<div class="grid grid-cols-subgrid gap-2 col-span-3">
-					<span class="text-sm">{{ quote.quote_number}}</span>
-					<span class="text-sm">{{ quote.customer.getName()}}</span>
+					<span class="text-sm">{{ quote.quoteNumber}}</span>
+					<span class="text-sm">{{ quote.customer.name}}</span>
 					<span class="text-sm justify-self-end">990,00€</span>
 				</div>
 			{% endfor %}
