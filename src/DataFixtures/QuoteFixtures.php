@@ -7,6 +7,7 @@ use App\Entity\Quote;
 use App\Entity\Customer;
 use App\Entity\Company;
 use App\Entity\QuoteStatus;
+use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -28,19 +29,23 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
 
         //Les QuoteItem sont attribués dans QuoteItemFixtures
 
-        for ($i = 0; $i < 80; $i++) {
-            $quote = new Quote();
+        foreach ($customers as $customer) {
+            $nbCustomerQuotes = count($customer->getQuotes());
+            $uuidParts = explode("-", $customer->getId()->toRfc4122());
+            for ($i = $nbCustomerQuotes + 1; $i <= $nbCustomerQuotes + 10; $i++) {
 
-            $quote->setCustomer($faker->randomElement($customers));
-            $quote->setStatus($faker->randomElement($status));
-            $quote->setCompany($faker->randomElement($companies));
-            $quote->setCreatedAt($faker->dateTimeBetween('2020-01-01', '2024-01-01'));
-            $quote->setQuoteNumber($faker->unique()->numberBetween(1000, 9999));
+                $quote = new Quote();
+                $quoteNumber = date("Y") . "-" . $uuidParts[array_key_last($uuidParts)] . "-" .  str_pad($i, 3, "0", STR_PAD_LEFT);
+                $quote->setCustomer($customer);
+                $quote->setStatus($faker->randomElement($status));
+                $quote->setCompany($faker->randomElement($companies));
+                $quote->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTimeBetween('2020-01-01', '2024-01-01')));
+                $quote->setQuoteNumber($quoteNumber);
 
-            $manager->persist($quote);
+                $manager->persist($quote);
+                $manager->flush();
+            }
         }
-
-        $manager->flush();
     }
 
     public function getDependencies()
