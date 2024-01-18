@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Quote;
 use App\Form\QuoteSearchType;
 use App\Repository\QuoteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,10 +45,10 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show')]
-    public function show(): Response
+    public function show(Quote $quote): Response
     {
         return $this->render('quote/show.html.twig', [
-            'controller_name' => 'QuoteController',
+            'quote' => $quote,
         ]);
     }
 

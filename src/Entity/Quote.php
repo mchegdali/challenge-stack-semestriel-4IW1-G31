@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\Timestampable;
 use App\Repository\QuoteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +13,8 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: QuoteRepository::class)]
 class Quote
 {
+    use Timestampable;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -29,8 +32,6 @@ class Quote
     #[ORM\JoinColumn(nullable: false)]
     private ?QuoteStatus $status = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'quotes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -111,17 +112,6 @@ class Quote
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
 
     public function getCompany(): ?Company
     {
@@ -134,7 +124,7 @@ class Quote
 
         return $this;
     }
-  
+
     public function getQuoteNumber(): ?string
     {
         return $this->quoteNumber;
@@ -146,12 +136,30 @@ class Quote
 
         return $this;
     }
-  
-    public function getTotalTTC()
+
+    public function getTotalExcludingTax()
     {
         $total = 0;
-        foreach ($this->quoteItems as $item) {
-            $total += $item->getQuantity() * $item->getService()->getPrice();
+        foreach ($this->getQuoteItems() as $item) {
+            $total += $item->getPriceExcludingTax();
+        }
+        return $total;
+    }
+
+    public function getTaxAmount()
+    {
+        $total = 0;
+        foreach ($this->getQuoteItems() as $item) {
+            $total += $item->getTaxAmount();
+        }
+        return $total;
+    }
+
+    public function getTotalIncludingTax()
+    {
+        $total = 0;
+        foreach ($this->getQuoteItems() as $item) {
+            $total += $item->getPriceIncludingtax();
         }
         return $total;
     }

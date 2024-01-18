@@ -12,11 +12,11 @@
                 <h2>Client</h2>
                 <div class="w-full flex justify-between">
                     <span class="font-semibold">Nom</span>
-                    <span>Lorem, ipsum dolor.</span>
+                    <span>{{ quote.customer.name}}</span>
                 </div>
                 <div class="w-full flex justify-between">
-                    <span class="font-semibold">Nom</span>
-                    <span>Lorem, ipsum dolor.</span>
+                    <span class="font-semibold">Numéro de client</span>
+                    <span>{{quote.customer.customerNumber}}</span>
                 </div>
             </div>        
         </header>
@@ -27,12 +27,12 @@
                 <span class="font-semibold">TVA</span>
                 <span class="font-semibold">Total</span>
             </div>
-            {% for item in [0, 1, 2] %}
+            {% for item in quote.quoteItems %}
             <div class="grid grid-cols-subgrid col-span-4">
-                <span>Réparation de robinet</span>
-                <span>1</span>
-                <span>10%</span>
-                <span>272,73€</span>
+                <span>{{item.service.name}}</span>
+                <span>{{item.quantity}}</span>
+                <span>{{item.tax.value}}%</span>
+                <span>{{ item.getPriceIncludingTax() }}</span>
             </div>
             {% endfor %}
         </section>
