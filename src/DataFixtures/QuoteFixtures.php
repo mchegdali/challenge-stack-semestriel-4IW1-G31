@@ -39,7 +39,7 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
                 $quote->setCustomer($customer);
                 $quote->setStatus($faker->randomElement($status));
                 $quote->setCompany($faker->randomElement($companies));
-                $quote->setCreatedAt(DateTimeImmutable::createFromMutable($faker->dateTimeBetween('2020-01-01', '2024-01-01')));
+                $quote->setCreatedAt($faker->dateTimeBetween('2020-01-01', '2024-01-01'));
                 $quote->setQuoteNumber($quoteNumber);
 
                 $manager->persist($quote);

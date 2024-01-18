@@ -25,7 +25,7 @@ module.exports = {
         },
       },
       gridTemplateColumns: {
-        'quote-items': '3fr 0.5fr 0.5fr 1fr',
+        'quote-items': '3.1fr 0.14fr 0.14fr 3.1fr',
         'quote-list': '2fr 2fr 1fr',
       },
       fontFamily: {

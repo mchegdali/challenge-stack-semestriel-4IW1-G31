@@ -137,30 +137,44 @@ class Quote
         return $this;
     }
 
-    public function getTotalExcludingTax()
+    public function getTotalExcludingTax(): float
     {
-        $total = 0;
-        foreach ($this->getQuoteItems() as $item) {
-            $total += $item->getPriceExcludingTax();
+        $total = 0.0;
+
+        foreach ($this->getQuoteItems() as $quoteItem) {
+            $total += $quoteItem->getPriceExcludingTax() * $quoteItem->getQuantity();
+        }
+
+        return $total;
+    }
+
+    /**
+     * Calculate the tax amount for the quote.
+     *
+     * @return float The total tax amount.
+     */
+    public function getTaxAmount(): float
+    {
+        $total = 0.0;
+        foreach ($this->getQuoteItems() as $quoteItem) {
+            $total += $quoteItem->getTaxAmount() * $quoteItem->getQuantity();
         }
         return $total;
     }
 
-    public function getTaxAmount()
-    {
-        $total = 0;
-        foreach ($this->getQuoteItems() as $item) {
-            $total += $item->getTaxAmount();
-        }
-        return $total;
-    }
-
+    /**
+     * Calculate the total amount including tax for all quote items.
+     *
+     * @return float The total amount including tax.
+     */
     public function getTotalIncludingTax()
     {
-        $total = 0;
-        foreach ($this->getQuoteItems() as $item) {
-            $total += $item->getPriceIncludingtax();
+        $total = 0.0;
+
+        foreach ($this->getQuoteItems() as $quoteItem) {
+            $total += $quoteItem->getPriceIncludingtax() * $quoteItem->getQuantity();
         }
+
         return $total;
     }
 }
