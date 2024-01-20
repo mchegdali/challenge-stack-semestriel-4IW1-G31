@@ -134,7 +134,7 @@ class Quote
 
         return $this;
     }
-
+  
     public function getQuoteNumber(): ?string
     {
         return $this->quoteNumber;
@@ -146,5 +146,13 @@ class Quote
 
         return $this;
     }
-
+  
+    public function getTotalTTC()
+    {
+        $total = 0;
+        foreach ($this->quoteItems as $item) {
+            $total += $item->getQuantity() * $item->getService()->getPrice();
+        }
+        return $total;
+    }
 }

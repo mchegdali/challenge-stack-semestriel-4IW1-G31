@@ -58,4 +58,25 @@ class QuoteController extends AbstractController
             'controller_name' => 'QuoteController',
         ]);
     }
+
+    #[Route('/quoteslist', name: 'quote_list')]
+    public function list(QuoteRepository $quoteRepository): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+
+        $company = $user->getCompany();
+        if (!$company) {
+            throw $this->createNotFoundException('Entreprise non trouvée.');
+        }
+
+        $quotes = $quoteRepository->findBy(['company' => $company]);
+
+        return $this->render('quote/list.html.twig', [
+            'quotes' => $quotes,
+        ]);
+    }
 }
