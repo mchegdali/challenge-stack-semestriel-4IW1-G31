@@ -29,7 +29,7 @@ class ServiceController extends AbstractController
 
         $services = $doctrine->getManager()->getRepository(Service::class)->findAll();
 
-        return $this->render('default/service.html.twig', [
+        return $this->render('service/service.html.twig', [
             'form' => $form->createView(),
             'services' => $services,
         ]);
