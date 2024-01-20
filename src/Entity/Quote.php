@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\Timestampable;
 use App\Repository\QuoteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +13,8 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: QuoteRepository::class)]
 class Quote
 {
+    use Timestampable;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -29,8 +32,6 @@ class Quote
     #[ORM\JoinColumn(nullable: false)]
     private ?QuoteStatus $status = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'quotes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -111,17 +112,6 @@ class Quote
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
 
     public function getCompany(): ?Company
     {
@@ -134,7 +124,7 @@ class Quote
 
         return $this;
     }
-  
+
     public function getQuoteNumber(): ?string
     {
         return $this->quoteNumber;
@@ -146,13 +136,45 @@ class Quote
 
         return $this;
     }
-  
-    public function getTotalTTC()
+
+    public function getTotalExcludingTax(): float
     {
-        $total = 0;
-        foreach ($this->quoteItems as $item) {
-            $total += $item->getQuantity() * $item->getService()->getPrice();
+        $total = 0.0;
+
+        foreach ($this->getQuoteItems() as $quoteItem) {
+            $total += $quoteItem->getPriceExcludingTax() * $quoteItem->getQuantity();
         }
+
+        return $total;
+    }
+
+    /**
+     * Calculate the tax amount for the quote.
+     *
+     * @return float The total tax amount.
+     */
+    public function getTaxAmount(): float
+    {
+        $total = 0.0;
+        foreach ($this->getQuoteItems() as $quoteItem) {
+            $total += $quoteItem->getTaxAmount() * $quoteItem->getQuantity();
+        }
+        return $total;
+    }
+
+    /**
+     * Calculate the total amount including tax for all quote items.
+     *
+     * @return float The total amount including tax.
+     */
+    public function getTotalIncludingTax()
+    {
+        $total = 0.0;
+
+        foreach ($this->getQuoteItems() as $quoteItem) {
+            $total += $quoteItem->getPriceIncludingtax() * $quoteItem->getQuantity();
+        }
+
         return $total;
     }
 }

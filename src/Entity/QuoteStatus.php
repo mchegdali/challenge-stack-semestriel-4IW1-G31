@@ -21,6 +21,10 @@ class QuoteStatus
     #[ORM\OneToMany(mappedBy: 'status', targetEntity: Quote::class)]
     private Collection $quotes;
 
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $color = null;
+
+
     public function __construct()
     {
         $this->quotes = new ArrayCollection();
@@ -51,25 +55,17 @@ class QuoteStatus
         return $this->quotes;
     }
 
-    public function addQuote(Quote $quote): static
+    public function getColor(): string
     {
-        if (!$this->quotes->contains($quote)) {
-            $this->quotes->add($quote);
-            $quote->setStatus($this);
-        }
+        return $this->color;
+    }
+
+    public function setColor(string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }
 
-    public function removeQuote(Quote $quote): static
-    {
-        if ($this->quotes->removeElement($quote)) {
-            // set the owning side to null (unless already changed)
-            if ($quote->getStatus() === $this) {
-                $quote->setStatus(null);
-            }
-        }
 
-        return $this;
-    }
 }
