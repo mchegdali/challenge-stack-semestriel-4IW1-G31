@@ -30,7 +30,7 @@ class Customer
     #[ORM\Column(length: 255)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $customer_number = null;
 
     #[ORM\Column(length: 255)]

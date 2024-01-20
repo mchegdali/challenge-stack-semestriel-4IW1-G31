@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 class CompanyController extends AbstractController
@@ -25,6 +24,15 @@ class CompanyController extends AbstractController
             $em = $doctrine->getManager();
             $em->persist($company);
             $em->flush();
+
+            $id = $company->getId();
+
+            $companyNumber = substr($id, -12);
+
+            $company->setCompanyNumber($companyNumber);
+
+            $em->persist($company);
+            $em->flush();
         }
 
         $companys = $doctrine->getManager()->getRepository(Company::class)->findAll();
@@ -39,7 +47,7 @@ class CompanyController extends AbstractController
     public function companyDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
     {
         $companyRepository = $doctrine->getManager()->getRepository(Company::class);
-        
+
         $company = $companyRepository->find($id);
 
         if (!$company) {
@@ -63,13 +71,12 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/company/{id}/delete', name: 'delete_company')]
-    public function deleteCompany(Request $request, PersistenceManagerRegistry $doctrine, Company $company): Response
+    public function deleteCompany(PersistenceManagerRegistry $doctrine, Company $company): Response
     {
         $em = $doctrine->getManager();
         $em->remove($company);
         $em->flush();
-    
+
         return $this->redirectToRoute('app_company');
     }
-
 }

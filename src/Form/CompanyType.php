@@ -15,16 +15,10 @@ class CompanyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('name', TextType::class, [
-            'label' => false,
-            'attr' => [
-                'placeholder' => 'Entrer un nom',
-            ],
-        ])
-            ->add('company_number', NumberType::class, [
+            ->add('name', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'company_number',
+                    'placeholder' => 'Entrer un nom',
                 ],
             ])
             ->add('address', TextType::class, [
@@ -47,8 +41,7 @@ class CompanyType extends AbstractType
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Ajouter',
-            ]);
-        ;
+            ]);;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

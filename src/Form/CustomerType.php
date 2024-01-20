@@ -19,43 +19,36 @@ class CustomerType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Entrer un nom',
+                    'placeholder' => 'Exemple: John Doe',
                 ],
             ])
             ->add('address', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Entrer une adresse',
+                    'placeholder' => 'Exemple: 123 Main Street',
                 ],
             ])
             ->add('postal_code', NumberType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Entrer un code postal',
+                    'placeholder' => 'Exemple: 12345',
                 ],
             ])
             ->add('city', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Entrer une ville',
-                ],
-            ])
-            ->add('customer_number', NumberType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'company_number',
+                    'placeholder' => 'Exemple: Anytown',
                 ],
             ])
             ->add('email', EmailType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Adresse email',
+                    'placeholder' => 'Exemple: john@example.com',
                 ],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Ajouter',
-            ]);
-        ;
+            ]);;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

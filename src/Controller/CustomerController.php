@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 class CustomerController extends AbstractController
@@ -63,7 +62,7 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/customer/{id}/delete', name: 'delete_customer')]
-    public function deleteCustomer(Request $request, PersistenceManagerRegistry $doctrine, Customer $customer): Response
+    public function deleteCustomer(PersistenceManagerRegistry $doctrine, Customer $customer): Response
     {
         $em = $doctrine->getManager();
         $em->remove($customer);
