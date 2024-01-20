@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Client
+{% endblock %}
+
+{% block body %}
+	<div class="flex mt-6 mx-6">
+		<a href="{{ path('app_customer')}}">
+			<i class="material-icons">arrow_left</i>
+		</a>
+		<h1 class='px-6 font-bold'>Informations du client</h1>
+
+	</div>
+	{% include 'components/CustomerDetails.html.twig' %}
+
+{% endblock %}
