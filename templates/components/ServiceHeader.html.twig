@@ -1,45 +1,33 @@
 <div class="flex flex-col rounded-b-2xl w-screen">
     <div class='p-6 w-full flex flex-row justify-between rounded-lg'>
-
         <h1 class='text-2xl font-bold'>Service</h1>
-
         <button onclick="openModal()"
                 class="bg-darkPurple text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
-            <p>Ajouter un service</p>
-
+            Ajouter un service
         </button>
-
-
     </div>
-
-
     <!-- Modale -->
     <div id="myModal"
          class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white p-8 rounded shadow-lg">
             <h2 class="text-lg font-bold mb-4">Ajout d'un service</h2>
             {{ form_start(form, {'attr': {'class': 'flex flex-col items-center w-full gap-4'}}) }}
-
-
             <span>
 				<label>Nom</label>
-				{{ form_row(form.name, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
+				{{ form_row(form.name) }}
 			</span>
-
             <span>
 				<label>Prix</label>
-				{{ form_row(form.price, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
+				{{ form_row(form.price) }}
 			</span>
-
             <span>
 				<label>Taxe</label>
-				{{ form_row(form.tax, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
-
+				{{ form_row(form.tax) }}
 			</span>
 
 
             <span class='flex gap-4 justify-end w-full'>
-				{{ form_row(form.save, {'attr': {'class': 'rounded px-4 py-2 flex-1 bg-darkPurple font-bold text-white'}}) }}
+				{{ form_row(form.save) }}
 				<button onclick="closeModal()"
                         class="bg-white flex-1 text-darkPurple font-bold p-2 rounded border border-darkPurple">
 					Fermer
