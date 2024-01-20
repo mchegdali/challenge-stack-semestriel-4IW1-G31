@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Quote;
+use App\Entity\QuoteStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,32 +23,23 @@ class QuoteRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param int[] $statuses
      * @return Quote[] Returns an array of Quote objects
      */
-    public function findBySearch(array $criteria): array
+    public function findByStatuses(array $statuses): array
     {
-        $qb = $this->createQueryBuilder('q')
-            ->leftJoin('q.customer', 'c')
-            ->leftJoin('q.status', 's');
+        dump("findByStatuses statuses", $statuses);
+        $qb = $this->createQueryBuilder('q');
 
-        if (isset($criteria['text']) && !empty($criteria['text'])) {
+        if (!empty($statuses)) {
             $qb
                 ->andWhere(
-                    $qb->expr()->orX(
-                        $qb->expr()->like("c.customer_name", ":text"),
-                        $qb->expr()->like("q.quote_number", ":text")
-                    )
-                )
-                ->setParameter('text', '%' . $criteria['text'] . '%');
+                    $qb->expr()->in("q.status", $statuses)
+                );
         }
 
-        if (isset($criteria['status']) && !empty($criteria['status'])) {
-            $qb
-                ->andWhere(
-                    $qb->expr()->in("s.id", ":status")
-                )
-                ->setParameter('status', $criteria['status']);
-        }
+        dump("findByStatuses qb", $qb->getQuery()->getSQL());
+
 
 
         return $qb->getQuery()->getResult();
