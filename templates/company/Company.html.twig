@@ -4,13 +4,11 @@
 {% endblock %}
 
 {% block body %}
+{% include 'components/Navbar.html.twig' %}
 	{% include 'components/CompanyHeader.html.twig' %}
 
 	<h1 class='px-6 font-bold'>Liste des entreprises</h1>
 	{% for company in companys %}
 		{% include 'components/CompanyData.html.twig' %}
 	{% endfor %}
-
-
-	
 {% endblock %}	

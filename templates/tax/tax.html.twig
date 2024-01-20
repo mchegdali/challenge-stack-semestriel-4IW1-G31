@@ -1,9 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tax
+{% block title %}Taxe
 {% endblock %}
 
 {% block body %}
+{% include 'components/Navbar.html.twig' %}
 	{% include 'components/TaxHeader.html.twig' %}
 	<h1 class='px-6 font-bold'>Liste des taxes</h1>
 	{% for tax in taxs %}
