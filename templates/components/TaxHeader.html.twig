@@ -28,31 +28,24 @@
 			{{ form_end(form) }}
 
 		</div>
-
 	</div>
-
-	<script>
-		// Récupérer la modale et le bouton de fermeture
+		<script>
 const modal = document.getElementById("myModal");
 
-// Fonction pour ouvrir la modale
 function openModal() {
 modal.classList.remove("hidden");
 }
 
-// Fonction pour fermer la modale
 function closeModal() {
 modal.classList.add("hidden");
 }
 
-// Fermer la modale en cliquant à l'extérieur
 window.onclick = function (event) {
 if (event.target === modal) {
 closeModal();
 }
 };
 
-// Fermer la modale en cliquant sur le bouton de fermeture
 closeButton.onclick = function () {
 closeModal();
 };
