@@ -29,41 +29,61 @@
 		</section>
 	</main>
 	<script>
-		const submitBtn = document.getElementById("quote_search_submit");
 		const formEl = document.querySelector("form");
+		const submitBtn = document.getElementById("quote_search_submit");
+		let isSubmitDisabled = true;
 
 		/**
 		 *
 		 * @type {NodeListOf<HTMLInputElement>}
 		 */
 		const checkboxesEl = formEl.querySelectorAll("input[type='checkbox']");
-		let isDisabled = true;
+		/**
+		 *
+		 * @type {NodeListOf<HTMLInputElement>}
+		 */
+		const inputTextEl = formEl.querySelectorAll("input[type='text']");
 
-		for (const checkboxEl of checkboxesEl) {
-			checkboxEl.addEventListener("change", function (ev) {
-				for (const checkbox of checkboxesEl) {
-					if (checkbox.checked) {
-						isDisabled = false;
+
+		/**
+		 *
+		 * @type EventListener
+		 */
+		const handleForm = () => {
+			for (const checkbox of checkboxesEl) {
+				if (checkbox.checked) {
+					isSubmitDisabled = false;
+					break;
+				} else {
+					isSubmitDisabled = true;
+				}
+			}
+
+			// Check for non-empty text fields if no checkbox is checked
+			if (isSubmitDisabled) {
+				for (const input of inputTextEl) {
+					if (input.value.trim() !== '') {
+						isSubmitDisabled = false;
 						break;
-					} else {
-						isDisabled = true;
 					}
 				}
+			}
 
-				if (isDisabled) {
-					submitBtn.setAttribute("disabled", '');
-				} else {
-					submitBtn.removeAttribute("disabled");
-				}
-			});
+			if (isSubmitDisabled) {
+				submitBtn.setAttribute("disabled", '');
+			} else {
+				submitBtn.removeAttribute("disabled");
+			}
 		}
 
-		if (isDisabled) {
-			submitBtn.setAttribute("disabled", '');
+		for (const checkbox of checkboxesEl) {
+			checkbox.addEventListener('change', handleForm);
+		}
+		for (const input of inputTextEl) {
+			input.addEventListener('input', handleForm);
 		}
 
-
-
+		handleForm()
 	</script>
 {% endblock %}
 

@@ -23,8 +23,8 @@ class QuoteController extends AbstractController
         $form = $this->createForm(QuoteSearchType::class, null, ["method" => "POST"] );
 
         if($request->isMethod("POST")) {
-            $status = $request->request->all("quote_search")["status"];
-            $quotes = $quoteRepository->findByStatuses($status);
+            $searchResult = $request->request->all("quote_search");
+            $quotes = $quoteRepository->findBySearch($searchResult);
         }
         else {
             $quotes = $quoteRepository->findAll();

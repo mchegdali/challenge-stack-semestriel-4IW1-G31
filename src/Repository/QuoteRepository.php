@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Quote;
 use App\Entity\QuoteStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,31 +19,59 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class QuoteRepository extends ServiceEntityRepository
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Quote::class);
     }
 
     /**
-     * @param int[] $statuses
+     * @param array $searchResult
      * @return Quote[] Returns an array of Quote objects
      */
-    public function findByStatuses(array $statuses): array
+    public function findBySearch(array $searchResult): array
     {
-        dump("findByStatuses statuses", $statuses);
-        $qb = $this->createQueryBuilder('q');
+        $searchResult = array_filter($searchResult, function($value) {
+            return !empty($value);
+        });
 
-        if (!empty($statuses)) {
-            $qb
-                ->andWhere(
-                    $qb->expr()->in("q.status", $statuses)
-                );
+        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+        $rsm->addRootEntityFromClassMetadata(Quote::class, 'q');
+
+        $sql = '
+        WITH total_prices AS (
+            SELECT q.id, SUM(qi.price_including_tax * qi.quantity) as total
+            FROM quote q
+            INNER JOIN quote_item qi ON q.id = qi.quote_id
+            GROUP BY q.id
+        )
+        SELECT q.*, tp.total
+        FROM quote q
+        INNER JOIN total_prices tp ON q.id = tp.id
+    ';
+
+        $params = [];
+        if (!empty($searchResult)) {
+            if(array_key_exists("status", $searchResult) ) {
+                $sql .= ' AND q.status_id IN (:status)';
+                $params['status'] = $searchResult["status"];
+            }
+
+            if(array_key_exists("priceMin", $searchResult)) {
+                $sql .= ' AND tp.total >= :priceMin';
+                $params['priceMin'] = $searchResult["priceMin"];
+            }
+
+            if(array_key_exists("priceMax", $searchResult)) {
+                $sql .= ' AND tp.total <= :priceMax';
+                $params['priceMax'] = $searchResult["priceMax"];
+            }
         }
 
-        dump("findByStatuses qb", $qb->getQuery()->getSQL());
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameters($params);
 
-
-
-        return $qb->getQuery()->getResult();
+        return $query->getResult();
     }
+
 }
