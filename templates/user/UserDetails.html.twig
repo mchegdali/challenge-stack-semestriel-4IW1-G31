@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateur
+{% endblock %}
+
+{% block body %}
+{% include 'components/Navbar.html.twig' %}
+	<div class="flex mt-6 mx-6">
+		<a href="{{ path('app_user')}}">
+			<i class="material-icons">arrow_left</i>
+		</a>
+		<h1 class='px-6 font-bold text-xl'>Informations de l'utilisateur</h1>
+	</div>
+	{% include 'components/UserDetails.html.twig' %}
+{% endblock %}

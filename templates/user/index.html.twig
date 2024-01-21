@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateur
+{% endblock %}
+
+{% block body %}
+	{% include 'components/Navbar.html.twig' %}
+	<h1 class='px-6 font-bold'>Liste des utilisateurs</h1>
+	{% for user in users %}
+		{% include 'components/User.html.twig' %}
+	{% endfor %}
+{% endblock %}
