@@ -21,6 +21,8 @@ class QuoteSearchType extends AbstractType
                 'choice_label' => 'name',
                 "expanded" => true,
                 "multiple" => true,
+                "mapped" => false,
+                "required" => false,
             ])->add('priceMin', MoneyType::class, [
                 "mapped" => false,
                 "label" => "Montant minimum",
@@ -44,7 +46,7 @@ class QuoteSearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Quote::class,
+            'data_class' => null,
         ]);
     }
 }
