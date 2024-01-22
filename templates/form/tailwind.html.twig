@@ -15,11 +15,6 @@
     {{ parent() }}
 {% endblock checkbox_widget  %}
 
-{% block button_attributes  %}
-    {% set widget_class = widget_class|default('rounded px-4 py-2 flex-1 bg-blue-800 font-bold text-white') %}
-    {{ parent() }}
-{% endblock button_attributes  %}
-
 {% block form_label %}
     {% set label_class = label_class|default('block text-base text-blue-950') %}
     {{ parent() }}
