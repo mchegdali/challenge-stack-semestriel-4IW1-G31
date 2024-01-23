@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Form\CompanyUserRegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +36,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -46,15 +46,15 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('register@plumbill.fr', 'Plumbill'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
-            // do anything else you need here, like send an email
 
             return $userAuthenticator->authenticateUser(
                 $user,
@@ -68,15 +68,14 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/create-account', name: 'create_account')]
-    public function createAccount(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    #[Route('/create-account-admin', name: 'create_account')]
+    public function createAccountByAdmin(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -87,24 +86,57 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('register@plumbill.fr', 'Plumbill'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
-            // do anything else you need here, like send an email
+        }
 
-            return $userAuthenticator->authenticateUser(
+        return $this->render('registration/createAccountForUser.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/create-account', name: 'create_account_company')]
+    public function createAccountByCompany(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    {
+        $loggedInUser = $this->getUser();
+
+        $user = new User();
+
+        $form = $this->createForm(CompanyUserRegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
+            $user->setCompany($loggedInUser->getCompany());
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
                 $user,
-                $authenticator,
-                $request
+                (new TemplatedEmail())
+                    ->from(new Address('register@plumbill.fr', 'Plumbill'))
+                    ->to($user->getEmail())
+                    ->subject('Please Confirm your Email')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
             );
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('registration/companyCreateAccountForUser.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
