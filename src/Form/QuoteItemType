@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Quote;
 use DateTimeImmutable;
+use App\Entity\Service;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,9 +16,27 @@ class QuoteItemType extends AbstractType
     {
         $builder
             ->add('quantity')
-            ->add('priceExcludingTax')
-            ->add('priceIncludingTax')
-            ->add('taxAmount')
+            ->add('status', EntityType::class, [
+                'label' => 'Tax',
+                'placeholder' => '-- Choisir une tax --',
+                'class' => Tax::class,
+                'choice_label' => function (Tax $tax) {
+                    return $tax->getValue();
+                }
+            ])
+            //pour priceExcludingTax faire calcul dans controller
+            //pour priceIncludingTax faire calcul dans controller
+            //pour taxAmount faire calcul dans controller
+            //on attribue quote dans le controller
+
+            ->add('service', EntityType::class, [
+                'label' => 'Service',
+                'placeholder' => '-- Choisir un service --',
+                'class' => Service::class,
+                'choice_label' => function (Service $service) {
+                    return $service->getName();
+                }
+            ])
             ->add('services', CollectionType::class, [
                 'entry_type' => ServiceType::class,
                 'label' => 'Services',

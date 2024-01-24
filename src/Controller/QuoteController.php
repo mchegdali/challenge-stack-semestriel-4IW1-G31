@@ -39,6 +39,7 @@ class QuoteController extends AbstractController
         ]);
     }
 
+
     #[Route('/new', name: 'new')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -50,16 +51,27 @@ class QuoteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //gerer le company et le quote number
+            $quote->setCreatedAt(new \DateTimeImmutable('now'));
+            $quote->setCompany($this->getUser()->getCompany());
+
             $entityManager->persist($quote);
+            $entityManager->flush();
+
+
+            //On set le quotenumber après le flush car avant le flush l'id n'est pas généré
+            $uuid = $quote->getId()->toString();
+            $quote->setQuoteNumber(substr($uuid, strrpos($uuid, '-') + 1));
+
+            //on flush de nouveau pour mettre à jour $quote 
             $entityManager->flush();
 
 
             return $this->redirectToRoute('todo'); //todo: mettre la route des devis
         }
 
-        //Si formulaire non valide 
-        return $this->redirectToRoute('home'); //todo: verifier que route home existe
+        return $this->render('quote/new.html.twig', [
+            'controller_name' => 'QuoteController',
+        ]);
     }
 
     #[Route('/{id}', name: 'show')]

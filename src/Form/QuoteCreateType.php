@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Quote;
 use DateTimeImmutable;
+use App\Entity\Customer;
 use App\Entity\QuoteStatus;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,13 +25,13 @@ class QuoteCreateType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false
             ])
-            ->add('customer', CollectionType::class, [
-                'entry_type' => CustomerType::class, //TODO: faire le customer type
-                'label' => 'Customer',
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false
+            ->add('customer', EntityType::class, [
+                'label' => 'Status',
+                'placeholder' => '-- Choisir un client --',
+                'class' => Customer::class,
+                'choice_label' => function (Customer $customer) {
+                    return $customer->getName();
+                }
             ])
             ->add('status', EntityType::class, [
                 'label' => 'Status',
@@ -46,7 +47,6 @@ class QuoteCreateType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Quote::class,
-            'createdAt' => new DateTimeImmutable()
         ]);
     }
 }
