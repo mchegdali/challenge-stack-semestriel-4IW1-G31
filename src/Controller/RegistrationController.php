@@ -68,45 +68,6 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/create-account', name: 'create_account_company')]
-    public function createAccountByCompany(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
-    {
-        $loggedInUser = $this->getUser();
-
-        $user = new User();
-
-        $form = $this->createForm(CompanyUserRegistrationFormType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-
-            $user->setCompany($loggedInUser->getCompany());
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email',
-                $user,
-                (new TemplatedEmail())
-                    ->from(new Address('register@plumbill.fr', 'Plumbill'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-        }
-
-        return $this->render('registration/companyCreateAccountForUser.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
-    }
-
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {

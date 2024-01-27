@@ -105,30 +105,18 @@ class UserController extends AbstractController
             // );
         }
 
-        // $users = $doctrine
-        //     ->getManager()
-        //     ->getRepository(User::class)
-        //     ->findBy(['company' => $companyName]);
-
         $userId = $loggedInUser->getId();
         $companyName = $loggedInUser->getCompany();
-        // $userRoles = $loggedInUser->getRoles();
-        
-        // Convertir le tableau $userRoles en chaîne de caractères
-        // $userRolesString = implode(",", $userRoles);
+
         
         $users = $doctrine->getManager()->getRepository(User::class)->createQueryBuilder('u')
             ->where('u.id != :userId')
             ->andWhere('u.company = :companyName')
-            // ->andWhere("u.roles = :userRoles") // Utilisation de l'opérateur @> pour rechercher dans un tableau JSON
             ->setParameter('userId', $userId)
             ->setParameter('companyName', $companyName)
-            // ->setParameter('userRoles', json_encode([$userRolesString])) // Encodage en JSON pour la comparaison
             ->getQuery()
             ->getResult();
         
-        
-
         return $this->render('user/index.html.twig', [
             'form' => $form->createView(),
             'users' => $users,
