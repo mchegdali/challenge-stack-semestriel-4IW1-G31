@@ -3,24 +3,138 @@
 namespace App\Controller;
 
 use App\Entity\User;
+
 use App\Form\UserType;
+
+
+use App\Form\RegistrationFormType;
+use App\Form\CompanyUserRegistrationFormType;
+use App\Security\EmailVerifier;
+use App\Security\LoginFormAuthenticator;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user')]
-    public function createCompany(Request $request, PersistenceManagerRegistry $doctrine): Response
+    #[Route('/user-admin', name: 'app_list_user_admin')]
+    public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
-        $users = $doctrine->getManager()->getRepository(User::class)->findAll();
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // $this->emailVerifier->sendEmailConfirmation(
+            //     'app_verify_email',
+            //     $user,
+            //     (new TemplatedEmail())
+            //         ->from(new Address('register@plumbill.fr', 'Plumbill'))
+            //         ->to($user->getEmail())
+            //         ->subject('Please Confirm your Email')
+            //         ->htmlTemplate('registration/confirmation_email.html.twig')
+            // );
+        }
+
+        $loggedInUser = $this->getUser();
+        $userId = $loggedInUser->getId();
+
+        $users = $doctrine->getManager()->getRepository(User::class)->createQueryBuilder('u')
+            ->where('u.id != :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
 
         return $this->render('user/index.html.twig', [
+            'form' => $form->createView(),
             'users' => $users,
         ]);
     }
+
+
+    #[Route('/user', name: 'app_list_user')]
+    public function companyCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
+    {
+        $loggedInUser = $this->getUser();
+
+        $user = new User();
+        $form = $this->createForm(CompanyUserRegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
+            $user->setCompany($loggedInUser->getCompany());
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // $this->emailVerifier->sendEmailConfirmation(
+            //     'app_verify_email',
+            //     $user,
+            //     (new TemplatedEmail())
+            //         ->from(new Address('register@plumbill.fr', 'Plumbill'))
+            //         ->to($user->getEmail())
+            //         ->subject('Please Confirm your Email')
+            //         ->htmlTemplate('registration/confirmation_email.html.twig')
+            // );
+        }
+
+        // $users = $doctrine
+        //     ->getManager()
+        //     ->getRepository(User::class)
+        //     ->findBy(['company' => $companyName]);
+
+        $userId = $loggedInUser->getId();
+        $companyName = $loggedInUser->getCompany();
+        // $userRoles = $loggedInUser->getRoles();
+        
+        // Convertir le tableau $userRoles en chaîne de caractères
+        // $userRolesString = implode(",", $userRoles);
+        
+        $users = $doctrine->getManager()->getRepository(User::class)->createQueryBuilder('u')
+            ->where('u.id != :userId')
+            ->andWhere('u.company = :companyName')
+            // ->andWhere("u.roles = :userRoles") // Utilisation de l'opérateur @> pour rechercher dans un tableau JSON
+            ->setParameter('userId', $userId)
+            ->setParameter('companyName', $companyName)
+            // ->setParameter('userRoles', json_encode([$userRolesString])) // Encodage en JSON pour la comparaison
+            ->getQuery()
+            ->getResult();
+        
+        
+
+        return $this->render('user/index.html.twig', [
+            'form' => $form->createView(),
+            'users' => $users,
+        ]);
+    }
+
 
     #[Route('/user-details/{id}', name: 'app_user_details')]
     public function companyDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
@@ -49,13 +163,23 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user/{id}/delete', name: 'delete_user')]
-    public function deleteCompany(PersistenceManagerRegistry $doctrine, User $user): Response
+    #[Route('/user-admin/{id}/delete', name: 'delete_user_admin')]
+    public function deleteUser(PersistenceManagerRegistry $doctrine, User $user): Response
     {
         $em = $doctrine->getManager();
         $em->remove($user);
         $em->flush();
 
-        return $this->redirectToRoute('app_user');
+        return $this->redirectToRoute('app_list_user_admin');
+    }
+
+    #[Route('/user/{id}/delete', name: 'delete_user')]
+    public function deleteUserCompany(PersistenceManagerRegistry $doctrine, User $user): Response
+    {
+        $em = $doctrine->getManager();
+        $em->remove($user);
+        $em->flush();
+
+        return $this->redirectToRoute('app_list_user');
     }
 }
