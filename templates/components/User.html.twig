@@ -1,4 +1,4 @@
-{% if is_granted('ROLE_ADMIN') %}
+{% if 'ROLE_ADMIN' in app.user.role.name %}
 	<a href="{{path('app_user_details', {'id': user.id})}}">
 		<div class="bg-white p-4 mx-6 my-2 rounded-lg flex flex-col">
 			<div class='flex gap-2 justify-between items-center'>

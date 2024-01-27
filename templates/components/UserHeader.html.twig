@@ -14,7 +14,7 @@
 		<div class="bg-white p-8 rounded shadow-lg">
 			<h2 class="text-lg font-bold mb-4">Ajout d'un utilisateur</h2>
 
-			{% if is_granted('ROLE_ADMIN') %}
+			{% if 'ROLE_ADMIN' in app.user.role.name %}
 				{% include 'components/AdminCreateUserForm.html.twig' %}
 			{% else %}
 				{% include 'components/CreateUserForm.html.twig' %}

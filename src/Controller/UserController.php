@@ -57,6 +57,7 @@ class UserController extends AbstractController
         }
 
         $loggedInUser = $this->getUser();
+        // dd($loggedInUser);
         $userId = $loggedInUser->getId();
 
         $users = $doctrine->getManager()->getRepository(User::class)->createQueryBuilder('u')
