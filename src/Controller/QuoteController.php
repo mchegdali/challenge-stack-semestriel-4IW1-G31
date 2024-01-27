@@ -6,33 +6,33 @@ use App\Entity\Quote;
 use App\Form\QuoteSearchType;
 use App\Repository\QuoteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 
 #[Route('/quotes', name: 'quote_')]
 class QuoteController extends AbstractController
 {
-    #[Route('', name: 'index', methods: "get")]
+
+    #[Route('', name: 'index', methods: ['GET', 'POST'])]
     public function index(
         QuoteRepository $quoteRepository,
-        #[MapQueryParameter] ?array $status,
-        #[MapQueryParameter] ?string $text,
-    ): Response {
-        $form = $this->createForm(QuoteSearchType::class);
+        Request         $request
+    ): Response
+    {
+        $form = $this->createForm(QuoteSearchType::class, null, ["method" => "POST"] );
 
-        if ((!isset($status) || count($status) == 0) && (!isset($text)  || strlen($text) == 0)) {
+        if($request->isMethod("POST")) {
+            $searchResult = $request->request->all("quote_search");
+            $quotes = $quoteRepository->findBySearch($searchResult);
+        }
+        else {
             $quotes = $quoteRepository->findAll();
-        } else {
-            $quotes = $quoteRepository->findBySearch([
-                "status" => $status,
-                "text" => $text,
-            ]);
         }
 
         return $this->render('quote/index.html.twig', [
             'quotes' => $quotes,
-            "searchForm" => $form
+            "searchForm" => $form->createView()
         ]);
     }
 
