@@ -14,14 +14,13 @@ use Symfony\Component\Uid\Uuid;
 class Invoice
 {
     use Timestampable;
-
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: InvoiceItem::class, orphanRemoval: true, cascade:["persist"])]
+    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: InvoiceItem::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $invoiceItems;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
@@ -58,6 +57,18 @@ class Invoice
         return $this;
     }
 
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): static
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, InvoiceItem>
      */
@@ -88,17 +99,6 @@ class Invoice
         return $this;
     }
 
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): static
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
 
     public function getStatus(): ?InvoiceStatus
     {
