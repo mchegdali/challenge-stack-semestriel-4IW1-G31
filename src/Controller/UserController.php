@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Role;
 use App\Entity\User;
 
 use App\Form\UserType;
@@ -78,6 +79,28 @@ class UserController extends AbstractController
     {
         $loggedInUser = $this->getUser();
 
+        $comptableRole = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_COMPTABLE']);
+
+        $existingComptable = $entityManager->getRepository(User::class)
+            ->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.company = :companyName')
+            ->andWhere('u.role = :comptableRoleId') // Utiliser l'ID du rôle
+            ->setParameter('companyName', $loggedInUser->getCompany())
+            ->setParameter('comptableRoleId', $comptableRole->getId()) // Passer l'ID du rôle
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // dd($existingComptable);
+
+        // dd($existingComptable);
+
+        // if ($existingComptable) {
+        //     // Handle the case where a "comptable" user already exists (e.g., display an error message)
+        //     return $this->render('error/comptable_already_exists.html.twig');
+        // }
+
+
         $user = new User();
         $form = $this->createForm(CompanyUserRegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -91,6 +114,10 @@ class UserController extends AbstractController
             );
 
             $user->setCompany($loggedInUser->getCompany());
+
+            $comptableRole = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_COMPTABLE']);
+
+            $user->setRole($comptableRole);
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -109,7 +136,7 @@ class UserController extends AbstractController
         $userId = $loggedInUser->getId();
         $companyName = $loggedInUser->getCompany();
 
-        
+
         $users = $doctrine->getManager()->getRepository(User::class)->createQueryBuilder('u')
             ->where('u.id != :userId')
             ->andWhere('u.company = :companyName')
@@ -117,10 +144,11 @@ class UserController extends AbstractController
             ->setParameter('companyName', $companyName)
             ->getQuery()
             ->getResult();
-        
+
         return $this->render('user/index.html.twig', [
             'form' => $form->createView(),
             'users' => $users,
+            'existingComptable' => $existingComptable,
         ]);
     }
 

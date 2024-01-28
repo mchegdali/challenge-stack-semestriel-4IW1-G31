@@ -24,6 +24,13 @@
 				</p>
 			</span>
 
+			<span class='flex gap-2'>
+				<p class='font-bold'>Role</p>
+				<p class=''>
+					{{ user.role.name }}
+				</p>
+			</span>
+
 		</div>
 		<div>
 			<a href="#" onclick="openModal(event)" class='text-blue-800 '>
@@ -42,6 +49,10 @@
 
 				<span>
 					{{ form_row(form.company, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
+				</span>
+
+				<span>
+					{{ form_row(form.role, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
 				</span>
 				<span class='flex gap-4 justify-end w-full'>
 					{{ form_row(form.save, {'attr': {'class': 'rounded px-4 py-2 flex-1 bg-blue-800 font-bold text-white'}}) }}
