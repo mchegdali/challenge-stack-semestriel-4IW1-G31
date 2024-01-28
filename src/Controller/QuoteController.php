@@ -70,7 +70,7 @@ class QuoteController extends AbstractController
         }
 
         return $this->render('quote/new.html.twig', [
-            'controller_name' => 'QuoteController',
+            'form' => $form
         ]);
     }
 

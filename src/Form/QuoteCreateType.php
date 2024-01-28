@@ -26,7 +26,7 @@ class QuoteCreateType extends AbstractType
                 'by_reference' => false
             ])
             ->add('customer', EntityType::class, [
-                'label' => 'Status',
+                'label' => 'Client',
                 'placeholder' => '-- Choisir un client --',
                 'class' => Customer::class,
                 'choice_label' => function (Customer $customer) {
@@ -34,8 +34,8 @@ class QuoteCreateType extends AbstractType
                 }
             ])
             ->add('status', EntityType::class, [
-                'label' => 'Status',
-                'placeholder' => '-- Choisir un status --',
+                'label' => 'Statut',
+                'placeholder' => '-- Choisir un statut --',
                 'class' => QuoteStatus::class,
                 'choice_label' => function (QuoteStatus $status) {
                     return $status->getName();
