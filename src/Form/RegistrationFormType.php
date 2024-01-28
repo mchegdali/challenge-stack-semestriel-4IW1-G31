@@ -55,6 +55,14 @@ class RegistrationFormType extends AbstractType
                     'placeholder' => 'Saisir un nom de entreprise',
                 ],
             ])
+            ->add('role', EntityType::class, [
+                'label' => 'Role',
+                'class' => 'App\Entity\Role',
+                'choice_label' => 'name',
+                'attr' => [
+                    'placeholder' => 'Saisir un role',
+                ],
+            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Ajouter',
             ])

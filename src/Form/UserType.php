@@ -16,18 +16,17 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email')
-            // ->add('roles')
-            // ->add('password')
-            // ->add('isVerified')
-            // ->add('company', EntityType::class, [
-            //     'class' => Company::class,
-            //     'choice_label' => 'id',
-            // ])
             ->add('company', EntityType::class, [
                 'label' => 'Entreprise',
                 'class' => 'App\Entity\Company',
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionner une entreprise',
+            ])
+            ->add('role', EntityType::class, [
+                'label' => 'Role',
+                'class' => 'App\Entity\Role',
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionner un role',
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Ajouter',
