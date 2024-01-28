@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello RoleController!
+{% block title %}Roles
 {% endblock %}
 
 {% block body %}
-
+	{% include 'components/Navbar.html.twig' %}
 	{% include 'components/CreateRoleForm.html.twig' %}
 	<h1 class='px-6 font-bold'>Liste des roles</h1>
 	{% for role in roles %}
