@@ -3,12 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Quote;
+
+use App\Form\QuoteCreateType;
 use App\Form\QuoteSearchType;
 use App\Repository\QuoteRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/quotes', name: 'quote_')]
 class QuoteController extends AbstractController
@@ -36,11 +40,38 @@ class QuoteController extends AbstractController
         ]);
     }
 
+
     #[Route('/new', name: 'new')]
-    public function new(): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $quote = new Quote;
+
+        $form = $this->createForm(QuoteCreateType::class, $quote);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $quote->setCreatedAt(new \DateTimeImmutable('now'));
+            $quote->setCompany($this->getUser()->getCompany());
+
+            $entityManager->persist($quote);
+            $entityManager->flush();
+
+
+            //On set le quotenumber après le flush car avant le flush l'id n'est pas généré
+            $uuid = $quote->getId()->toString();
+            $quote->setQuoteNumber(substr($uuid, strrpos($uuid, '-') + 1));
+
+            //on flush de nouveau pour mettre à jour $quote 
+            $entityManager->flush();
+
+
+            return $this->redirectToRoute('todo'); //todo: mettre la route des devis
+        }
+
         return $this->render('quote/new.html.twig', [
-            'controller_name' => 'QuoteController',
+            'form' => $form
         ]);
     }
 
