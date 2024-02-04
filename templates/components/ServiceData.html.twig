@@ -1,12 +1,38 @@
-<div class="bg-white p-6 border-b-2 border-gray">
-    <ul>
-        <li class='flex justify-between'>
-            <div class='flex gap-2 items-center'>
-                <div class='w-2 h-2 bg-blue-500 rounded-full'></div>
-                <p>{{ service.name }}</p>
-                <p>{{ service.price }} €</p>
-            </div>
-            <a href="{{ path('delete_service', {'id': service.id}) }}">Supprimer</a>
-        </li>
-    </ul>
+<div class="bg-white p-2 mx-6 my-2 rounded-lg">
+
+	<div class='flex justify-between'>
+		<h1 class='font-bold'>{{ service.name|upper }}</h1>
+		<div>
+			{# <a href="{{ path('update_service', {'id': service.id}) }}" class='text-blue-800'>
+				<i class="material-icons">edit</i>
+			</a> #}
+			<a href="{{ path('delete_service', {'id': service.id}) }}" class='text-red-500'>
+				<i class="material-icons">delete_outline</i>
+			</a>
+		</div>
+	</div>
+
+
+	<div class='flex gap-2 justify-between items-center text-sm'>
+
+		<span class='flex gap-2'>
+			<p class='font-bold'>TVA</p>
+			<p class=''>
+				{{ service.tax.value }}</p>
+		</span>
+
+		<span class='flex gap-2'>
+			<p class='font-bold'>Prix HT</p>
+			<p class=''>
+				{{ service.price }}€</p>
+		</span>
+
+		<span class='flex gap-2'>
+			<p class='font-bold'>Prix TTC</p>
+			<p class=''>
+				{{ service.price * (1 + (service.tax.value / 100)) }}€</p>
+		</span>
+
+
+	</div>
 </div>

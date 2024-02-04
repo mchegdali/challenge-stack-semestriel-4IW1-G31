@@ -1,0 +1,38 @@
+<div class="flex flex-col rounded-b-2xl w-screen">
+	<div class='p-6 w-full flex flex-row justify-between rounded-lg'>
+
+		<h1 class='text-2xl font-bold'>Utilisateurs</h1>
+
+		{% if 'ROLE_ADMIN' in app.user.role.name %}
+			<button onclick="openModal()" class="bg-blue-800 text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
+				<p>Ajouter un utilisateur</p>
+			</button>
+		{% else %}
+			{% if existingComptable > 1 %}
+				<button disabled onclick="openModal()" title="Un compte comptable a déjà été créé. Il n'est possible d'avoir qu'un seul compte comptable." class="bg-gray-300 text-gray-400 font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
+					<p>Ajouter un utilisateur</p>
+				</button>
+			{% else %}
+				<button onclick="openModal()" class="bg-blue-800 text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
+					<p>Ajouter un utilisateur</p>
+				</button>
+			{% endif %}
+		{% endif %}
+
+
+	</div>
+	<!-- Modale -->
+	<div id="myModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+		<button onclick="closeModal()" class='bg-black'></button>
+		<div class="bg-white p-8 rounded shadow-lg">
+			<h2 class="text-lg font-bold mb-4">Ajout d'un utilisateur</h2>
+
+			{% if 'ROLE_ADMIN' in app.user.role.name %}
+				{% include 'components/AdminCreateUserForm.html.twig' %}
+			{% else %}
+				{% include 'components/CreateUserForm.html.twig' %}
+			{% endif %}
+
+
+		</div>
+	</div>

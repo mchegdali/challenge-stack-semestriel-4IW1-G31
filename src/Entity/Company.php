@@ -22,7 +22,7 @@ class Company
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $company_number = null;
 
     #[ORM\Column(length: 255)]
@@ -40,13 +40,17 @@ class Company
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Quote::class, orphanRemoval: true)]
     private Collection $quotes;
 
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: User::class)]
+    private Collection $users;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
         $this->quotes = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -165,6 +169,36 @@ class Company
             // set the owning side to null (unless already changed)
             if ($quote->getCompany() === $this) {
                 $quote->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getCompany() === $this) {
+                $user->setCompany(null);
             }
         }
 

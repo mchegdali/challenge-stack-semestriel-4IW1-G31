@@ -10,13 +10,25 @@ class QuoteStatusFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $statusNames = ["VALIDATED" => "Validé", "SENT" => "Envoyé", "DRAFT" => "Brouillon"];
+        $draftStatus = new QuoteStatus();
+        $draftStatus->setName("Brouillon");
+        $draftStatus->setColor("gray");
+        $manager->persist($draftStatus);
 
-        foreach ($statusNames as $key => $value) {
-            $status = new QuoteStatus();
-            $status->setName($value);
-            $manager->persist($status);
-        }
+        $sentStatus = new QuoteStatus();
+        $sentStatus->setName("Envoyé");
+        $sentStatus->setColor("blue");
+        $manager->persist($sentStatus);
+
+        $validatedStatus = new QuoteStatus();
+        $validatedStatus->setName("Validé");
+        $validatedStatus->setColor("green");
+        $manager->persist($validatedStatus);
+
+        $rejectedStatus = new QuoteStatus();
+        $rejectedStatus->setName("Refusé");
+        $rejectedStatus->setColor("red");
+        $manager->persist($rejectedStatus);
 
         $manager->flush();
     }

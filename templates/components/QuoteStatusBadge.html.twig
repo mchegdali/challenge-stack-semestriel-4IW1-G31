@@ -1,0 +1,23 @@
+{% set color = quoteStatus.color %}
+
+{% if color == 'red' %}
+    {% set bgColor = 'bg-red-50' %}
+    {% set borderColor = 'border-red-700' %}
+    {% set textColor = 'text-red-700' %}
+{% elseif color == "gray" %}
+    {% set bgColor = 'bg-gray-50' %}
+    {% set borderColor = 'border-gray-700' %}
+    {% set textColor = 'text-gray-700' %}
+{% elseif color == "green" %}
+    {% set bgColor = 'bg-green-50' %}
+    {% set borderColor = 'border-green-700' %}
+    {% set textColor = 'text-green-700' %}
+{% elseif color == "blue" %}
+    {% set bgColor = 'bg-blue-50' %}
+    {% set borderColor = 'border-blue-700' %}
+    {% set textColor = 'text-blue-700' %}
+{% endif %}
+
+<div class="w-16 h-5 px-1.5 py-0.5 border rounded justify-center items-center inline-flex {{ bgColor }} {{ borderColor }}">
+    <span class="{{ textColor }} text-center text-xs font-bold leading-none">{{ quoteStatus.name }}</span>
+</div>

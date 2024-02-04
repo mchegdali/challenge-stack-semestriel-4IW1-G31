@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Service
+{% endblock %}
+
+{% block body %}
+{% include 'components/Navbar.html.twig' %}
+	<div class="flex mt-6 mx-6">
+		<a href="{{ path('app_company')}}">
+			<i class="material-icons">arrow_left</i>
+		</a>
+		<h1 class='px-2 font-bold text-xl'>Informations de l’entreprise</h1>
+	</div>
+	{% include 'components/CompanyDetails.html.twig' %}
+{% endblock %}

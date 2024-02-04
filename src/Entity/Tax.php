@@ -24,12 +24,16 @@ class Tax
     #[ORM\OneToMany(mappedBy: 'tax', targetEntity: Service::class)]
     private Collection $services;
 
+    #[ORM\OneToMany(mappedBy: 'tax', targetEntity: QuoteItem::class)]
+    private Collection $quoteItems;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
+        $this->quoteItems = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -77,6 +81,36 @@ class Tax
             // set the owning side to null (unless already changed)
             if ($service->getTax() === $this) {
                 $service->setTax(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QuoteItem>
+     */
+    public function getQuoteItems(): Collection
+    {
+        return $this->quoteItems;
+    }
+
+    public function addQuoteItem(QuoteItem $quoteItem): static
+    {
+        if (!$this->quoteItems->contains($quoteItem)) {
+            $this->quoteItems->add($quoteItem);
+            $quoteItem->setTax($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuoteItem(QuoteItem $quoteItem): static
+    {
+        if ($this->quoteItems->removeElement($quoteItem)) {
+            // set the owning side to null (unless already changed)
+            if ($quoteItem->getTax() === $this) {
+                $quoteItem->setTax(null);
             }
         }
 

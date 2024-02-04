@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Quote;
+
 use App\Form\QuoteCreateType;
 use App\Form\QuoteSearchType;
 use App\Repository\QuoteRepository;
@@ -16,26 +17,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/quotes', name: 'quote_')]
 class QuoteController extends AbstractController
 {
-    #[Route('', name: 'index', methods: "get")]
+
+    #[Route('', name: 'index', methods: ['GET', 'POST'])]
     public function index(
         QuoteRepository $quoteRepository,
-        #[MapQueryParameter] ?array $status,
-        #[MapQueryParameter] ?string $text,
-    ): Response {
-        $form = $this->createForm(QuoteSearchType::class);
+        Request         $request
+    ): Response
+    {
+        $form = $this->createForm(QuoteSearchType::class, null, ["method" => "POST"] );
 
-        if ((!isset($status) || count($status) == 0) && (!isset($text)  || strlen($text) == 0)) {
+        if($request->isMethod("POST")) {
+            $searchResult = $request->request->all("quote_search");
+            $quotes = $quoteRepository->findBySearch($searchResult);
+        }
+        else {
             $quotes = $quoteRepository->findAll();
-        } else {
-            $quotes = $quoteRepository->findBySearch([
-                "status" => $status,
-                "text" => $text,
-            ]);
         }
 
         return $this->render('quote/index.html.twig', [
             'quotes' => $quotes,
-            "searchForm" => $form
+            "searchForm" => $form->createView()
         ]);
     }
 
@@ -75,10 +76,10 @@ class QuoteController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show')]
-    public function show(): Response
+    public function show(Quote $quote): Response
     {
         return $this->render('quote/show.html.twig', [
-            'controller_name' => 'QuoteController',
+            'quote' => $quote,
         ]);
     }
 
@@ -87,6 +88,27 @@ class QuoteController extends AbstractController
     {
         return $this->render('quote/edit.html.twig', [
             'controller_name' => 'QuoteController',
+        ]);
+    }
+
+    #[Route('/quoteslist', name: 'quote_list')]
+    public function list(QuoteRepository $quoteRepository): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+
+        $company = $user->getCompany();
+        if (!$company) {
+            throw $this->createNotFoundException('Entreprise non trouvée.');
+        }
+
+        $quotes = $quoteRepository->findBy(['company' => $company]);
+
+        return $this->render('quote/list.html.twig', [
+            'quotes' => $quotes,
         ]);
     }
 }
