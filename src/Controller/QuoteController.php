@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Quote;
 
+use DateTimeImmutable;
 use App\Form\QuoteCreateType;
 use App\Form\QuoteSearchType;
 use App\Repository\QuoteRepository;
@@ -52,22 +53,22 @@ class QuoteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $quote->setCreatedAt(new \DateTimeImmutable('now'));
             $quote->setCompany($this->getUser()->getCompany());
 
             $entityManager->persist($quote);
+            $quote->setQuoteNumber(1);
             $entityManager->flush();
 
 
             //On set le quotenumber après le flush car avant le flush l'id n'est pas généré
-            $uuid = $quote->getId()->toString();
+            $uuid = $quote->getId()->__toString();
             $quote->setQuoteNumber(substr($uuid, strrpos($uuid, '-') + 1));
 
             //on flush de nouveau pour mettre à jour $quote 
             $entityManager->flush();
 
 
-            return $this->redirectToRoute('todo'); //todo: mettre la route des devis
+            return $this->redirectToRoute('quote_new'); //todo: mettre la route des devis
         }
 
         return $this->render('quote/new.html.twig', [

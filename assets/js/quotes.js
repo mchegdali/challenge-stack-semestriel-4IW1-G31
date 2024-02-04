@@ -1,50 +1,53 @@
-alert("dfefre");
-console.log("gtrgtr");
-let collection,
-boutonAjout,
-span;
+console.log("salut")
+let collection, boutonAjout, span;
+
 window.onload = () => {
-    collection = document.querySelector("#quoteitem")
-    span = collection.querySelector("span")
+    collection = document.querySelector("#quoteitem");
+    span = collection.querySelector("span");
 
     boutonAjout = document.createElement("button");
-    boutonAjout.className = "ajout-quoteitem"
-    boutonAjout.innerText = "Ajouter un service à votre devis"
+    boutonAjout.className = "ajout-quoteitem";
+    boutonAjout.type = "button";
+    boutonAjout.innerText = "Ajouter un élément à votre devis";
 
-    let nouveauBouton = span.append(boutonAjout)
+    let nouveauBouton = span.append(boutonAjout);
 
-    collection.dataset.index = collection.querySelector("input").length
+    collection.dataset.index = collection.querySelectorAll("div").length;
 
     boutonAjout.addEventListener("click", function () {
-        addButton(collection, nouveauBouton)
+        addButton(collection, nouveauBouton);
     })
 }
 
 function addButton(collection, nouveauButton) {
-    let prototype = collection.dataset.prototype
+    console.log("salut toi");
+    let prototype = collection.dataset.prototype;
 
-    let index = collection.dataset.index
+    let index = collection.dataset.index;
 
-    prototype = prototype.replace(/__name__/g, index)
+    prototype = prototype.replace(/__name__/g, index);
 
-    let content = document.createElement("html")
-    content.innerHTML = prototype
-    let newForm = content.querySelector("div")
+    let content = document.createElement("html");
+    content.innerHTML = prototype;
+    let newForm = content.querySelector("div");
 
-    let boutonSuppr = document.createElement("button")
-    boutonSuppr.type = "button"
-    boutonSuppr.id = "delete-quoteitem" + index
-    boutonSuppr.innerText = "Supprimer cette ligne"
+    let boutonSuppr = document.createElement("button");
+    boutonSuppr.type = "button";
+    boutonSuppr.className = "btn red";
+    boutonSuppr.id = "delete-quoteitem-" + index;
+    boutonSuppr.innerText = "Supprimer cette ligne";
 
-    newForm.append(boutonSuppr)
+    newForm.append(boutonSuppr);
 
-    collection.dataset.index ++;
+    collection.dataset.index++;
 
-    let boutonAjout = collection.querySelector(".ajout-quoteitem")
+    let boutonAjout = collection.querySelector(".ajout-quoteitem");
 
     span.insertBefore(newForm, boutonAjout);
 
     boutonSuppr.addEventListener("click", function() {
-        this.previousElementSibling.parent.remove()
+        this.previousElementSibling.parent.remove();
     })
 }
+
+
