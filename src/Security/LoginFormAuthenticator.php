@@ -17,6 +17,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use App\Repository\UserRepository;
+
+
 
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
@@ -25,33 +28,38 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator, private UserRepository $userRepository)
     {
     }
 
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
-
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
-
+    
+        // Récupérer l'utilisateur par son email
+        $user = $this->userRepository->findOneByEmail($email);
+    
+        if (!$user) {
+            throw new CustomUserMessageAuthenticationException('Aucun utilisateur trouvé avec cet email.');
+        }
+    
+        // Vérifier si isVerified est à true
+        if (!$user->isVerified()) {
+            throw new CustomUserMessageAuthenticationException('Votre compte n\'est pas vérifié. Veuillez vérifier votre e-mail.');
+        }
+    
         // Créer un objet Passport
-        $passport = new Passport(
-            new UserBadge($email),
+        return new Passport(
+            new UserBadge($email, function($email) {
+                return $this->userRepository->findOneByEmail($email);
+            }),
             new PasswordCredentials($request->request->get('password', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
                 new RememberMeBadge(),
             ]
         );
-
-        // Appeler la méthode isverified de l'entité User
-        $user = New User();
-        if (!$user->isVerified()) {
-            throw new CustomUserMessageAuthenticationException('Votre compte n\'est pas valide.');
-        }
-
-        return $passport;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
