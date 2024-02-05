@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Payment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +22,23 @@ class PaymentRepository extends ServiceEntityRepository
         parent::__construct($registry, Payment::class);
     }
 
-//    /**
-//     * @return Payment[] Returns an array of Payment objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @param array $searchResult
+     * @return Payment[] Returns an array of Quote objects
+     */
+    public function findBySearch(array $searchResult): array
+    {
+        $searchResult = array_filter($searchResult, function ($value) {
+            return !empty($value);
+        });
 
-//    public function findOneBySomeField($value): ?Payment
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $qb = $this->createQueryBuilder('p')
+            ->select('p')
+            ->leftJoin('p.customer', 'c')
+            ->leftJoin('p.status', 's')
+            ->leftJoin('p.invoice', 'i')
+            ->addSelect('c', 's', 'i');
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PaymentRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -34,19 +35,16 @@ class Payment
     #[ORM\Column]
     private ?float $taxAmount = null;
 
-    #[ORM\ManyToOne(inversedBy: 'payments')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Tax $tax = null;
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Invoice $invoice = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $expectedDate = null;
+    private ?DateTimeImmutable $expectedDate = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
-    private ?\DateTimeImmutable $paymentDate = null;
+    private ?DateTimeImmutable $paymentDate = null;
 
     public function getId(): ?Uuid
     {
@@ -120,17 +118,6 @@ class Payment
         return $this;
     }
 
-    public function getTax(): ?Tax
-    {
-        return $this->tax;
-    }
-
-    public function setTax(?Tax $tax): static
-    {
-        $this->tax = $tax;
-
-        return $this;
-    }
 
     public function getInvoice(): ?Invoice
     {
@@ -144,24 +131,24 @@ class Payment
         return $this;
     }
 
-    public function getExpectedDate(): ?\DateTimeImmutable
+    public function getExpectedDate(): ?DateTimeImmutable
     {
         return $this->expectedDate;
     }
 
-    public function setExpectedDate(\DateTimeImmutable $expectedDate): static
+    public function setExpectedDate(DateTimeImmutable $expectedDate): static
     {
         $this->expectedDate = $expectedDate;
 
         return $this;
     }
 
-    public function getPaymentDate(): ?\DateTimeImmutable
+    public function getPaymentDate(): ?DateTimeImmutable
     {
         return $this->paymentDate;
     }
 
-    public function setPaymentDate(?\DateTimeImmutable $paymentDate): static
+    public function setPaymentDate(?DateTimeImmutable $paymentDate): static
     {
         $this->paymentDate = $paymentDate;
 
