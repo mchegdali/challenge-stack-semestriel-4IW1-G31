@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
 class QuoteItemType extends AbstractType
 {
@@ -33,18 +34,29 @@ class QuoteItemType extends AbstractType
                     return $tax->getValue();
                 }
             ])
-            //pour priceExcludingTax faire calcul dans controller
+            ->add('priceExcludingTax', MoneyType::class, [
+                'label' => 'Prix HT',
+                'attr' => [
+                    'class' => 'w-1/4'
+                ]
+            ])
             //pour priceIncludingTax faire calcul dans controller
             //pour taxAmount faire calcul dans controller
             //on attribue quote dans le controller
 
             ->add('service', EntityType::class, [
                 'label' => 'Service',
+                'attr' => [
+                    'class' => 'service-select'
+                ],
                 'placeholder' => '-- Choisir un service --',
                 'class' => Service::class,
                 'choice_label' => function (Service $service) {
-                    return $service->getName() . ' (' . $service->getPrice() . '€)';
-                }
+                    return sprintf('%s (€%s)', $service->getName(), $service->getPrice());
+                },
+                'choice_attr' => function (Service $service) {
+                    return ['data-price' => $service->getPrice()];
+                },
             ]);
     }
 

@@ -1,4 +1,3 @@
-console.log("salut")
 let collection, boutonAjout, span;
 
 window.onload = () => {
@@ -52,3 +51,22 @@ function addButton(collection, nouveauButton) {
 }
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.addEventListener('change', function(event) {
+        const serviceSelectRegex = /quote_create_quoteitems_(\d+)_service/;
+        const match = serviceSelectRegex.exec(event.target.id);
+        
+        if (match) {
+            // On récupère l'index du champ pour identifier le champ priceExcludingTax correspondant
+            const index = match[1];
+            const priceFieldId = `quote_create_quoteitems_${index}_priceExcludingTax`;
+            const priceField = document.getElementById(priceFieldId);
+            
+            if (priceField) {
+                // On récupère le prix depuis data-price de l'option sélectionnée
+                const price = event.target.options[event.target.selectedIndex].dataset.price;
+                priceField.value = price; // On met à jour la valeur du champ Prix HT
+            }
+        }
+    });
+});
