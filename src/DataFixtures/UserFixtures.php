@@ -5,7 +5,6 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Company;
-use App\Entity\Role;
 use App\Entity\User;
 use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -20,7 +19,6 @@ class UserFixtures extends Fixture
         $faker = Factory::create();
 
         $companies = $manager->getRepository(Company::class)->findAll();
-        $roles = $manager->getRepository(Role::class)->findAll();
 
         $user = new User();
         $userComptable = new User();
