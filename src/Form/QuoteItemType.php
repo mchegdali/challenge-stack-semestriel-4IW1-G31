@@ -11,13 +11,19 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class QuoteItemType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('quantity')
+            ->add('quantity', NumberType::class, [
+                'label' => 'Quantité',
+                'attr' => [
+                    'class' => 'w-1/4'
+                ]
+            ])
             ->add('status', EntityType::class, [
                 'label' => 'Tax',
                 'placeholder' => '-- Choisir une tax --',
@@ -36,7 +42,7 @@ class QuoteItemType extends AbstractType
                 'placeholder' => '-- Choisir un service --',
                 'class' => Service::class,
                 'choice_label' => function (Service $service) {
-                    return $service->getName();
+                    return $service->getName() . ' (' . $service->getPrice() . '€)';
                 }
             ])
             ->add('services', CollectionType::class, [

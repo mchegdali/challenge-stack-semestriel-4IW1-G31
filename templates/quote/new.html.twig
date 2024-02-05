@@ -6,16 +6,24 @@
 {% block body %}
 	{% include 'components/Navbar.html.twig' %}
 
-	<main class="mx-auto">
-		{{form_start(form)}}
-			{{form_widget(form.status) }}
-			{{form_widget(form.customer) }}
-			<div id="quoteitem" data-prototype="{{ form_row(form.quoteitems.vars.prototype)|e('html_attr')}}">
-				{{form_row(form.quoteitems)}}
-				<span></span>
-			</div>
-		{{form_end(form)}}
-	</main>
+	<h1 class='px-6 font-bold'>Créer un nouveau devis</h1>
+
+	<div class="bg-white p-4 mx-6 my-2 rounded-lg flex flex-col">
+
+		<main class="mx-auto">
+			
+			{{form_start(form)}}
+				{{ form_label(form.customer) }}
+				{{form_widget(form.customer) }}
+				{{form_label(form.status)}}
+				{{form_widget(form.status) }}
+				<div id="quoteitem" data-prototype="{{ form_row(form.quoteitems.vars.prototype)|e('html_attr')}}">
+					{{form_row(form.quoteitems)}}
+					<span></span>
+				</div>
+			{{form_end(form)}}
+		</main>
+	</div>
 	
 {% endblock %}
 

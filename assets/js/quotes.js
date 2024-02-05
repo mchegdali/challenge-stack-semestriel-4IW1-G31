@@ -6,7 +6,7 @@ window.onload = () => {
     span = collection.querySelector("span");
 
     boutonAjout = document.createElement("button");
-    boutonAjout.className = "ajout-quoteitem";
+    boutonAjout.classList.add("ajout-quoteitem", "bg-blue-800", "text-white", "font-bold", "py-2", "px-4", "rounded", "w-auto", "items-center", "flex", "justify-center", "gap-2", "text-sm");
     boutonAjout.type = "button";
     boutonAjout.innerText = "Ajouter un élément à votre devis";
 
@@ -33,7 +33,8 @@ function addButton(collection, nouveauButton) {
 
     let boutonSuppr = document.createElement("button");
     boutonSuppr.type = "button";
-    boutonSuppr.className = "btn red";
+    boutonSuppr.classList.add("bg-blue-800", "text-white", "font-bold", "py-2", "px-4", "rounded", "w-auto", "items-center", "flex", "justify-center", "gap-2", "text-sm");
+
     boutonSuppr.id = "delete-quoteitem-" + index;
     boutonSuppr.innerText = "Supprimer cet élément";
 
