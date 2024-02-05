@@ -35,7 +35,7 @@ function addButton(collection, nouveauButton) {
     boutonSuppr.type = "button";
     boutonSuppr.className = "btn red";
     boutonSuppr.id = "delete-quoteitem-" + index;
-    boutonSuppr.innerText = "Supprimer cette ligne";
+    boutonSuppr.innerText = "Supprimer cet élément";
 
     newForm.append(boutonSuppr);
 
@@ -46,7 +46,7 @@ function addButton(collection, nouveauButton) {
     span.insertBefore(newForm, boutonAjout);
 
     boutonSuppr.addEventListener("click", function() {
-        this.previousElementSibling.parent.remove();
+        this.parentNode.remove(); 
     })
 }
 
