@@ -6,6 +6,7 @@ use App\Entity\Quote;
 use DateTimeImmutable;
 use App\Entity\Customer;
 use App\Entity\QuoteStatus;
+use App\Form\QuoteItemType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,7 +21,7 @@ class QuoteCreateType extends AbstractType
         $builder
             ->add('quoteitems', CollectionType::class, [
                 'entry_type' => QuoteItemType::class,
-                'label' => 'Items',
+                'label' => false,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -42,7 +43,11 @@ class QuoteCreateType extends AbstractType
                     return $status->getName();
                 }
             ])
-            ->add('valider', SubmitType::class);
+            ->add('valider', SubmitType::class, [
+                'attr' => [
+                    'class' => 'bg-blue-800 text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm mt-4',
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
