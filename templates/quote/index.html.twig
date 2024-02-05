@@ -10,7 +10,7 @@
 		<header class="mb-2 p-1">
 			<h1 class="font-bold text-3xl">Liste des devis</h1>
 		</header>
-		<section class="mb-2 p-1 bg-white shadow-sm">
+		<section class="mb-2 px-4 py-2 bg-white shadow-sm rounded-lg">
 			<details>
 				<summary class="font-bold">Filtres</summary>
 				{{ form_start(searchForm, {'method': 'POST' }) }}
@@ -22,7 +22,7 @@
 
 			</details>
 		</section>
-		<section class="flex flex-col w-full gap-1">
+		<section class="flex flex-col w-full gap-2">
 			{% for quote in quotes %}
 				<twig:QuoteListItem :quote="quote" />
 			{% endfor %}
