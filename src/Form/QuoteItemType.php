@@ -6,25 +6,26 @@ use App\Entity\Tax;
 use App\Entity\Quote;
 use DateTimeImmutable;
 use App\Entity\Service;
+use App\Entity\QuoteItem;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class QuoteItemType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('quantity', NumberType::class, [
+            ->add('quantity', IntegerType::class, [
                 'label' => 'Quantité',
                 'attr' => [
                     'class' => 'w-1/4'
                 ]
             ])
-            ->add('status', EntityType::class, [
+            ->add('tax', EntityType::class, [
                 'label' => 'Tax',
                 'placeholder' => '-- Choisir une tax --',
                 'class' => Tax::class,
@@ -44,19 +45,13 @@ class QuoteItemType extends AbstractType
                 'choice_label' => function (Service $service) {
                     return $service->getName() . ' (' . $service->getPrice() . '€)';
                 }
-            ])
-            ->add('services', CollectionType::class, [
-                'entry_type' => ServiceType::class,
-                'label' => 'Services',
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'data_class' => QuoteItem::class,
+        ]);
     }
 }

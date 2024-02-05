@@ -21,7 +21,7 @@ class Quote
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'quote', targetEntity: QuoteItem::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'quote', targetEntity: QuoteItem::class, orphanRemoval: true, cascade:["persist"])]
     private Collection $quoteItems;
 
     #[ORM\ManyToOne(inversedBy: 'quotes')]
