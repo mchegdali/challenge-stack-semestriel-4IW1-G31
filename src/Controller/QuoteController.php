@@ -57,25 +57,17 @@ class QuoteController extends AbstractController
 
             
             foreach ($quote->getQuoteItems() as $item) {
-                //calcul de priceExcludingTax pour chaque quoteItem
-                $priceExcludingTax = $item->getQuantity() * $item->getService()->getPrice();
-                $item->setPriceExcludingTax($priceExcludingTax);
-
                 //calcul de priceIncludingTax pour chaque quoteItem
-                $tax = $item->getTax()->getValue() * $priceExcludingTax / 100;
+                $tax = $item->getTax()->getValue() * $item->getPriceExcludingTax() / 100;
 
                 $item->setTaxAmount($tax);
 
-                $item->setPriceIncludingTax($priceExcludingTax + $tax);
-                $item->setPriceIncludingTax($priceExcludingTax + $tax);
+                $item->setPriceIncludingTax($item->getPriceExcludingTax() + $tax);
             }
-
-
 
             $entityManager->persist($quote);
             $quote->setQuoteNumber(1);
             $entityManager->flush();
-
 
             //On set le quotenumber après le flush car avant le flush l'id n'est pas généré
             $uuid = $quote->getId()->__toString();

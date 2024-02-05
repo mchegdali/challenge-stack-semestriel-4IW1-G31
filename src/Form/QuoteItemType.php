@@ -46,11 +46,17 @@ class QuoteItemType extends AbstractType
 
             ->add('service', EntityType::class, [
                 'label' => 'Service',
+                'attr' => [
+                    'class' => 'service-select'
+                ],
                 'placeholder' => '-- Choisir un service --',
                 'class' => Service::class,
                 'choice_label' => function (Service $service) {
-                    return $service->getName() . ' (' . $service->getPrice() . '€)';
-                }
+                    return sprintf('%s (€%s)', $service->getName(), $service->getPrice());
+                },
+                'choice_attr' => function (Service $service) {
+                    return ['data-price' => $service->getPrice()];
+                },
             ]);
     }
 
