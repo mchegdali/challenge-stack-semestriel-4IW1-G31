@@ -25,6 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class UserController extends AbstractController
 {
@@ -131,6 +132,9 @@ class UserController extends AbstractController
             //         ->subject('Please Confirm your Email')
             //         ->htmlTemplate('registration/confirmation_email.html.twig')
             // );
+
+            return new RedirectResponse($this->generateUrl('app_list_user'));
+
         }
 
         $userId = $loggedInUser->getId();
