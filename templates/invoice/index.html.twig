@@ -8,26 +8,27 @@
 
 	<main class="mx-2 mt-2">
 		<header class="mb-2 p-1">
-			<h1 class="font-bold text-3xl">Liste des devis</h1>
+			<h1 class="font-bold text-3xl">Liste des factures</h1>
 		</header>
-		<section class="mb-2 p-1 bg-white shadow-sm">
+		<section class="mb-2 px-4 py-2 bg-white shadow-sm rounded-lg">
 			<details>
 				<summary class="font-bold">Filtres</summary>
-			
-				<button id="invoice_search_submit" type="submit" class="rounded px-2 py-1 bg-blue-800 font-bold text-white disabled:bg-blue-200">Filtrer</button>
-				
+				{{ form_start(searchForm, {'method': 'POST' }) }}
+				{{ form_rest(searchForm)  }}
+				<button id="quote_search_submit" type="submit" class="rounded px-2 py-1 bg-blue-800 font-bold text-white disabled:bg-blue-200">Filtrer</button>
+				{{ form_end(searchForm) }}
 
 			</details>
 		</section>
-		<section class="flex flex-col w-full gap-1">
-			{% for invoice in invoices %}
-				<twig:InvoiceListItem :invoice="invoice" />
+		<section class="flex flex-col w-full gap-2">
+			{% for quote in quotes %}
+				<twig:QuoteListItem :quote="quote" />
 			{% endfor %}
 		</section>
 	</main>
 	<script>
 		const formEl = document.querySelector("form");
-		const submitBtn = document.getElementById("invoicee_search_submit");
+		const submitBtn = document.getElementById("quote_search_submit");
 		let isSubmitDisabled = true;
 
 		/**

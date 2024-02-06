@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Invoice;
-use App\Entity\InvoiceItem;
+
+use DateTimeImmutable;
 use App\Form\InvoiceCreateType;
-use App\Form\InvoiceItemType;
 use App\Form\InvoiceSearchType;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,33 +51,37 @@ class InvoiceController extends AbstractController
 
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $invoice->setCreatedAt(new \DateTimeImmutable('now'));
             $invoice->setCompany($this->getUser()->getCompany());
 
+            
+            foreach ($invoice->getInvoiceItems() as $item) {
+                //calcul de priceIncludingTax pour chaque invoiceItem
+                $tax = $item->getTax()->getValue() * $item->getPriceExcludingTax() / 100;
+
+                $item->setTaxAmount($tax);
+
+                $item->setPriceIncludingTax($item->getPriceExcludingTax() + $tax);
+            }
+
             $entityManager->persist($invoice);
+            $invoice->setInvoiceNumber(1);
             $entityManager->flush();
-        
 
-        }
+            //On set le invoicenumber après le flush car avant le flush l'id n'est pas généré
+            $uuid = $invoice->getId()->__toString();
+            $invoice->setInvoiceNumber(substr($uuid, strrpos($uuid, '-') + 1));
 
-        $invoices = new InvoiceItem;
-
-        $forms = $this->createForm(InvoiceItemType::class, $invoices);
-
-        $forms->handleRequest($request);
-        
-        if ($forms->isSubmitted() && $forms->isValid()) {
-
-            $entityManager->persist($invoices);
+            //on flush de nouveau pour mettre à jour $invoice 
             $entityManager->flush();
+
+
+            return $this->redirectToRoute('invoice_new'); //todo: mettre la route des devis
         }
 
         return $this->render('invoice/new.html.twig', [
-            'form' => $form,
-            'forms' => $forms
+            'form' => $form
         ]);
     }
 
