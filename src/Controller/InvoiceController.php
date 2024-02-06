@@ -3,80 +3,34 @@
 namespace App\Controller;
 
 use App\Entity\Invoice;
+
 use App\Form\InvoiceCreateType;
-use App\Form\InvoiceFormType;
 use App\Form\InvoiceSearchType;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
+#[Route('/invoices', name: 'invoice_')]
 class InvoiceController extends AbstractController
 {
 
-    #[Route('/invoice', name: 'create_invoice')]
-    public function createInvoice(Request $request, PersistenceManagerRegistry $doctrine): Response
+    #[Route('', name: 'index', methods: ['GET', 'POST'])]
+    public function index(
+        InvoiceRepository $invoiceRepository,
+        Request         $request
+    ): Response
     {
-        $invoice = new Invoice();
-        $form = $this->createForm(InvoiceFormType::class, $invoice);
+        $form = $this->createForm(InvoiceSearchType::class, null, ["method" => "POST"] );
 
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $doctrine->getManager();
-            $em->persist($invoice);
-            $em->flush();
-        }
-
-        $invoices = $doctrine->getManager()->getRepository(Invoice::class)->findAll();
-
-        return $this->render('invoice/invoice.html.twig', [
-            'form' => $form->createView(),
-            'invoices' => $invoices,
-        ]);
-    }
-
-    #[Route('/invoice/{id}/delete', name: 'delete_invoice')]
-    public function deleteInvoice(Request $request, PersistenceManagerRegistry $doctrine, Invoice $invoice): Response
-    {
-        $em = $doctrine->getManager();
-        $em->remove($invoice);
-        $em->flush();
-    
-        return $this->redirectToRoute('create_invoice');
-    }
-
-    #[Route('/invoice/{id}/update', name: 'update_invoice')]
-    public function updateInvoice(Request $request, PersistenceManagerRegistry $doctrine, Invoice $invoice): Response
-    {
-        $form = $this->createForm(InvoiceFormType::class, $invoice);
-    
-        $form->handleRequest($request);
-    
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $doctrine->getManager();
-            $entityManager->flush();
-    
-            return $this->redirectToRoute('create_invoice');
-        }
-    
-        return $this->render('default/UpdateTax.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
-   /* #[Route('', name: 'index', methods: ['GET', 'POST'])]
-    public function index(InvoiceRepository $invoiceRepository, Request $request): Response
-    {
-        $form = $this->createForm(InvoiceSearchType::class, null, ["method" => "POST"]);
-
-        if ($request->isMethod("POST")) {
+        if($request->isMethod("POST")) {
             $searchResult = $request->request->all("invoice_search");
             $invoices = $invoiceRepository->findBySearch($searchResult);
-        } else {
+        }
+        else {
             $invoices = $invoiceRepository->findAll();
         }
 
@@ -85,6 +39,7 @@ class InvoiceController extends AbstractController
             "searchForm" => $form->createView()
         ]);
     }
+
 
     #[Route('/new', name: 'new')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -103,17 +58,20 @@ class InvoiceController extends AbstractController
             $entityManager->persist($invoice);
             $entityManager->flush();
 
-            // Générer un numéro de facture basé sur l'ID de facture
-            $invoiceNumber = 'INV-' . str_pad($invoice->getId(), 6, '0', STR_PAD_LEFT);
-            $invoice->setInvoiceNumber($invoiceNumber);
 
-            $entityManager->flush();
+            /*On set le quotenumber après le flush car avant le flush l'id n'est pas généré
+            $uuid = $quote->getId()->toString();
+            $quote->setQuoteNumber(substr($uuid, strrpos($uuid, '-') + 1));
+            
+            on flush de nouveau pour mettre à jour $quote 
+            $entityManager->flush(); 
 
-            return $this->redirectToRoute('invoice_index');
+
+            return $this->redirectToRoute('todo'); //todo: mettre la route des devis */
         }
 
         return $this->render('invoice/new.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form
         ]);
     }
 
@@ -123,6 +81,34 @@ class InvoiceController extends AbstractController
         return $this->render('invoice/show.html.twig', [
             'invoice' => $invoice,
         ]);
-    } */
+    }
 
+    #[Route('/{id}/edit', name: 'edit')]
+    public function update(): Response
+    {
+        return $this->render('invoice/edit.html.twig', [
+            'controller_name' => 'InvoiceController',
+        ]);
+    }
+
+    #[Route('/invoiceslist', name: 'invoice_list')]
+    public function list(InvoiceRepository $invoiceRepository): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+
+        $company = $user->getCompany();
+        if (!$company) {
+            throw $this->createNotFoundException('Entreprise non trouvée.');
+        }
+
+        $invoices = $invoiceRepository->findBy(['company' => $company]);
+
+        return $this->render('invoice/list.html.twig', [
+            'invoices' => $invoices,
+        ]);
+    }
 }
