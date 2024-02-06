@@ -101,7 +101,7 @@ class QuoteController extends AbstractController
         ]);
     }
 
-    #[Route('/quoteslist', name: 'quote_list')]
+    #[Route('/list', name: 'list')]
     public function list(QuoteRepository $quoteRepository): Response
     {
         $user = $this->getUser();
