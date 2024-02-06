@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -32,7 +33,15 @@ class QuoteController extends AbstractController
             $quotes = $quoteRepository->findBySearch($searchResult);
         }
         else {
-            $quotes = $quoteRepository->findAll();
+            $user = $this->getUser();
+            if (!$user instanceof UserInterface) {
+                throw $this->createNotFoundException('Utilisateur non trouvé');
+            }
+            $company = $user->getCompany();
+            if (!$company) {
+                throw $this->createNotFoundException('Entreprise non trouvée');
+            }
+            $quotes = $quoteRepository->findBy(['company' => $company]);
         }
 
         return $this->render('quote/index.html.twig', [
@@ -98,27 +107,6 @@ class QuoteController extends AbstractController
     {
         return $this->render('quote/edit.html.twig', [
             'controller_name' => 'QuoteController',
-        ]);
-    }
-
-    #[Route('/quoteslist', name: 'quote_list')]
-    public function list(QuoteRepository $quoteRepository): Response
-    {
-        $user = $this->getUser();
-
-        if (!$user) {
-            throw $this->createNotFoundException('Utilisateur non trouvé.');
-        }
-
-        $company = $user->getCompany();
-        if (!$company) {
-            throw $this->createNotFoundException('Entreprise non trouvée.');
-        }
-
-        $quotes = $quoteRepository->findBy(['company' => $company]);
-
-        return $this->render('quote/list.html.twig', [
-            'quotes' => $quotes,
         ]);
     }
 }
