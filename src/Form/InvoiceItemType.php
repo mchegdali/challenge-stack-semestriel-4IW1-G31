@@ -20,14 +20,7 @@ class InvoiceItemType extends AbstractType
                 'class' => Service::class,
                 'choice_label' => 'name'
             ])
-            ->add('services', CollectionType::class, [
-                'entry_type' => ServiceType::class,
-                'label' => 'Services',
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false
-            ]);
+        
         ;
     }
 

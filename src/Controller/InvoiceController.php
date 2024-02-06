@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Invoice;
-
+use App\Entity\InvoiceItem;
 use App\Form\InvoiceCreateType;
+use App\Form\InvoiceItemType;
 use App\Form\InvoiceSearchType;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,6 +51,7 @@ class InvoiceController extends AbstractController
 
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $invoice->setCreatedAt(new \DateTimeImmutable('now'));
@@ -57,21 +59,25 @@ class InvoiceController extends AbstractController
 
             $entityManager->persist($invoice);
             $entityManager->flush();
+        
 
+        }
 
-            /*On set le quotenumber après le flush car avant le flush l'id n'est pas généré
-            $uuid = $quote->getId()->toString();
-            $quote->setQuoteNumber(substr($uuid, strrpos($uuid, '-') + 1));
-            
-            on flush de nouveau pour mettre à jour $quote 
-            $entityManager->flush(); 
+        $invoices = new InvoiceItem;
 
+        $forms = $this->createForm(InvoiceItemType::class, $invoices);
 
-            return $this->redirectToRoute('todo'); //todo: mettre la route des devis */
+        $forms->handleRequest($request);
+        
+        if ($forms->isSubmitted() && $forms->isValid()) {
+
+            $entityManager->persist($invoices);
+            $entityManager->flush();
         }
 
         return $this->render('invoice/new.html.twig', [
-            'form' => $form
+            'form' => $form,
+            'forms' => $forms
         ]);
     }
 
