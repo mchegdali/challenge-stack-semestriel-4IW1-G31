@@ -2,9 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Company;
-use App\Entity\Customer;
-use App\Entity\Invoice;
+use App\Entity\InvoiceItem;
 use App\Entity\Service;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -19,12 +17,8 @@ class InvoiceItemType extends AbstractType
         $builder
             ->add('quantity')
             ->add('service', EntityType::class, [
-                'label' => 'Service',
-                'placeholder' => '-- Choisir un service --',
                 'class' => Service::class,
-                'choice_label' => function (Service $service) {
-                    return $service->getName();
-                }
+                'choice_label' => 'name'
             ])
             ->add('services', CollectionType::class, [
                 'entry_type' => ServiceType::class,
@@ -40,7 +34,7 @@ class InvoiceItemType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Invoice::class,
+            'data_class' => InvoiceItem::class,
         ]);
     }
 }
