@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Twig\Components;
+
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use App\Entity\PaymentStatus;
+use App\Entity\InvoiceStatus;
 
 #[AsTwigComponent]
-class PaymentStatusBadge
+class InvoiceStatusBadge
 {
-    public PaymentStatus $paymentStatus;
+    public InvoiceStatus $invoiceStatus;
 }

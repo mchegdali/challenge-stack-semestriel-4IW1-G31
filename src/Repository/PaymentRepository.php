@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Payment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -35,7 +34,6 @@ class PaymentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p')
             ->select('p')
             ->leftJoin('p.customer', 'c')
-            ->leftJoin('p.status', 's')
             ->leftJoin('p.invoice', 'i')
             ->addSelect('c', 's', 'i');
 

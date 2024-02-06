@@ -22,10 +22,6 @@ class Payment
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 
-    #[ORM\ManyToOne(inversedBy: 'payments')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?PaymentStatus $status = null;
-
     #[ORM\Column]
     private ?float $amountWithoutTax = null;
 
@@ -70,17 +66,6 @@ class Payment
         return $this;
     }
 
-    public function getStatus(): ?PaymentStatus
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?PaymentStatus $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
 
     public function getAmountWithoutTax(): ?float
     {

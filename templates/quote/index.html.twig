@@ -4,8 +4,9 @@
 {% endblock %}
 
 {% block body %}
-	{% include 'components/Navbar.html.twig' %}
+    {% include 'components/Navbar.html.twig' %}
 
+<<<<<<< HEAD
 	<main class="mx-2 mt-2">
 		<header class="mb-2 p-1">
 			<h1 class="font-bold text-3xl">Liste des factures</h1>
@@ -19,72 +20,89 @@
 				{{ form_rest(searchForm)  }}
 				<button id="quote_search_submit" type="submit" class="rounded px-2 py-1 bg-blue-800 font-bold text-white disabled:bg-blue-200">Filtrer</button>
 				{{ form_end(searchForm) }}
+=======
+    <main class="mx-2 mt-2">
+        <header class="mb-2 p-1">
+            <h1 class="font-bold text-3xl">Liste des devis</h1>
+        </header>
+        <section class="mb-2 px-4 py-2 bg-white shadow-sm rounded-lg">
+            <details>
+                <summary class="font-bold">Filtres</summary>
+                {{ form_start(searchForm, {'method': 'POST' }) }}
+                {{ form_label(searchForm.status) }}
+                {{ form_widget(searchForm.status, {widget_class: "mb-2 flex gap-2" }) }}
+                {{ form_rest(searchForm) }}
+                <button id="quote_search_submit" type="submit"
+                        class="rounded px-2 py-1 bg-blue-800 font-bold text-white disabled:bg-blue-200">Filtrer
+                </button>
+                {{ form_end(searchForm) }}
+>>>>>>> 61146e3 (remove useless code + fixtures)
 
-			</details>
-		</section>
-		<section class="flex flex-col w-full gap-2">
-			{% for quote in quotes %}
-				<twig:QuoteListItem :quote="quote" />
-			{% endfor %}
-		</section>
-	</main>
-	<script>
-		const formEl = document.querySelector("form");
-		const submitBtn = document.getElementById("quote_search_submit");
-		let isSubmitDisabled = true;
+            </details>
+        </section>
+        <section class="flex flex-col w-full gap-2">
+            {% for quote in quotes %}
+                <twig:QuoteListItem :quote="quote"/>
+            {% endfor %}
+        </section>
+    </main>
+    <script>
+        const formEl = document.querySelector("form");
+        const submitBtn = document.getElementById("quote_search_submit");
+        let isSubmitDisabled = true;
 
-		/**
-		 *
-		 * @type {NodeListOf<HTMLInputElement>}
-		 */
-		const checkboxesEl = formEl.querySelectorAll("input[type='checkbox']");
-		/**
-		 *
-		 * @type {NodeListOf<HTMLInputElement>}
-		 */
-		const inputTextEl = formEl.querySelectorAll("input[type='text']");
+        /**
+         *
+         * @type {NodeListOf<HTMLInputElement>}
+         */
+        const checkboxesEl = formEl.querySelectorAll("input[type='checkbox']");
+        /**
+         *
+         * @type {NodeListOf<HTMLInputElement>}
+         */
+        const inputTextEl = formEl.querySelectorAll("input[type='text']");
 
 
-		/**
-		 *
-		 * @type EventListener
-		 */
-		const handleForm = () => {
-			for (const checkbox of checkboxesEl) {
-				if (checkbox.checked) {
-					isSubmitDisabled = false;
-					break;
-				} else {
-					isSubmitDisabled = true;
-				}
-			}
+        /**
+         *
+         * @type EventListener
+         */
+        const handleForm = () => {
+            for (const checkbox of checkboxesEl) {
+                if (checkbox.checked) {
+                    isSubmitDisabled = false;
+                    break;
+                } else {
+                    isSubmitDisabled = true;
+                }
+            }
 
-			// Check for non-empty text fields if no checkbox is checked
-			if (isSubmitDisabled) {
-				for (const input of inputTextEl) {
-					if (input.value.trim() !== '') {
-						isSubmitDisabled = false;
-						break;
-					}
-				}
-			}
+            // Check for non-empty text fields if no checkbox is checked
+            if (isSubmitDisabled) {
+                for (const input of inputTextEl) {
+                    if (input.value.trim() !== '') {
+                        isSubmitDisabled = false;
+                        break;
+                    }
+                }
+            }
 
-			if (isSubmitDisabled) {
-				submitBtn.setAttribute("disabled", '');
-			} else {
-				submitBtn.removeAttribute("disabled");
-			}
-		}
+            if (isSubmitDisabled) {
+                submitBtn.setAttribute("disabled", '');
+            } else {
+                submitBtn.removeAttribute("disabled");
+            }
+        }
 
-		for (const checkbox of checkboxesEl) {
-			checkbox.addEventListener('change', handleForm);
-		}
-		for (const input of inputTextEl) {
-			input.addEventListener('input', handleForm);
-		}
+        for (const checkbox of checkboxesEl) {
+            checkbox.addEventListener('change', handleForm);
+        }
+        for (const input of inputTextEl) {
+            input.addEventListener('input', handleForm);
+        }
 
-		handleForm()
-	</script>
+        handleForm()
+    </script>
 {% endblock %}
 
 

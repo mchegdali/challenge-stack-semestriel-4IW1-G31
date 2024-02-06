@@ -18,7 +18,7 @@ class QuoteStatus
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'status', targetEntity: Quote::class)]
+    #[ORM\OneToMany(mappedBy: 'status', targetEntity: Invoice::class)]
     private Collection $quotes;
 
     #[ORM\Column(length: 255, unique: true)]
@@ -48,7 +48,7 @@ class QuoteStatus
     }
 
     /**
-     * @return Collection<int, Quote>
+     * @return Collection<int, Invoice>
      */
     public function getQuotes(): Collection
     {

@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Tax;
-use App\Entity\Quote;
-use DateTimeImmutable;
 use App\Entity\Service;
 use App\Entity\QuoteItem;
 use Symfony\Component\Form\AbstractType;
@@ -54,9 +52,9 @@ class QuoteItemType extends AbstractType
                     return $tax->getValue();
                 }
             ]);
-            //pour priceIncludingTax faire calcul dans controller
-            //pour taxAmount faire calcul dans controller
-            //on attribue quote dans le controller
+        //pour priceIncludingTax faire calcul dans controller
+        //pour taxAmount faire calcul dans controller
+        //on attribue quote dans le controller
     }
 
     public function configureOptions(OptionsResolver $resolver): void

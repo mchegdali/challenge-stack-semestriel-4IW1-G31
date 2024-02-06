@@ -37,7 +37,7 @@ class Company
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Invoice::class)]
     private Collection $invoices;
 
-    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Quote::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Invoice::class, orphanRemoval: true)]
     private Collection $quotes;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: User::class)]
@@ -146,14 +146,14 @@ class Company
     }
 
     /**
-     * @return Collection<int, Quote>
+     * @return Collection<int, Invoice>
      */
     public function getQuotes(): Collection
     {
         return $this->quotes;
     }
 
-    public function addQuote(Quote $quote): static
+    public function addQuote(Invoice $quote): static
     {
         if (!$this->quotes->contains($quote)) {
             $this->quotes->add($quote);
@@ -163,7 +163,7 @@ class Company
         return $this;
     }
 
-    public function removeQuote(Quote $quote): static
+    public function removeQuote(Invoice $quote): static
     {
         if ($this->quotes->removeElement($quote)) {
             // set the owning side to null (unless already changed)

@@ -18,12 +18,20 @@ class InvoiceStatus
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $displayName = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $borderColor = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $textColor = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $bgColor = null;
+
     #[ORM\OneToMany(mappedBy: 'status', targetEntity: Invoice::class)]
     private Collection $invoices;
-
-    #[ORM\Column(length: 255, unique: true)]
-    private ?string $color = null;
-
 
     public function __construct()
     {
@@ -47,6 +55,54 @@ class InvoiceStatus
         return $this;
     }
 
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName(string $displayName): static
+    {
+        $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    public function getBorderColor(): ?string
+    {
+        return $this->borderColor;
+    }
+
+    public function setBorderColor(string $borderColor): static
+    {
+        $this->borderColor = $borderColor;
+
+        return $this;
+    }
+
+    public function getTextColor(): ?string
+    {
+        return $this->textColor;
+    }
+
+    public function setTextColor(string $textColor): static
+    {
+        $this->textColor = $textColor;
+
+        return $this;
+    }
+
+    public function getBgColor(): ?string
+    {
+        return $this->bgColor;
+    }
+
+    public function setBgColor(string $bgColor): static
+    {
+        $this->bgColor = $bgColor;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Invoice>
      */
@@ -55,17 +111,25 @@ class InvoiceStatus
         return $this->invoices;
     }
 
-    public function getColor(): string
+    public function addInvoice(Invoice $invoice): static
     {
-        return $this->color;
-    }
-
-    public function setColor(string $color): static
-    {
-        $this->color = $color;
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setStatus($this);
+        }
 
         return $this;
     }
 
+    public function removeInvoice(Invoice $invoice): static
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getStatus() === $this) {
+                $invoice->setStatus(null);
+            }
+        }
 
+        return $this;
+    }
 }
