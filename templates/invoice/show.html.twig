@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plumbill{% endblock %}
+
+{% block body %}
+   {% include 'components/Navbar.html.twig' %}
+   
+    <main class="mx-auto px-1 pt-2 sm:px-0">
+        <header class="px-1 sm:px-0 mb-2">
+            <h1><span class="text-3xl font-bold">Devis</span> <span class="text-2xl font-medium">{{ quote.quoteNumber }}</span></h1>
+            <twig:QuoteStatusBadge :quoteStatus="quote.status" />
+        </header>
+        <article class="px-1 sm:px-0">
+            <twig:Card>
+                <h2 class="text-2xl font-semibold">Client</h2>
+                <div class="w-full flex justify-between">
+                    <span class="font-semibold">Nom</span>
+                    <span>{{ quote.customer.name }}</span>
+                </div>
+                <div class="w-full flex justify-between">
+                    <span class="font-semibold">Numéro de client</span>
+                    <span>{{ quote.customer.customerNumber }}</span>
+                </div>
+            </twig:Card>
+            <twig:Card>
+                <div class="grid grid-cols-quote-items mb-2">
+                    <div class="grid grid-cols-subgrid col-span-4">
+                        <span class="font-semibold">Éléments</span>
+                        <span class="font-semibold justify-self-center">Qt</span>
+                        <span class="font-semibold justify-self-center">TVA</span>
+                        <span class="font-semibold justify-self-end">Total</span>
+                    </div>
+                    {% for item in quote.quoteItems %}
+
+                        <div class="grid grid-cols-subgrid col-span-4">
+                            <span>{{ item.service.name }}</span>
+                            <span class="justify-self-center">{{ item.quantity }}</span>
+                            <span class="justify-self-center">{{ item.tax.value }}%</span>
+                            <span class="justify-self-end">{{ item.priceIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="flex justify-end mb-2">
+                    <div class="border border-black rounded-sm px-2 py-1 w-1/2">
+                        <div class="w-full flex justify-between">
+                            <span class="font-semibold">Sous-total</span>
+                            <span>{{ quote.totalExcludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+                        </div>
+                        <div class="w-full flex justify-between">
+                            <span class="font-semibold">TVA</span>
+                            <span>{{ quote.taxAmount|format_currency('EUR', locale='fr_FR') }}</span>
+                        </div>
+                        <div class="w-full flex justify-between">
+                            <span class="font-semibold">TOTAL</span>
+                            <span>{{ quote.totalIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-between gap-2.5">
+                    <button class="grow flex place-content-center text-white bg-blue-600 rounded px-2 py-1 font-semibold  text-sm">
+                        Envoyer
+                    </button>
+                    <button class="grow flex place-content-center text-blue-600 border border-blue-600 bg-white font-semibold text-sm rounded px-2 py-1">
+                        Enregistrer
+                    </button>
+                </div>
+            </twig:Card>
+        </article>
+    </main>
+{% endblock %}
