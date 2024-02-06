@@ -1,6 +1,5 @@
 let collection, boutonAjout, span;
 
-alert("hello")
 window.onload = () => {
     collection = document.querySelector("#invoiceitem");
     span = collection.querySelector("span");
