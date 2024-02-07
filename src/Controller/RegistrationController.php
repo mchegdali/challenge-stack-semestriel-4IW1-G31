@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\CompanyUserRegistrationFormType;
@@ -56,6 +57,9 @@ class RegistrationController extends AbstractController
 
             $user->setCompany($company);
 
+            $roleCompany = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_COMPANY']);
+            $user->setRole($roleCompany);
+
             $entityManager->persist($company);
             $entityManager->persist($user);
             $entityManager->flush();
@@ -75,6 +79,7 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form->createView(),
         ]);
     }
+
 
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
