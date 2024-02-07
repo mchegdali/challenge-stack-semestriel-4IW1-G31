@@ -64,7 +64,7 @@
 		<p>Voulez-vous vraiment accepter cette demande de compte ?</p>
 
 		<div class='mt-6 flex flex-row justify-center items-center flex-1 w-full gap-3'>
-			<a id="acceptLink" class='flex-1 text-red-500 font-bold p-2 rounded border border-red-500 text-center'>
+			<a id="acceptLink" class='flex-1 bg-green-600 font-bold p-2 rounded text-white text-center'>
 				<p>Accepter</p>
 			</a>
 			<button onclick="closeAcceptModal()" class="bg-white flex-1 text-blue-800 font-bold p-2 rounded border border-blue-800">
@@ -83,7 +83,7 @@
 		<p>Voulez-vous vraiment rejeter cette demande de compte ?</p>
 
 		<div class='mt-6 flex flex-row justify-center items-center flex-1 w-full gap-3'>
-			<a id="deleteLink" class='flex-1 text-red-500 font-bold p-2 rounded border border-red-500 text-center'>
+			<a id="deleteLink" class='flex-1 bg-red-600 font-bold p-2 rounded text-white text-center'>
 				<p>Rejeter</p>
 			</a>
 			<button onclick="closeDeleteModal()" class="bg-white flex-1 text-blue-800 font-bold p-2 rounded border border-blue-800">
@@ -99,14 +99,12 @@ const modale = document.getElementById("modalAccept");
 
 function openModalAccept(userId) {
 modale.classList.remove("hidden");
-console.log("ID à supprimer : " + userId);
 
 var acceptLink = "{{ path('accept_request_company_account', {'id': '__userId__'}) }}".replace('__userId__', userId);
-console.log(acceptLink);
 
 document.getElementById('acceptLink').href = acceptLink;
 
-$('#modalAccept').modal('show');
+
 }
 
 function closeAcceptModal() {
@@ -128,14 +126,11 @@ const modaleDelete = document.getElementById("modalDelete");
 
 function openModalDelete(userId) {
 modaleDelete.classList.remove("hidden");
-console.log("ID à supprimer : " + userId);
 
 var deleteLink = "{{ path('delete_request_company_account', {'id': '__userId__'}) }}".replace('__userId__', userId);
-console.log(deleteLink);
 
 document.getElementById('deleteLink').href = deleteLink;
 
-$('#modalDelete').modal('show');
 }
 
 function closeDeleteModal() {
