@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -32,7 +33,15 @@ class InvoiceController extends AbstractController
             $invoices = $invoiceRepository->findBySearch($searchResult);
         }
         else {
-            $invoices = $invoiceRepository->findAll();
+            $user = $this->getUser();
+            if (!$user instanceof UserInterface) {
+                throw $this->createNotFoundException('Utilisateur non trouvé');
+            }
+            $company = $user->getCompany();
+            if (!$company) {
+                throw $this->createNotFoundException('Entreprise non trouvée');
+            }
+            $invoices = $invoiceRepository->findBy(['company' => $company]);
         }
 
         return $this->render('invoice/index.html.twig', [
@@ -94,31 +103,21 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit')]
-    public function update(): Response
+    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $em): Response
     {
+        $form = $this->createForm(InvoiceCreateType::class, $invoice);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            return $this->redirectToRoute('invoice_show', ['id' => $invoice->getId()]);
+        }
+
         return $this->render('invoice/edit.html.twig', [
-            'controller_name' => 'InvoiceController',
-        ]);
-    }
-
-    #[Route('/invoiceslist', name: 'invoice_list')]
-    public function list(InvoiceRepository $invoiceRepository): Response
-    {
-        $user = $this->getUser();
-
-        if (!$user) {
-            throw $this->createNotFoundException('Utilisateur non trouvé.');
-        }
-
-        $company = $user->getCompany();
-        if (!$company) {
-            throw $this->createNotFoundException('Entreprise non trouvée.');
-        }
-
-        $invoices = $invoiceRepository->findBy(['company' => $company]);
-
-        return $this->render('invoice/list.html.twig', [
-            'invoices' => $invoices,
+            'form' => $form->createView(),
+            'invoice' => $invoice,
         ]);
     }
 }
