@@ -110,7 +110,7 @@ class QuoteController extends AbstractController
 
         $type = 'new';
 
-        return $this->render('quote/new_html.html.twig', [
+        return $this->render('quote/new_edit.html.twig', [
             'form' => $form,
             'customerForm' => $customerForm->createView(),
             'type' => $type
