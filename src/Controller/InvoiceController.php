@@ -15,6 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/invoices', name: 'invoice_')]
 class InvoiceController extends AbstractController
@@ -136,4 +138,38 @@ class InvoiceController extends AbstractController
             'invoice' => $invoice,
         ]);
     }
+
+#[Route('/{id}/pdf', name: 'invoice_pdf')]
+public function pdf(InvoiceRepository $invoiceRepository, string $id, Invoice $invoices): Response
+{
+    $invoice = $invoiceRepository->find($id);
+    
+
+    if (!$invoice) {
+        throw $this->createNotFoundException('La facture demandée n\'a pas été trouvée.');
+    }
+
+    // Configurez Dompdf selon vos besoins
+    $pdfOptions = new Options();
+    $pdfOptions->set('defaultFont', 'Arial');
+    $dompdf = new Dompdf($pdfOptions);
+
+
+    // Générez le HTML à partir de votre template Twig pour la facture
+    $html = $this->renderView('invoice/pdf.html.twig', [
+        'invoices' => $invoices
+    ]);
+
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    // Envoyez le PDF au navigateur
+    $dompdf->stream("facture-{$id}.pdf", [
+        "Attachment" => false // Changez à true pour forcer le téléchargement
+    ]);
+    return new Response('', 200, [
+        'Content-Type' => 'application/pdf',
+    ]);
+}
 }
