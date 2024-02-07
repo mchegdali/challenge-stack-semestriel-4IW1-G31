@@ -13,41 +13,41 @@ class InvoiceStatusFixtures extends Fixture
         $refundStatus = new InvoiceStatus();
         $refundStatus->setName("created");
         $refundStatus->setDisplayName("Créée");
-        $refundStatus->setBgColor("bg-blue-600");
-        $refundStatus->setTextColor("text-white");
-        $refundStatus->setBorderColor("border-blue-600");
+        $refundStatus->setBgColor("blue-600");
+        $refundStatus->setTextColor("white");
+        $refundStatus->setBorderColor("blue-600");
         $manager->persist($refundStatus);
 
         $refundStatus = new InvoiceStatus();
         $refundStatus->setName("paid");
         $refundStatus->setDisplayName("Payée");
-        $refundStatus->setBgColor("bg-green-700");
-        $refundStatus->setTextColor("text-white");
-        $refundStatus->setBorderColor("border-green-700");
+        $refundStatus->setBgColor("green-700");
+        $refundStatus->setTextColor("white");
+        $refundStatus->setBorderColor("green-700");
         $manager->persist($refundStatus);
 
         $refundStatus = new InvoiceStatus();
         $refundStatus->setName("late");
         $refundStatus->setDisplayName("En retard");
-        $refundStatus->setBgColor("bg-red-500");
-        $refundStatus->setTextColor("text-white");
-        $refundStatus->setBorderColor("border-red-500");
+        $refundStatus->setBgColor("red-500");
+        $refundStatus->setTextColor("white");
+        $refundStatus->setBorderColor("red-500");
         $manager->persist($refundStatus);
 
         $refundStatus = new InvoiceStatus();
         $refundStatus->setName("cancelled");
         $refundStatus->setDisplayName("Annulée");
-        $refundStatus->setBgColor("bg-black");
-        $refundStatus->setTextColor("text-white");
-        $refundStatus->setBorderColor("border-black");
+        $refundStatus->setBgColor("black");
+        $refundStatus->setTextColor("white");
+        $refundStatus->setBorderColor("black");
         $manager->persist($refundStatus);
 
         $refundStatus = new InvoiceStatus();
         $refundStatus->setName("refund");
         $refundStatus->setDisplayName("Remboursée");
-        $refundStatus->setBgColor("bg-gray-700");
-        $refundStatus->setTextColor("text-white");
-        $refundStatus->setBorderColor("border-gray-700");
+        $refundStatus->setBgColor("gray-700");
+        $refundStatus->setTextColor("white");
+        $refundStatus->setBorderColor("gray-700");
         $manager->persist($refundStatus);
 
         $manager->flush();

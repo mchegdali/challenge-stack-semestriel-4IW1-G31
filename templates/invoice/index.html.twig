@@ -13,10 +13,8 @@
         </header>
         <section class="flex flex-col w-full gap-1">
             {% for invoice in invoices %}
-                <twig:InvoiceListItem :invoice="invoice"/>
+                <twig:Invoice:InvoiceListItem :invoice="invoice"/>
             {% endfor %}
         </section>
     </main>
 {% endblock %}
-
-

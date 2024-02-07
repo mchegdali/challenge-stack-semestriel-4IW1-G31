@@ -37,10 +37,6 @@ final class Version20240128221737 extends AbstractMigration
         $this->addSql('ALTER TABLE payment ADD CONSTRAINT FK_6D28840D6BF700BD FOREIGN KEY (status_id) REFERENCES payment_status (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE payment ADD CONSTRAINT FK_6D28840DB2A824D8 FOREIGN KEY (tax_id) REFERENCES tax (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE payment ADD CONSTRAINT FK_6D28840D2989F1FD FOREIGN KEY (invoice_id) REFERENCES invoice (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE invoice ADD updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL');
-        $this->addSql('ALTER TABLE invoice ALTER created_at TYPE TIMESTAMP(0) WITHOUT TIME ZONE');
-        $this->addSql('ALTER TABLE invoice ALTER created_at SET DEFAULT CURRENT_TIMESTAMP');
-        $this->addSql('COMMENT ON COLUMN invoice.created_at IS NULL');
     }
 
     public function down(Schema $schema): void
@@ -54,9 +50,5 @@ final class Version20240128221737 extends AbstractMigration
         $this->addSql('ALTER TABLE payment DROP CONSTRAINT FK_6D28840D2989F1FD');
         $this->addSql('DROP TABLE payment');
         $this->addSql('DROP TABLE payment_status');
-        $this->addSql('ALTER TABLE invoice DROP updated_at');
-        $this->addSql('ALTER TABLE invoice ALTER created_at TYPE TIMESTAMP(0) WITHOUT TIME ZONE');
-        $this->addSql('ALTER TABLE invoice ALTER created_at DROP DEFAULT');
-        $this->addSql('COMMENT ON COLUMN invoice.created_at IS \'(DC2Type:datetime_immutable)\'');
     }
 }

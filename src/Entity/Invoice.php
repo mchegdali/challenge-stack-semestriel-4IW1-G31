@@ -14,6 +14,7 @@ use Symfony\Component\Uid\Uuid;
 class Invoice
 {
     use Timestampable;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -110,7 +111,6 @@ class Invoice
 
         return $this;
     }
-
 
     public function getCompany(): ?Company
     {

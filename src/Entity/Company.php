@@ -18,7 +18,6 @@ class Company
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

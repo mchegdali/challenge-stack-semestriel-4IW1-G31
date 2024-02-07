@@ -1,3 +1,3 @@
-<div class="w-16 h-5 px-1.5 py-0.5 border rounded justify-center items-center inline-flex {{ invoiceStatus.bgColor }} {{ invoiceStatus.borderColor }}">
-    <span class="{{ invoiceStatus.textColor }} text-center text-xs font-bold leading-none">{{ invoiceStatus.displayName }}</span>
+<div class="px-1.5 py-0.5 rounded justify-center items-center flex max-w-fit bg-{{ invoiceStatus.bgColor }} dark:bg-{{ invoiceStatus.textColor}} dark:border dark:border-{{ invoiceStatus.borderColor }}">
+    <span class="text-{{ invoiceStatus.textColor }} dark:text-{{ invoiceStatus.bgColor }} text-center text-xs font-semibold leading-none">{{ invoiceStatus.displayName }}</span>
 </div>
