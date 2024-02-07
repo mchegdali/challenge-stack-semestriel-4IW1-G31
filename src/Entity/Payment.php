@@ -26,6 +26,9 @@ class Payment
     #[ORM\ManyToOne(inversedBy: 'payments')]
     private ?Invoice $invoice = null;
 
+    #[ORM\Column]
+    private ?float $amount = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -70,6 +73,18 @@ class Payment
     public function setInvoice(?Invoice $invoice): static
     {
         $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    public function getAmount(): ?float
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(float $amount): static
+    {
+        $this->amount = $amount;
 
         return $this;
     }
