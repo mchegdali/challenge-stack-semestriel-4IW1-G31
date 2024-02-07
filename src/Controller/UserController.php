@@ -86,8 +86,6 @@ class UserController extends AbstractController
 
     }
 
-
-
     #[Route('/user', name: 'app_list_user')]
     public function companyCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
