@@ -225,4 +225,18 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('app_list_request_company_account');
     }
+
+    #[Route('/request-company-account/{id}/accept', name: 'accept_request_company_account')]
+    public function acceptRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user): Response
+    {
+
+        $user->setIsVerified(true);
+
+        $em = $doctrine->getManager();
+       
+        $em->flush();
+
+        return $this->redirectToRoute('app_list_request_company_account');
+    }
+
 }
