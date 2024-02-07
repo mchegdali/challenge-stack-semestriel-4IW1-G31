@@ -26,7 +26,7 @@ class Payment
     #[ORM\ManyToOne]
     private ?PaymentMethod $paymentMethod = null;
 
-    #[ORM\OneToOne(mappedBy: 'payment', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'payments')]
     private ?Invoice $invoice = null;
 
     public function getId(): ?Uuid
@@ -84,18 +84,9 @@ class Payment
 
     public function setInvoice(?Invoice $invoice): static
     {
-        // unset the owning side of the relation if necessary
-        if ($invoice === null && $this->invoice !== null) {
-            $this->invoice->setPayment(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($invoice !== null && $invoice->getPayment() !== $this) {
-            $invoice->setPayment($this);
-        }
-
         $this->invoice = $invoice;
 
         return $this;
     }
+
 }

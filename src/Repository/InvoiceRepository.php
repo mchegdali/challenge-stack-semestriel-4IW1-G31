@@ -78,4 +78,24 @@ class InvoiceRepository extends ServiceEntityRepository
         }
         return $qb->getQuery()->getResult();
     }
+
+    //Compte les factures en retard (- de 30 jours)
+    // public function countLateInvoices1(): int
+    // {
+    //     return $this->createQueryBuilder('i')
+    //     ->select('COUNT(i.id)')
+    //     ->innerJoin('i.payments', 'p')
+    //     ->innerJoin('i.status', 's')
+    //     ->where('i.dueAt < :thirtyDaysAgo') 
+    //     ->andWhere('s.name != :cancelled OR s.name IS NULL') // Statut différent de "Annulé" ou nul
+    //     ->andWhere(
+    //         'COALESCE(SUM(p.amount), 0) < i.totalIncludingTax'
+    //     )
+    //     ->setParameter('thirtyDaysAgo', new \DateTime('-30 days'))
+    //     ->setParameter('cancelled', 'Annulé')
+    //     ->getQuery()
+    //     ->getSingleScalarResult();
+    // }
+
+
 }

@@ -17,9 +17,11 @@ class DefaultController extends AbstractController
     public function index(InvoiceRepository $invoiceRepository): Response
     {
         $nombreDeFactures = $invoiceRepository->count([]);
+        //$nombreDeFacturesEnRetard1 = $invoiceRepository->countLateInvoices1();
 
         return $this->render('default/index.html.twig', [
             'nombreDeFactures' => $nombreDeFactures,
+            //'nombreDeFacturesEnRetard1' => $nombreDeFacturesEnRetard1,
         ]);
     }
 
