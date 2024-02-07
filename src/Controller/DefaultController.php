@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Tax;
+use App\Repository\InvoiceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class DefaultController extends AbstractController
 {
     #[Route('/', name: 'default_index')]
-    public function index(): Response
+    public function index(InvoiceRepository $invoiceRepository): Response
     {
-        return $this->render('default/index.html.twig');
+        $nombreDeFactures = $invoiceRepository->count([]);
+
+        return $this->render('default/index.html.twig', [
+            'nombreDeFactures' => $nombreDeFactures,
+        ]);
     }
 
 }
