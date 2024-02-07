@@ -1,0 +1,48 @@
+<div class="bg-white p-4 mx-6 my-2 rounded-lg flex flex-col">
+	<div class="flex gap-2 justify-between items-center">
+		<div class="flex flex-col">
+
+			<div class="flex gap-2">
+				<p class="font-bold">Entreprise</p>
+				<p class="">
+					{{ user.company.name }}
+				</p>
+			</div>
+
+			<div class="flex gap-2">
+				<p class="font-bold">Siret</p>
+				<p class="">
+					{{ user.company.CompanyNumber }}
+				</p>
+			</div>
+
+			<div class="flex gap-2">
+				<p class="font-bold">Adresse</p>
+				<p class="">
+					{{ user.company.address }}
+				</p>
+			</div>
+
+			<div class="flex gap-2">
+				<p class="font-bold">Code Postal</p>
+				<p class="">
+					{{ user.company.postalCode }}
+				</p>
+			</div>
+
+			<div class="flex gap-2">
+				<p class="font-bold">Ville</p>
+				<p class="">
+					{{ user.company.city }}
+				</p>
+			</div>
+
+		</div>
+		<div class="flex gap-2 font-bold">
+			{% if user.isVerified == false %}
+				<i class="material-icons text-green-600">check</i>
+				<i class="material-icons text-red-600">close</i>
+			{% endif %}
+		</div>
+	</div>
+</div>

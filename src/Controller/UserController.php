@@ -75,6 +75,20 @@ class UserController extends AbstractController
     }
 
 
+    #[Route('/request-company-account', name: 'app_list_request_company_account')]
+    public function requestCompanyAccount(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
+    {
+        $users = $entityManager->getRepository(User::class)->findBy(['isVerified' => false]);
+
+        // dd($users);
+
+        return $this->render('requestCompanyAccount/index.html.twig', [
+            'users' => $users,
+        ]);
+
+    }
+
+
     #[Route('/user', name: 'app_list_user')]
     public function companyCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
@@ -134,7 +148,6 @@ class UserController extends AbstractController
             // );
 
             return new RedirectResponse($this->generateUrl('app_list_user'));
-
         }
 
         $userId = $loggedInUser->getId();
