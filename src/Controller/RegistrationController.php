@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\CompanyUserRegistrationFormType;
@@ -29,8 +30,11 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
-    {
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager
+    ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -43,6 +47,16 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $company = new Company();
+            $company->setName($form->get('company_name')->getData());
+            $company->setCity($form->get('city')->getData());
+            $company->setAddress($form->get('address')->getData());
+            $company->setPostalCode($form->get('postal_code')->getData());
+            $company->setCompanyNumber($form->get('company_number')->getData());
+
+            $user->setCompany($company);
+
+            $entityManager->persist($company);
             $entityManager->persist($user);
             $entityManager->flush();
 
