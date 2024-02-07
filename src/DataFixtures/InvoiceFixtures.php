@@ -49,9 +49,9 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
                 $payment = new Payment();
                 $paymentDueAt = DateTimeImmutable::createFromMutable($faker->dateTimeBetween('2020-01-01', '2024-01-01'));
                 $payment->setDueAt($paymentDueAt);
-                $payment->setPaidAt(DateTimeImmutable::createFromMutable($faker->dateTimeInInterval($paymentDueAt, '+ 90 days')));
+                $payment->setPaidAt(DateTimeImmutable::createFromMutable($faker->dateTimeInInterval($paymentDueAt->format("Y-m-d"), '+ 90 days')));
                 $payment->setInvoice($invoice);
-                $payment->setPaymentMethod($faker->randomElement());
+                $payment->setPaymentMethod($faker->randomElement($paymentMethods));
                 $manager->persist($payment);
 
                 $invoice->setPayment($payment);

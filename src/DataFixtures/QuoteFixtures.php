@@ -27,8 +27,6 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
             throw new \Exception('Assurez-vous que CustomerFixtures, QuoteStatusFixtures, et CompanyFixtures sont chargés en premier.');
         }
 
-        //Les QuoteItem sont attribués dans QuoteItemFixtures
-
         foreach ($customers as $customer) {
             $nbCustomerQuotes = count($customer->getQuotes());
             $uuidParts = explode("-", $customer->getId()->toRfc4122());
