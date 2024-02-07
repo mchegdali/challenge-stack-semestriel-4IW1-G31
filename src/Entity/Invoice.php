@@ -42,6 +42,9 @@ class Invoice
     #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: Payment::class)]
     private Collection $payments;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $dueAt = null;
+
 
     public function __construct()
     {
@@ -206,6 +209,18 @@ class Invoice
                 $payment->setInvoice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDueAt(): ?\DateTimeImmutable
+    {
+        return $this->dueAt;
+    }
+
+    public function setDueAt(\DateTimeImmutable $dueAt): static
+    {
+        $this->dueAt = $dueAt;
 
         return $this;
     }

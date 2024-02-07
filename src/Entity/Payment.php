@@ -17,9 +17,6 @@ class Payment
     private ?Uuid $id = null;
 
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $dueAt = null;
-
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $paidAt = null;
 
@@ -37,18 +34,6 @@ class Payment
     public function setId(Uuid $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getDueAt(): ?\DateTimeImmutable
-    {
-        return $this->dueAt;
-    }
-
-    public function setDueAt(\DateTimeImmutable $dueAt): static
-    {
-        $this->dueAt = $dueAt;
 
         return $this;
     }
