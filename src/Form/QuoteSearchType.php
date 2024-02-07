@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Quote;
 use App\Entity\QuoteStatus;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

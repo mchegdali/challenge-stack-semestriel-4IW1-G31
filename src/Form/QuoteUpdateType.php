@@ -15,8 +15,7 @@ class QuoteUpdateType extends AbstractType
             ->add('createdAt')
             ->add('customer')
             ->add('status')
-            ->add('company')
-        ;
+            ->add('company');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

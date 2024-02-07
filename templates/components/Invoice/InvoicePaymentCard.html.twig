@@ -1,0 +1,19 @@
+{% props invoice %}
+
+<twig:Card>
+    <header>
+        <h1 class="text-2xl font-bold">Récapitulatif de paiement</h1>
+    </header>
+    <section class="w-full justify-between items-center flex">
+        <span class="grow shrink basis-0 text-black font-semibold leading-tight tracking-tight">Date d'émission</span>
+        <span class="text-black font-normal leading-tight">{{ invoice.createdAt|date('d/m/Y') }}</span>
+    </section>
+    <section class="w-full justify-between items-center flex">
+        <span class="grow shrink basis-0 text-black font-semibold leading-tight tracking-tight">Date limite de paiement</span>
+        <span class="text-black font-normal leading-tight">{{ invoice.payment.dueAt|date('d/m/Y') }}</span>
+    </section>
+    <section class="w-full justify-between items-center flex">
+        <span class="text-center text-black font-semibold leading-tight tracking-tight">Méthode de paiement</span>
+        <span class="text-black font-normal leading-tight">{{ invoice.payment.paymentMethod.displayName }}</span>
+    </section>
+</twig:Card>

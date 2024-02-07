@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Invoice;
-
-use DateTimeImmutable;
+use App\Entity\InvoiceItem;
+use App\Entity\InvoiceStatus;
 use App\Form\InvoiceCreateType;
 use App\Form\InvoiceSearchType;
 use App\Repository\InvoiceRepository;
@@ -20,33 +20,49 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class InvoiceController extends AbstractController
 {
 
-    #[Route('', name: 'index', methods: ['GET', 'POST'])]
+    #[Route('', name: 'index', methods: ['GET'])]
     public function index(
-        InvoiceRepository $invoiceRepository,
-        Request         $request
-    ): Response
-    {
-        $form = $this->createForm(InvoiceSearchType::class, null, ["method" => "POST"] );
+        InvoiceRepository $invoiceRepository
+    ): Response {
+        $form = $this->createForm(InvoiceSearchType::class, null, ["method" => "POST"]);
 
-        if($request->isMethod("POST")) {
-            $searchResult = $request->request->all("invoice_search");
-            $invoices = $invoiceRepository->findBySearch($searchResult);
-        }
-        else {
-            $user = $this->getUser();
-            if (!$user instanceof UserInterface) {
-                throw $this->createNotFoundException('Utilisateur non trouvé');
-            }
-            $company = $user->getCompany();
-            if (!$company) {
-                throw $this->createNotFoundException('Entreprise non trouvée');
-            }
-            $invoices = $invoiceRepository->findBy(['company' => $company]);
-        }
+        $invoices = $invoiceRepository->findAll();
 
         return $this->render('invoice/index.html.twig', [
             'invoices' => $invoices,
             "searchForm" => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param InvoiceRepository $invoiceRepository
+     * @param Request $request
+     * @return Response
+     */
+    #[Route('/search', name: 'search', methods: ['GET', 'POST'])]
+    public function search(
+        InvoiceRepository $invoiceRepository,
+        Request           $request
+    ): Response {
+        $form = $this->createForm(InvoiceSearchType::class, null, ["method" => "POST"]);
+        $form->handleRequest($request);
+
+        if ($request->isMethod('GET')) {
+            return $this->render('invoice/search.html.twig', [
+                "form" => $form->createView()
+            ]);
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $searchResult = $request->request->all("invoice_search");
+            dump($searchResult);
+            $invoices = $invoiceRepository->findBySearch($searchResult);
+        } else {
+            $invoices = $invoiceRepository->findAll();
+        }
+
+        return $this->redirectToRoute('invoice_index', [
+            'invoices' => $invoices
         ]);
     }
 
@@ -64,7 +80,7 @@ class InvoiceController extends AbstractController
 
             $invoice->setCompany($this->getUser()->getCompany());
 
-            
+
             foreach ($invoice->getInvoiceItems() as $item) {
                 //calcul de priceIncludingTax pour chaque invoiceItem
                 $tax = $item->getTax()->getValue() * $item->getPriceExcludingTax() / 100;

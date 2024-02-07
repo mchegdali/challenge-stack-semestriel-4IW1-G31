@@ -27,15 +27,13 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
             throw new \Exception('Assurez-vous que CustomerFixtures, QuoteStatusFixtures, et CompanyFixtures sont chargés en premier.');
         }
 
-        //Les QuoteItem sont attribués dans QuoteItemFixtures
-
         foreach ($customers as $customer) {
             $nbCustomerQuotes = count($customer->getQuotes());
             $uuidParts = explode("-", $customer->getId()->toRfc4122());
             for ($i = $nbCustomerQuotes + 1; $i <= $nbCustomerQuotes + 10; $i++) {
 
                 $quote = new Quote();
-                $quoteNumber = date("Y") . "-" . $uuidParts[array_key_last($uuidParts)] . "-" .  str_pad($i, 3, "0", STR_PAD_LEFT);
+                $quoteNumber = date("Y") . "-" . $uuidParts[array_key_last($uuidParts)] . "-" . str_pad($i, 3, "0", STR_PAD_LEFT);
                 $quote->setCustomer($customer);
                 $quote->setStatus($faker->randomElement($status));
                 $quote->setCompany($faker->randomElement($companies));
