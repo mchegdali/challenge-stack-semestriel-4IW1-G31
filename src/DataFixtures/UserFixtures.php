@@ -12,7 +12,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserFixtures extends Fixture
 {
 
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher) {}
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
+    {
+    }
 
     public function load(ObjectManager $manager)
     {
@@ -55,6 +57,19 @@ class UserFixtures extends Fixture
         $userCompany->setPassword($this->passwordHasher->hashPassword($userCompany, '12345678'));
         $userCompany->setRole($this->getReference('ROLE_COMPANY'));
         $userCompany->setIsVerified(true);
+
+        for ($i = 0; $i < 10; $i++) {
+            $userCompany = new User();
+            $userCompany->setCompany($faker->randomElement($companies));
+            $userCompany->setEmail($faker->email);
+            $userCompany->setFirstName($faker->firstName());
+            $userCompany->setLastName($faker->lastName());
+            $userCompany->setPassword($this->passwordHasher->hashPassword($userCompany, '12345678'));
+            $userCompany->setRole($this->getReference('ROLE_COMPANY'));
+            $userCompany->setIsVerified(false);
+
+            $manager->persist($userCompany);
+        }
 
         $manager->persist($user);
         $manager->persist($userComptable);
