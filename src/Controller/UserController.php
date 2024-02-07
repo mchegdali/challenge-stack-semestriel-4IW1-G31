@@ -10,6 +10,7 @@ use App\Form\UserType;
 
 use App\Form\RegistrationFormType;
 use App\Form\CompanyUserRegistrationFormType;
+use App\Form\CreateAccountType;
 use App\Security\EmailVerifier;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,15 +26,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class UserController extends AbstractController
 {
     #[Route('/user-admin', name: 'app_list_user_admin')]
+
     public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(CreateAccountType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -87,6 +90,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user', name: 'app_list_user')]
+    // #[Security("is_granted('ROLE_ADMIN')")]
     public function companyCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $loggedInUser = $this->getUser();
@@ -128,6 +132,8 @@ class UserController extends AbstractController
             $user->setCompany($loggedInUser->getCompany());
 
             $comptableRole = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_COMPTABLE']);
+
+            $user->setRoles(['ROLE_COMPTABLE']);
 
             $user->setRole($comptableRole);
 

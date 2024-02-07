@@ -27,7 +27,8 @@
 			<span class='flex gap-2'>
 				<p class='font-bold'>Role</p>
 				<p class=''>
-					{{ user.role.name }}
+					{{ user.roles|join(', ') }}
+
 				</p>
 			</span>
 

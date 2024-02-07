@@ -60,6 +60,8 @@ class RegistrationController extends AbstractController
             $roleCompany = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_COMPANY']);
             $user->setRole($roleCompany);
 
+            $user->setRoles(['ROLE_COMPANY']);
+
             $entityManager->persist($company);
             $entityManager->persist($user);
             $entityManager->flush();
