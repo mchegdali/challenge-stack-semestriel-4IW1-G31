@@ -23,6 +23,7 @@ class UserFixtures extends Fixture
         $user = new User();
         $userComptable = new User();
         $userAdmin = new User();
+        $userCompany = new User();
 
         $user->setCompany($faker->randomElement($companies));
         $user->setEmail('user@user.fr');
@@ -47,9 +48,18 @@ class UserFixtures extends Fixture
         $userAdmin->setRole($this->getReference('ROLE_ADMIN'));
         $userAdmin->setIsVerified(true);
 
+        $userCompany->setCompany($faker->randomElement($companies));
+        $userCompany->setEmail('company@company.fr');
+        $userCompany->setFirstName($faker->firstName());
+        $userCompany->setLastName($faker->lastName());
+        $userCompany->setPassword($this->passwordHasher->hashPassword($userCompany, '12345678'));
+        $userCompany->setRole($this->getReference('ROLE_COMPANY'));
+        $userCompany->setIsVerified(true);
+
         $manager->persist($user);
         $manager->persist($userComptable);
         $manager->persist($userAdmin);
+        $manager->persist($userCompany);
 
         $manager->flush();
     }

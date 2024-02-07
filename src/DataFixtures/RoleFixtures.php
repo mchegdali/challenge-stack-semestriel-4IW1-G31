@@ -28,7 +28,7 @@ class RoleFixtures extends Fixture
         $roleCompany = new Role();
         $roleCompany->setName('ROLE_COMPANY');
         $manager->persist($roleCompany);
-        $this->setReference('ROLE_USER', $roleCompany);
+        $this->setReference('ROLE_COMPANY', $roleCompany);
 
         $manager->flush();
     }
