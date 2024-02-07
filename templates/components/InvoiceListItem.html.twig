@@ -1,0 +1,22 @@
+<a href="{{ path('invoice_show', {id: invoice.id }) }}" class="p-4 bg-white shadow flex-col justify-start items-start flex rounded-lg gap-1">
+    <section class="self-stretch justify-between items-center inline-flex">
+        <span class="grow text-black text-sm font-bold  leading-tight tracking-tight">N° devis</span>
+        <span class="shrink text-black text-sm font-normal leading-tight">{{ invoice.invoiceNumber }}</span>
+    </section>
+    <section class="self-stretch justify-between items-center inline-flex">
+        <span class="grow shrink basis-0 text-black text-sm font-bold  leading-tight tracking-tight">Client</span>
+        <span class="text-black text-sm font-normal  leading-tight">{{ invoice.customer.name }}</span>
+    </section>
+    <section class="self-stretch justify-between items-center inline-flex">
+        <span class="text-center text-black text-sm font-bold  leading-tight tracking-tight">Montant HT</span>
+        <span class="text-center text-black text-sm font-normal  leading-tight">{{ invoice.totalExcludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+    </section>
+    <section class="self-stretch justify-between items-center inline-flex">
+        <span class="text-center text-black text-sm font-bold  leading-tight tracking-tight">Montant TTC</span>
+        <span class="text-center text-black text-sm font-normal  leading-tight">{{ invoice.totalIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+    </section>
+    <section class="self-stretch justify-between items-center inline-flex">
+        <span class="text-center text-black text-sm font-bold  leading-tight tracking-tight">Statut</span>
+        <twig:InvoiceStatusBadge :invoiceStatus="invoice.status" />
+    </section>
+</a>

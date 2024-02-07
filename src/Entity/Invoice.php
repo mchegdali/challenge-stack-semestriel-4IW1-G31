@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\Timestampable;
 use App\Repository\InvoiceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,33 +13,40 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 class Invoice
 {
+    use Timestampable;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: InvoiceItem::class, orphanRemoval: true, cascade:["persist"])]
+    private Collection $invoiceItems;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 
-    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: InvoiceItem::class, orphanRemoval: true)]
-    private Collection $invoiceItems;
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?InvoiceStatus $status = null;
+
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Company $company = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $invoiceNumber = null;
+
 
     public function __construct()
     {
         $this->invoiceItems = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -46,30 +54,6 @@ class Invoice
     public function setId(Uuid $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): static
-    {
-        $this->customer = $customer;
 
         return $this;
     }
@@ -104,6 +88,31 @@ class Invoice
         return $this;
     }
 
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): static
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getStatus(): ?InvoiceStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?InvoiceStatus $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+
     public function getCompany(): ?Company
     {
         return $this->company;
@@ -114,5 +123,58 @@ class Invoice
         $this->company = $company;
 
         return $this;
+    }
+
+    public function getInvoiceNumber(): ?string
+    {
+        return $this->invoiceNumber;
+    }
+
+    public function setInvoiceNumber(string $invoiceNumber): static
+    {
+        $this->invoiceNumber = $invoiceNumber;
+
+        return $this;
+    }
+
+    public function getTotalExcludingTax(): float
+    {
+        $total = 0.0;
+
+        foreach ($this->getInvoiceItems() as $invoiceItem) {
+            $total += $invoiceItem->getPriceExcludingTax() * $invoiceItem->getQuantity();
+        }
+
+        return $total;
+    }
+
+    /**
+     * Calculate the tax amount for the invoice.
+     *
+     * @return float The total tax amount.
+     */
+    public function getTaxAmount(): float
+    {
+        $total = 0.0;
+        foreach ($this->getInvoiceItems() as $invoiceItem) {
+            $total += $invoiceItem->getTaxAmount() * $invoiceItem->getQuantity();
+        }
+        return $total;
+    }
+
+    /**
+     * Calculate the total amount including tax for all invoice items.
+     *
+     * @return float The total amount including tax.
+     */
+    public function getTotalIncludingTax()
+    {
+        $total = 0.0;
+
+        foreach ($this->getInvoiceItems() as $invoiceItem) {
+            $total += $invoiceItem->getPriceIncludingtax() * $invoiceItem->getQuantity();
+        }
+
+        return $total;
     }
 }
