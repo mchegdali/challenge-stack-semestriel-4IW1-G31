@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -45,4 +46,36 @@ class InvoiceRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    /**
+     * @param array $searchResult
+     * @return Invoice[] Returns an array of Quote objects
+     */
+    public function findBySearch(array $searchResult): array
+    {
+        $searchResult = array_filter($searchResult, function ($value) {
+            return !empty($value);
+        });
+
+        $qb = $this->createQueryBuilder('i');
+        $qb->innerJoin('i.invoiceItems', 'ii');
+        $qb->addSelect('ii');
+
+        if (!empty($searchResult)) {
+            if (array_key_exists("status", $searchResult)) {
+                $qb->andWhere('i.status IN (:status)');
+                $qb->setParameter('status', $searchResult["status"]);
+            }
+
+            if (array_key_exists("priceMin", $searchResult)) {
+                $qb->andWhere('ii.priceIncludingTax * ii.quantity >= :priceMin');
+                $qb->setParameter('priceMin', $searchResult["priceMin"]);
+            }
+
+            if (array_key_exists("priceMax", $searchResult)) {
+                $qb->andWhere('ii.priceIncludingTax * ii.quantity <= :priceMax');
+                $qb->setParameter('priceMax', $searchResult["priceMax"]);
+            }
+        }
+        return $qb->getQuery()->getResult();
+    }
 }

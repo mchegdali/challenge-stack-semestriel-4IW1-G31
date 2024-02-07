@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/quotes', name: 'quote_')]
@@ -27,15 +26,13 @@ class QuoteController extends AbstractController
     public function index(
         QuoteRepository $quoteRepository,
         Request         $request
-    ): Response
-    {
-        $form = $this->createForm(QuoteSearchType::class, null, ["method" => "POST"] );
+    ): Response {
+        $form = $this->createForm(QuoteSearchType::class, null, ["method" => "POST"]);
 
-        if($request->isMethod("POST")) {
+        if ($request->isMethod("POST")) {
             $searchResult = $request->request->all("quote_search");
             $quotes = $quoteRepository->findBySearch($searchResult);
-        }
-        else {
+        } else {
             $user = $this->getUser();
             if (!$user instanceof UserInterface) {
                 throw $this->createNotFoundException('Utilisateur non trouvé');
@@ -67,7 +64,7 @@ class QuoteController extends AbstractController
 
             $quote->setCompany($this->getUser()->getCompany());
 
-            
+
             foreach ($quote->getQuoteItems() as $item) {
                 //calcul de priceIncludingTax pour chaque quoteItem
                 $tax = $item->getTax()->getValue() * $item->getPriceExcludingTax() / 100;
@@ -100,7 +97,7 @@ class QuoteController extends AbstractController
         if ($customerForm->isSubmitted() && $customerForm->isValid()) {
             $entityManager->persist($customer);
             $entityManager->flush();
-    
+
             // Retourne l'ID du nouveau client sous forme de réponse JSON
             return new JsonResponse([
                 'newClientId' => $customer->getId(),
@@ -167,7 +164,7 @@ class QuoteController extends AbstractController
         if ($customerForm->isSubmitted() && $customerForm->isValid()) {
             $em->persist($customer);
             $em->flush();
-    
+
             // Retourne l'ID du nouveau client sous forme de réponse JSON
             return new JsonResponse([
                 'newClientId' => $customer->getId(),

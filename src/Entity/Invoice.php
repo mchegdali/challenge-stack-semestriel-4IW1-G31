@@ -21,7 +21,7 @@ class Invoice
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: InvoiceItem::class, orphanRemoval: true, cascade:["persist"])]
+    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: InvoiceItem::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $invoiceItems;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
@@ -30,15 +30,17 @@ class Invoice
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?InvoiceStatus $status = null;
-
+    private ?Company $company = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Company $company = null;
+    private ?InvoiceStatus $status = null;
 
     #[ORM\Column(length: 255)]
     private ?string $invoiceNumber = null;
+
+    #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
+    private ?Payment $payment = null;
 
 
     public function __construct()
@@ -54,6 +56,18 @@ class Invoice
     public function setId(Uuid $id): static
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): static
+    {
+        $this->customer = $customer;
 
         return $this;
     }
@@ -88,18 +102,6 @@ class Invoice
         return $this;
     }
 
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): static
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
-
     public function getStatus(): ?InvoiceStatus
     {
         return $this->status;
@@ -111,7 +113,6 @@ class Invoice
 
         return $this;
     }
-
 
     public function getCompany(): ?Company
     {
@@ -176,5 +177,17 @@ class Invoice
         }
 
         return $total;
+    }
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(?Payment $payment): static
+    {
+        $this->payment = $payment;
+
+        return $this;
     }
 }

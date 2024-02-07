@@ -36,16 +36,20 @@ class Customer
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Quote::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Invoice::class, orphanRemoval: true)]
     private Collection $quotes;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Invoice::class)]
     private Collection $invoices;
 
+    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Payment::class)]
+    private Collection $payments;
+
     public function __construct()
     {
         $this->quotes = new ArrayCollection();
         $this->invoices = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -133,14 +137,14 @@ class Customer
     }
 
     /**
-     * @return Collection<int, Quote>
+     * @return Collection<int, Invoice>
      */
     public function getQuotes(): Collection
     {
         return $this->quotes;
     }
 
-    public function addQuote(Quote $quote): static
+    public function addQuote(Invoice $quote): static
     {
         if (!$this->quotes->contains($quote)) {
             $this->quotes->add($quote);
@@ -150,7 +154,7 @@ class Customer
         return $this;
     }
 
-    public function removeQuote(Quote $quote): static
+    public function removeQuote(Invoice $quote): static
     {
         if ($this->quotes->removeElement($quote)) {
             // set the owning side to null (unless already changed)
@@ -186,6 +190,36 @@ class Customer
             // set the owning side to null (unless already changed)
             if ($invoice->getCustomer() === $this) {
                 $invoice->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Payment>
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(Payment $payment): static
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments->add($payment);
+            $payment->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(Payment $payment): static
+    {
+        if ($this->payments->removeElement($payment)) {
+            // set the owning side to null (unless already changed)
+            if ($payment->getCustomer() === $this) {
+                $payment->setCustomer(null);
             }
         }
 

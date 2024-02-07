@@ -31,7 +31,7 @@ class QuoteRepository extends ServiceEntityRepository
      */
     public function findBySearch(array $searchResult): array
     {
-        $searchResult = array_filter($searchResult, function($value) {
+        $searchResult = array_filter($searchResult, function ($value) {
             return !empty($value);
         });
 
@@ -52,17 +52,17 @@ class QuoteRepository extends ServiceEntityRepository
 
         $params = [];
         if (!empty($searchResult)) {
-            if(array_key_exists("status", $searchResult) ) {
+            if (array_key_exists("status", $searchResult)) {
                 $sql .= ' AND q.status_id IN (:status)';
                 $params['status'] = $searchResult["status"];
             }
 
-            if(array_key_exists("priceMin", $searchResult)) {
+            if (array_key_exists("priceMin", $searchResult)) {
                 $sql .= ' AND tp.total >= :priceMin';
                 $params['priceMin'] = $searchResult["priceMin"];
             }
 
-            if(array_key_exists("priceMax", $searchResult)) {
+            if (array_key_exists("priceMax", $searchResult)) {
                 $sql .= ' AND tp.total <= :priceMax';
                 $params['priceMax'] = $searchResult["priceMax"];
             }
