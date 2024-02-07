@@ -1,0 +1,154 @@
+<div class="bg-white p-4 rounded-lg flex flex-col">
+	<div class="flex gap-2 justify-between items-center">
+		<div class="flex flex-col">
+
+			<div class="flex gap-2">
+				<p class="font-bold">Entreprise</p>
+				<p class="">
+					{{ user.company.name }}
+				</p>
+			</div>
+
+			<div class="flex gap-2">
+				<p class="font-bold">Siret</p>
+				<p class="">
+					{{ user.company.CompanyNumber }}
+				</p>
+			</div>
+
+			<div class="flex gap-2">
+				<p class="font-bold">Adresse</p>
+				<p class="">
+					{{ user.company.address }}
+				</p>
+			</div>
+
+			<div class="flex gap-2">
+				<p class="font-bold">Code Postal</p>
+				<p class="">
+					{{ user.company.postalCode }}
+				</p>
+			</div>
+
+			<div class="flex gap-2">
+				<p class="font-bold">Ville</p>
+				<p class="">
+					{{ user.company.city }}
+				</p>
+			</div>
+
+		</div>
+		<div class="flex gap-2 font-bold">
+			{% if user.isVerified == false %}
+
+				<a onclick="openModalAccept('{{ user.id }}')" class='text-green-600 cursor-pointer'>
+					<i class="material-icons text-green-600">check</i>
+				</a>
+
+				<a onclick="openModalDelete('{{ user.id }}')" class='text-red-600 cursor-pointer'>
+					<i class="material-icons">close</i>
+				</a>
+
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+
+<!-- Modale -->
+<div id="modalAccept" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+
+	<div class="bg-white p-8 rounded shadow-lg m-6">
+		<h2 class="text-lg font-bold mb-4">Accepter la demande</h2>
+
+		<p>Voulez-vous vraiment accepter cette demande de compte ?</p>
+
+		<div class='mt-6 flex flex-row justify-center items-center flex-1 w-full gap-3'>
+			<a id="acceptLink" class='flex-1 text-red-500 font-bold p-2 rounded border border-red-500 text-center'>
+				<p>Accepter</p>
+			</a>
+			<button onclick="closeAcceptModal()" class="bg-white flex-1 text-blue-800 font-bold p-2 rounded border border-blue-800">
+				Annuler
+			</button>
+		</div>
+	</div>
+</div>
+
+<!-- Modale -->
+<div id="modalDelete" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+
+	<div class="bg-white p-8 rounded shadow-lg m-6">
+		<h2 class="text-lg font-bold mb-4">Rejeter la demande</h2>
+
+		<p>Voulez-vous vraiment rejeter cette demande de compte ?</p>
+
+		<div class='mt-6 flex flex-row justify-center items-center flex-1 w-full gap-3'>
+			<a id="deleteLink" class='flex-1 text-red-500 font-bold p-2 rounded border border-red-500 text-center'>
+				<p>Rejeter</p>
+			</a>
+			<button onclick="closeDeleteModal()" class="bg-white flex-1 text-blue-800 font-bold p-2 rounded border border-blue-800">
+				Annuler
+			</button>
+		</div>
+	</div>
+</div>
+
+
+<script>
+const modale = document.getElementById("modalAccept");
+
+function openModalAccept(userId) {
+modale.classList.remove("hidden");
+console.log("ID à supprimer : " + userId);
+
+var acceptLink = "{{ path('accept_request_company_account', {'id': '__userId__'}) }}".replace('__userId__', userId);
+console.log(acceptLink);
+
+document.getElementById('acceptLink').href = acceptLink;
+
+$('#modalAccept').modal('show');
+}
+
+function closeAcceptModal() {
+modale.classList.add("hidden");
+}
+
+window.onclick = function (event) {
+if (event.target === modale) {
+closeAcceptModal();
+}
+};
+
+closeButton.onclick = function () {
+closeAcceptModal();
+};
+
+
+const modaleDelete = document.getElementById("modalDelete");
+
+function openModalDelete(userId) {
+modaleDelete.classList.remove("hidden");
+console.log("ID à supprimer : " + userId);
+
+var deleteLink = "{{ path('delete_request_company_account', {'id': '__userId__'}) }}".replace('__userId__', userId);
+console.log(deleteLink);
+
+document.getElementById('deleteLink').href = deleteLink;
+
+$('#modalDelete').modal('show');
+}
+
+function closeDeleteModal() {
+modaleDelete.classList.add("hidden");
+}
+
+window.onclick = function (event) {
+if (event.target === modaleDelete) {
+closeDeleteModal();
+}
+};
+
+closeButton.onclick = function () {
+closeDeleteModal();
+};
+</script>
