@@ -40,8 +40,13 @@
 		</div>
 		<div class="flex gap-2 font-bold">
 			{% if user.isVerified == false %}
+				{# <a href="{{path('delete_request_company_account', {'id': user.id})}}"> #}
 				<i class="material-icons text-green-600">check</i>
-				<i class="material-icons text-red-600">close</i>
+				{# </a> #}
+				<a href="{{path('delete_request_company_account', {'id': user.id})}}">
+					<i class="material-icons text-red-600">close</i>
+				</a>
+
 			{% endif %}
 		</div>
 	</div>

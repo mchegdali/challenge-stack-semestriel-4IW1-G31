@@ -76,17 +76,16 @@ class UserController extends AbstractController
 
 
     #[Route('/request-company-account', name: 'app_list_request_company_account')]
-    public function requestCompanyAccount(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
+    public function requestCompanyAccount(EntityManagerInterface $entityManager): Response
     {
         $users = $entityManager->getRepository(User::class)->findBy(['isVerified' => false]);
-
-        // dd($users);
 
         return $this->render('requestCompanyAccount/index.html.twig', [
             'users' => $users,
         ]);
 
     }
+
 
 
     #[Route('/user', name: 'app_list_user')]
@@ -215,5 +214,15 @@ class UserController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('app_list_user');
+    }
+
+    #[Route('/request-company-account/{id}/delete', name: 'delete_request_company_account')]
+    public function deleteRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user): Response
+    {
+        $em = $doctrine->getManager();
+        $em->remove($user);
+        $em->flush();
+
+        return $this->redirectToRoute('app_list_request_company_account');
     }
 }
