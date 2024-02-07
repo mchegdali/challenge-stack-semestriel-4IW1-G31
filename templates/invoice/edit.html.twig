@@ -1,41 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Plumbill{% endblock %}
+{% block title %}Modification de facture
+{% endblock %}
 
 {% block body %}
-   {% include 'components/Navbar.html.twig' %}
-   
-    <main class="mx-auto">
-        <header class="mb-2 p-1 bg-white ">
-            <h1 class="text-2xl">Devis</h1>
-            <div>
-                <h2>Client</h2>
-                <div class="w-full flex justify-between">
-                    <span class="font-semibold">Nom</span>
-                    <span>Lorem, ipsum dolor.</span>
-                </div>
-                <div class="w-full flex justify-between">
-                    <span class="font-semibold">Nom</span>
-                    <span>Lorem, ipsum dolor.</span>
-                </div>
-            </div>        
-        </header>
-        <section class="grid grid-cols-invoice-items">
-            <div class="grid grid-cols-subgrid col-span-4">
-                <span class="font-semibold">Éléments</span>
-                <span class="font-semibold">Qt</span>
-                <span class="font-semibold">TVA</span>
-                <span class="font-semibold">Total</span>
-            </div>
-            {% for item in [0, 1, 2] %}
-            <div class="grid grid-cols-subgrid col-span-4">
-                <span>Réparation de robinet</span>
-                <span>1</span>
-                <span>10%</span>
-                <span>272,73€</span>
-            </div>
-            {% endfor %}
-        </section>
-</button>
-    </main>
+	{% include 'components/Navbar.html.twig' %}
+
+	<h1 class='px-6 font-bold'>Modifier une facture</h1>
+
+	<div class="bg-white p-4 mx-6 my-2 rounded-lg flex flex-col">
+
+		<main class="mx-auto">
+			
+			{{form_start(form)}}
+				{{ form_label(form.customer) }}
+				{{form_widget(form.customer) }}
+				{{form_label(form.status)}}
+				{{form_widget(form.status) }}
+				<div id="invoiceitem" data-prototype="{{ form_row(form.invoiceitems.vars.prototype)|e('html_attr')}}">
+					{{form_row(form.invoiceitems)}}
+					<span></span>
+				</div>
+			{{form_end(form)}}
+		</main>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('invoices') }}
 {% endblock %}
