@@ -6,11 +6,13 @@ use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\Invoice;
 use App\Entity\InvoiceStatus;
+use App\Entity\Payment;
+use App\Entity\PaymentMethod;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-
 
 class InvoiceFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -24,12 +26,11 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
         $customers = $manager->getRepository(Customer::class)->findAll();
         $status = $manager->getRepository(InvoiceStatus::class)->findAll();
         $companies = $manager->getRepository(Company::class)->findAll();
+        $paymentMethods = $manager->getRepository(PaymentMethod::class)->findAll();
 
-        if (!$customers || !$status || !$companies) {
-            throw new \Exception('Assurez-vous que CustomerFixtures, QuoteStatusFixtures, et CompanyFixtures sont chargés en premier.');
+        if (!$customers || !$status || !$companies || !$paymentMethods) {
+            throw new \Exception('Assurez-vous que CustomerFixtures, QuoteStatusFixtures, CompanyFixtures, PaymentMethodFixtures soient chargées.');
         }
-
-        //Les QuoteItem sont attribués dans QuoteItemFixtures
 
         foreach ($customers as $customer) {
             $nbCustomerQuotes = count($customer->getQuotes());
@@ -43,8 +44,19 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
                 $invoice->setCompany($faker->randomElement($companies));
                 $invoice->setCreatedAt($faker->dateTimeBetween('2020-01-01', '2024-01-01'));
                 $invoice->setInvoiceNumber($invoiceNumber);
-
                 $manager->persist($invoice);
+
+                $payment = new Payment();
+                $paymentDueAt = DateTimeImmutable::createFromMutable($faker->dateTimeBetween('2020-01-01', '2024-01-01'));
+                $payment->setDueAt($paymentDueAt);
+                $payment->setPaidAt(DateTimeImmutable::createFromMutable($faker->dateTimeInInterval($paymentDueAt, '+ 90 days')));
+                $payment->setInvoice($invoice);
+                $payment->setPaymentMethod($faker->randomElement());
+                $manager->persist($payment);
+
+                $invoice->setPayment($payment);
+                $manager->persist($invoice);
+
                 $manager->flush();
             }
         }
@@ -53,6 +65,7 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
+            PaymentMethodFixtures::class,
             CustomerFixtures::class,
             InvoiceStatusFixtures::class,
             CompanyFixtures::class,

@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PaymentRepository;
-use DateTimeImmutable;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
@@ -18,29 +16,18 @@ class Payment
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'payments')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Customer $customer = null;
 
     #[ORM\Column]
-    private ?float $amountWithoutTax = null;
+    private ?\DateTimeImmutable $dueAt = null;
 
-    #[ORM\Column]
-    private ?float $amountWithTax = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $paidAt = null;
 
-    #[ORM\Column]
-    private ?float $taxAmount = null;
+    #[ORM\ManyToOne]
+    private ?PaymentMethod $paymentMethod = null;
 
-
-    #[ORM\ManyToOne(inversedBy: 'payments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(mappedBy: 'payment', cascade: ['persist', 'remove'])]
     private ?Invoice $invoice = null;
-
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?DateTimeImmutable $expectedDate = null;
-
-    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
-    private ?DateTimeImmutable $paymentDate = null;
 
     public function getId(): ?Uuid
     {
@@ -54,55 +41,41 @@ class Payment
         return $this;
     }
 
-    public function getCustomer(): ?Customer
+    public function getDueAt(): ?\DateTimeImmutable
     {
-        return $this->customer;
+        return $this->dueAt;
     }
 
-    public function setCustomer(?Customer $customer): static
+    public function setDueAt(\DateTimeImmutable $dueAt): static
     {
-        $this->customer = $customer;
+        $this->dueAt = $dueAt;
 
         return $this;
     }
 
-
-    public function getAmountWithoutTax(): ?float
+    public function getPaidAt(): ?\DateTimeImmutable
     {
-        return $this->amountWithoutTax;
+        return $this->paidAt;
     }
 
-    public function setAmountWithoutTax(float $amountWithoutTax): static
+    public function setPaidAt(?\DateTimeImmutable $paidAt): static
     {
-        $this->amountWithoutTax = $amountWithoutTax;
+        $this->paidAt = $paidAt;
 
         return $this;
     }
 
-    public function getAmountWithTax(): ?float
+    public function getPaymentMethod(): ?PaymentMethod
     {
-        return $this->amountWithTax;
+        return $this->paymentMethod;
     }
 
-    public function setAmountWithTax(float $amountWithTax): static
+    public function setPaymentMethod(?PaymentMethod $paymentMethod): static
     {
-        $this->amountWithTax = $amountWithTax;
+        $this->paymentMethod = $paymentMethod;
 
         return $this;
     }
-
-    public function getTaxAmount(): ?float
-    {
-        return $this->taxAmount;
-    }
-
-    public function setTaxAmount(float $taxAmount): static
-    {
-        $this->taxAmount = $taxAmount;
-
-        return $this;
-    }
-
 
     public function getInvoice(): ?Invoice
     {
@@ -111,31 +84,17 @@ class Payment
 
     public function setInvoice(?Invoice $invoice): static
     {
+        // unset the owning side of the relation if necessary
+        if ($invoice === null && $this->invoice !== null) {
+            $this->invoice->setPayment(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($invoice !== null && $invoice->getPayment() !== $this) {
+            $invoice->setPayment($this);
+        }
+
         $this->invoice = $invoice;
-
-        return $this;
-    }
-
-    public function getExpectedDate(): ?DateTimeImmutable
-    {
-        return $this->expectedDate;
-    }
-
-    public function setExpectedDate(DateTimeImmutable $expectedDate): static
-    {
-        $this->expectedDate = $expectedDate;
-
-        return $this;
-    }
-
-    public function getPaymentDate(): ?DateTimeImmutable
-    {
-        return $this->paymentDate;
-    }
-
-    public function setPaymentDate(?DateTimeImmutable $paymentDate): static
-    {
-        $this->paymentDate = $paymentDate;
 
         return $this;
     }

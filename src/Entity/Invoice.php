@@ -39,6 +39,9 @@ class Invoice
     #[ORM\Column(length: 255)]
     private ?string $invoiceNumber = null;
 
+    #[ORM\OneToOne(inversedBy: 'invoice', cascade: ['persist', 'remove'])]
+    private ?Payment $payment = null;
+
 
     public function __construct()
     {
@@ -98,7 +101,6 @@ class Invoice
 
         return $this;
     }
-
 
     public function getStatus(): ?InvoiceStatus
     {
@@ -175,5 +177,17 @@ class Invoice
         }
 
         return $total;
+    }
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(?Payment $payment): static
+    {
+        $this->payment = $payment;
+
+        return $this;
     }
 }
