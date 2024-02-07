@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateur
+{% endblock %}
+
+{% block body %}
+{% include 'components/Navbar.html.twig' %}
+
+
+
+	<div class="flex mt-6 mx-6">
+
+	{% if 'ROLE_ADMIN' in app.user.role.name %}
+				<a href="{{ path('app_list_user_admin')}}">
+			<i class="material-icons">arrow_left</i>
+		</a>
+			{% else %}
+				<a href="{{ path('app_list_user')}}">
+			<i class="material-icons">arrow_left</i>
+		</a>
+			{% endif %}
+		
+		<h1 class='px-6 font-bold text-xl'>Informations de l'utilisateur</h1>
+	</div>
+	{% include 'components/UserDetails.html.twig' %}
+{% endblock %}

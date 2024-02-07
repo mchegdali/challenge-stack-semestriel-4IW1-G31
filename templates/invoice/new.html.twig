@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plumbill
+{% endblock %}
+
+{% block body %}
+	{% include 'components/Navbar.html.twig' %}
+
+	<h1 class='px-6 font-bold'>Créer un nouveau devis</h1>
+
+	<div class="bg-white p-4 mx-6 my-2 rounded-lg flex flex-col">
+
+		<main class="mx-auto">
+			
+			{{form_start(form)}}
+				{{ form_label(form.customer) }}
+				{{form_widget(form.customer) }}
+
+				<div id="invoiceitem" data-prototype="{{ form_row(form.invoiceitems.vars.prototype)|e('html_attr')}}">
+					{{form_row(form.invoiceitems)}}
+					<span></span>
+				</div>
+			{{form_end(form)}}
+		</main>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('invoices') }}
+{% endblock %}
