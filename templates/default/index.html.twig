@@ -4,13 +4,21 @@
 {% endblock %}
 
 {% block body %}
+
+{% include 'components/Navbar.html.twig' %}
 <main class="mx-2 mt-2">
 		<header class="mb-2 p-1">
 			<h1 class="font-bold text-3xl">Plumbill</h1>
 		</header>
 
 		<section class="mb-2 px-4 py-2 bg-white shadow-sm rounded-lg">
+			<a href="{{path('invoice_new')}}"><h2>Créer une facture</h2></a>
 			<h2>Factures ({{ nombreDeFactures }})</h2>
+			<h2>Non échues</h2>
+			<h2>En retard (- de 30 jours) 
+            {# ({{ nombreDeFacturesEnRetard }})#}
+            </h2> 
+			<h2>En retard (+ de 30 jours)</h2>
 			<div class="h-screen flex justify-center items-center">
 				<div class="w-1/2">
 					<canvas id="myChart" class="w-full h-full"></canvas>
