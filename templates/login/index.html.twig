@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plumbill
+{% endblock %}
+
+{% block body %}
+
+
+	<h1>Accueil</h1>
+
+	<a href="{{ path('app_login') }}" class="text-center w-full bg-white text-button-color p-1.5 border border-button-color rounded-lg" type="submit">
+		Login
+	</a>
+	{# {% include 'components/Navbar.html.twig' %} #}
+
+
+{# <div class="items-center h-screen flex justify-center bg-white">
+        {% include 'components/RegisterForm.html.twig' %}
+    </div> #}
+
+	{#    {% include 'components/RegisterForm.html.twig' %}#}
+	{#    {% include 'components/QuoteForm.html.twig' %}#}
+	{# {% include 'components/QuoteList.html.twig' %} #}
+	{#    {% include 'components/WidgetOpenInvoice.html.twig' %}#}
+{% endblock %}
