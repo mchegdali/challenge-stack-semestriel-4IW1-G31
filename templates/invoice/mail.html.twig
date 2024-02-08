@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Facture Reçue</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+    </style>
+</head>
+<body>
+    <p>Bonjour {{ invoices.customer.name }},</p>
+
+    <p>Nous vous confirmons la réception de votre paiement et vous avons joint votre facture à cet email.</p>
+
+    <p>Si vous avez des questions concernant cette facture ou avez besoin d'assistance supplémentaire, n'hésitez pas à nous contacter.</p>
+
+    <p>Merci de faire affaire avec nous !</p>
+
+    <p>Cordialement,<br>
+    {{ invoices.company.name }}</p>
+</body>
+</html>

@@ -10,10 +10,12 @@
     </section>
     <section class="w-full justify-between items-center flex">
         <span class="grow shrink basis-0 text-black font-semibold leading-tight tracking-tight">Date limite de paiement</span>
-        <span class="text-black font-normal leading-tight">{{ invoice.payment.dueAt|date('d/m/Y') }}</span>
+        <span class="text-black font-normal leading-tight">{{ invoice.dueAt|date('d/m/Y') }}</span>
     </section>
     <section class="w-full justify-between items-center flex">
         <span class="text-center text-black font-semibold leading-tight tracking-tight">Méthode de paiement</span>
-        <span class="text-black font-normal leading-tight">{{ invoice.payment.paymentMethod.displayName }}</span>
+        {% for item in invoice.payments %}
+            <span class="text-black font-normal leading-tight">{{ item.paymentMethod.displayName }}</span>
+        {% endfor %}
     </section>
 </twig:Card>
