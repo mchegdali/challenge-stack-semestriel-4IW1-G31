@@ -43,19 +43,21 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
                 $invoice->setStatus($faker->randomElement($status));
                 $invoice->setCompany($faker->randomElement($companies));
                 $invoice->setCreatedAt($faker->dateTimeBetween('2020-01-01', '2024-01-01'));
+                $invoice->setDueAt(DateTimeImmutable::createFromMutable($invoice->getCreatedAt()->modify('+ 30 days')));
                 $invoice->setInvoiceNumber($invoiceNumber);
                 $manager->persist($invoice);
 
-                $payment = new Payment();
-                $paymentDueAt = DateTimeImmutable::createFromMutable($faker->dateTimeBetween('2020-01-01', '2024-01-01'));
-                $payment->setDueAt($paymentDueAt);
-                $payment->setPaidAt(DateTimeImmutable::createFromMutable($faker->dateTimeInInterval($paymentDueAt->format("Y-m-d"), '+ 90 days')));
-                $payment->setInvoice($invoice);
-                $payment->setPaymentMethod($faker->randomElement($paymentMethods));
-                $manager->persist($payment);
+                for ($j=0; $j < 2; $j++) { 
+                    $payment = new Payment();
+                    $payment->setPaidAt(DateTimeImmutable::createFromMutable($faker->dateTimeInInterval($invoice->getCreatedAt()->format("Y-m-d"), '+ 90 days')));
+                    $payment->setInvoice($invoice);
+                    $payment->setPaymentMethod($faker->randomElement($paymentMethods));
+                    $payment->setAmount($faker->randomFloat(2, 100, 1000));
+                    $manager->persist($payment);
 
-                $invoice->setPayment($payment);
-                $manager->persist($invoice);
+                    $invoice->addPayment($payment);
+                    $manager->persist($invoice);
+                }
 
                 $manager->flush();
             }
