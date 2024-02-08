@@ -39,7 +39,6 @@ class UserFixtures extends Fixture
         $userComptable->setFirstName($faker->firstName());
         $userComptable->setLastName($faker->lastName());
         $userComptable->setPassword($this->passwordHasher->hashPassword($userComptable, '12345678'));
-        $userComptable->setRole($this->getReference('ROLE_COMPTABLE'));
         $userComptable->setRoles(['ROLE_COMPTABLE']);
         $userComptable->setIsVerified(true);
 
@@ -47,7 +46,6 @@ class UserFixtures extends Fixture
         $userAdmin->setFirstName($faker->firstName());
         $userAdmin->setLastName($faker->lastName());
         $userAdmin->setPassword($this->passwordHasher->hashPassword($userAdmin, '12345678'));
-        $userAdmin->setRole($this->getReference('ROLE_ADMIN'));
         $userAdmin->setRoles(['ROLE_ADMIN']);
         $userAdmin->setIsVerified(true);
 
@@ -56,7 +54,6 @@ class UserFixtures extends Fixture
         $userCompany->setFirstName($faker->firstName());
         $userCompany->setLastName($faker->lastName());
         $userCompany->setPassword($this->passwordHasher->hashPassword($userCompany, '12345678'));
-        $userCompany->setRole($this->getReference('ROLE_COMPANY'));
         $userCompany->setRoles(['ROLE_COMPANY']);
         $userCompany->setIsVerified(true);
 
@@ -67,7 +64,6 @@ class UserFixtures extends Fixture
             $userCompany->setFirstName($faker->firstName());
             $userCompany->setLastName($faker->lastName());
             $userCompany->setPassword($this->passwordHasher->hashPassword($userCompany, '12345678'));
-            $userCompany->setRole($this->getReference('ROLE_COMPANY'));
             $userCompany->setRoles(['ROLE_COMPANY']);
             $userCompany->setIsVerified(false);
 

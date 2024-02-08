@@ -58,22 +58,15 @@ class CreateAccountType extends AbstractType
                     'placeholder' => 'Saisir un nom de entreprise',
                 ],
             ])
-            ->add('role', EntityType::class, [
-                'label' => 'Role',
-                'class' => 'App\Entity\Role',
-                'choice_label' => 'name',
-                'attr' => [
-                    'placeholder' => 'Saisir un role',
-                ],
-            ])
             ->add('roles', ChoiceType::class, [
                 'label' => 'Roles',
                 'multiple' => true,
-                'expanded' => true,
+                'expanded' => false,
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
                     'Administrateur' => 'ROLE_ADMIN',
                     'Comptable' => 'ROLE_COMPTABLE',
+                    'Entreprise' => 'ROLE_COMPANY'
                 ],
                 'attr' => [
                     'placeholder' => 'Sélectionner des rôles',
