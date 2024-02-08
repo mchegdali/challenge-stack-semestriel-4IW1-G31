@@ -3,7 +3,7 @@
 
 		<h1 class='text-2xl font-bold'>Utilisateurs</h1>
 
-		{% if 'ROLE_ADMIN' in app.user.role.name %}
+		{% if is_granted('ROLE_ADMIN') %}
 			<button onclick="openModal()" class="bg-blue-800 text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
 				<p>Ajouter un utilisateur</p>
 			</button>
@@ -27,7 +27,7 @@
 		<div class="bg-white p-8 rounded shadow-lg">
 			<h2 class="text-lg font-bold mb-4">Ajout d'un utilisateur</h2>
 
-			{% if 'ROLE_ADMIN' in app.user.role.name %}
+			{% if is_granted('ROLE_ADMIN') %}
 				{% include 'components/AdminCreateUserForm.html.twig' %}
 			{% else %}
 				{% include 'components/CreateUserForm.html.twig' %}
