@@ -13,12 +13,10 @@
 
 		<section class="mb-2 px-4 py-2 bg-white shadow-sm rounded-lg">
 			<a href="{{path('invoice_new')}}"><h2>Créer une facture</h2></a>
-			<h2>Factures ({{ nombreDeFactures }})</h2>
-			<h2>Non échues</h2>
-			<h2>En retard (- de 30 jours) 
-            {# ({{ nombreDeFacturesEnRetard }})#}
-            </h2> 
-			<h2>En retard (+ de 30 jours)</h2>
+			<h2>Factures ({{ invoiceCount }})</h2>
+			<h2>Non échues ({{ unpaidInvoicesCount }})</h2>
+			<h2>En retard (- de 30 jours) ({{ invoiceCountLate1 }})</h2> 
+			<h2>En retard (+ de 30 jours) ({{ invoiceCountLate2 }})</h2>
 			<div class="h-screen flex justify-center items-center">
 				<div class="w-1/2">
 					<canvas id="myChart" class="w-full h-full"></canvas>
@@ -37,10 +35,14 @@
             var myChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['Payées partiellement', 'Non payées', 'Payées'],
+                    labels: ['Non échues', 'Non payées', 'Payées'],
                     datasets: [{
                         label: 'Parts de factures',
-                        data: [5,4,3],
+                        data: [
+                            {{ unpaidInvoicesCount }},
+                            {{ invoiceCountLate1 }},
+                            {{ invoiceCountLate2 }}
+                        ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',

@@ -79,23 +79,79 @@ class InvoiceRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    //Compte les factures en retard (- de 30 jours)
-    // public function countLateInvoices1(): int
-    // {
-    //     return $this->createQueryBuilder('i')
-    //     ->select('COUNT(i.id)')
-    //     ->innerJoin('i.payments', 'p')
-    //     ->innerJoin('i.status', 's')
-    //     ->where('i.dueAt < :thirtyDaysAgo') 
-    //     ->andWhere('s.name != :cancelled OR s.name IS NULL') // Statut différent de "Annulé" ou nul
-    //     ->andWhere(
-    //         'COALESCE(SUM(p.amount), 0) < i.totalIncludingTax'
-    //     )
-    //     ->setParameter('thirtyDaysAgo', new \DateTime('-30 days'))
-    //     ->setParameter('cancelled', 'Annulé')
-    //     ->getQuery()
-    //     ->getSingleScalarResult();
-    // }
+    /**
+     * Compte le nombre d'invoices en retard (- de 30 jours). Les conditions sont les suivantes :
+     *
+     * - status différent de "Annulé"
+     * - (date d'échéance (dueAt) + 30 jours) > date actuelle
+     * - la somme des paiements pour chaque invoice est inférieure aux prix de la facture sum(invoiceitems.priceIncludingTax * quantity)
+     * 
+     * @return int Le nombre d'invoices en retard (- de 30 jours)
+     */
+    public function countLateInvoices1(): int
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb->select('COUNT(i.id)')
+            ->leftJoin('i.status', 's')
+            ->leftJoin('i.payments', 'p')
+            ->leftJoin('i.invoiceItems', 'ii')
+            ->groupBy('i.id')
+            ->having('SUM(p.amount) < SUM(ii.priceIncludingTax * ii.quantity)')
+            ->andWhere('s.name != :cancelledStatus')
+            ->setParameter('cancelledStatus', 'Annulé')
+            ->andWhere('DATE_ADD(i.dueAt, 30, \'day\') > CURRENT_DATE()');
 
+        return (int) $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Compte le nombre d'invoices en retard (+ de 30 jours). Les conditions sont les suivantes :
+     *
+     * - status différent de "Annulé"
+     * - (date d'échéance (dueAt) + 30 jours) < date actuelle
+     * - la somme des paiements pour chaque invoice est inférieure aux prix de la facture sum(invoiceitems.priceIncludingTax * quantity)
+     * 
+     * @return int Le nombre d'invoices en retard (+ de 30 jours)
+     */
+    public function countLateInvoices2(): int
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb->select('COUNT(i.id)')
+            ->leftJoin('i.status', 's')
+            ->leftJoin('i.payments', 'p')
+            ->leftJoin('i.invoiceItems', 'ii')
+            ->groupBy('i.id')
+            ->having('SUM(p.amount) < SUM(ii.priceIncludingTax * ii.quantity)')
+            ->andWhere('s.name != :cancelledStatus')
+            ->setParameter('cancelledStatus', 'Annulé')
+            ->andWhere('DATE_ADD(i.dueAt, 30, \'day\') < CURRENT_DATE()');
+
+        return (int) $qb->getQuery()->getResult();
+    }
+    
+/**
+     * Compte le nombre d'invoices non échues
+     *
+     * - status différent de "Annulé"
+     * - date d'échéance (dueAt) < date actuelle
+     * - la somme des paiements pour chaque invoice est inférieure aux prix de la facture sum(invoiceitems.priceIncludingTax * quantity)
+     * 
+     * @return int Le nombre d'invoices non échues
+     */
+    public function countUnpaindInvoices(): int
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb->select('COUNT(i.id)')
+            ->leftJoin('i.status', 's')
+            ->leftJoin('i.payments', 'p')
+            ->leftJoin('i.invoiceItems', 'ii')
+            ->groupBy('i.id')
+            ->having('SUM(p.amount) < SUM(ii.priceIncludingTax * ii.quantity)')
+            ->andWhere('s.name != :cancelledStatus')
+            ->setParameter('cancelledStatus', 'Annulé')
+            ->andWhere('i.dueAt < CURRENT_DATE()');
+
+        return (int) $qb->getQuery()->getResult();
+    }
 
 }
