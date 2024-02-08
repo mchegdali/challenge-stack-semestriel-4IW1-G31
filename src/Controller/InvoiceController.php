@@ -9,12 +9,16 @@ use App\Form\InvoiceCreateType;
 use App\Form\InvoiceSearchType;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mime\Attachment;
+use Symfony\Component\Mailer\MailerInterface;
 use DateTimeImmutable;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -22,6 +26,12 @@ use Dompdf\Options;
 #[Route('/invoices', name: 'invoice_')]
 class InvoiceController extends AbstractController
 {
+    private $mailer;
+
+    public function __construct(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
+    }
 
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(
@@ -143,7 +153,7 @@ class InvoiceController extends AbstractController
     }
 
 #[Route('/{id}/pdf', name: 'invoice_pdf')]
-public function pdf(InvoiceRepository $invoiceRepository, string $id, Invoice $invoices): Response
+public function pdf(InvoiceRepository $invoiceRepository,MailerInterface $mailer, string $id, Invoice $invoices): Response
 {
     $invoice = $invoiceRepository->find($id);
     
@@ -162,15 +172,38 @@ public function pdf(InvoiceRepository $invoiceRepository, string $id, Invoice $i
     $html = $this->renderView('invoice/pdf.html.twig', [
         'invoices' => $invoices
     ]);
+    $templateMail = $this->renderView('invoice/mail.html.twig', [
+        'invoices' => $invoices
+    ]);
 
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'portrait');
     $dompdf->render();
-
-    // Envoyez le PDF au navigateur
     $dompdf->stream("facture-{$id}.pdf", [
         "Attachment" => false // Changez à true pour forcer le téléchargement
     ]);
+
+    $pdfPath = sys_get_temp_dir() . '/facture-' . $id . '.pdf'; // Génère un nom de fichier unique
+    file_put_contents($pdfPath, $dompdf->output()); // Sauvegarde le contenu du PDF dans le fichier
+
+    $mailCustomer = $invoices->getCustomer()->getEmail();
+    $email = (new Email())
+        ->from('challengesemestre@hotmail.com')
+        ->to($mailCustomer)
+        ->subject('Votre facture')
+        ->text('Veuillez trouver ci-joint votre facture.')
+        ->html($templateMail);
+
+
+$email->attachFromPath($pdfPath, 'facture.pdf', 'application/pdf');
+
+
+$this->mailer->send($email);
+
+
+unlink($pdfPath);
+    // Envoyez le PDF au navigateur
+
     return new Response('', 200, [
         'Content-Type' => 'application/pdf',
     ]);
