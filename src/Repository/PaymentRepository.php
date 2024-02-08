@@ -39,4 +39,29 @@ class PaymentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    //Récupère la somme des paiements liés à l'entreprise de l'utilisateur connecté des 12 derniers mois ou du mois en cours
+    public function findTotalPaymentsForCompany($companyId, $period)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('SUM(p.amount) as totalPayments')
+            ->join('p.invoice', 'i')
+            ->where('i.company = :companyId')
+            ->setParameter('companyId', $companyId);
+
+        $currentDate = new \DateTime();
+        switch ($period) {
+            case 'last_12_months':
+                $date = (new \DateTime())->modify('-12 months');
+                $qb->andWhere('p.paidAt >= :date')
+                ->setParameter('date', $date);
+                break;
+            case 'current_month':
+                $startOfMonth = $currentDate->modify('first day of this month')->setTime(0, 0);
+                $qb->andWhere('p.paidAt > :startOfMonth')
+                ->setParameter('startOfMonth', $startOfMonth);
+                break;
+        }
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }
