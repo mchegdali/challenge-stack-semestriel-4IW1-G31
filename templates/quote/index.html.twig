@@ -6,87 +6,62 @@
 {% block body %}
     {% include 'components/Navbar.html.twig' %}
 
-    <main class="mx-2 mt-2">
-        <header class="mb-2 p-1">
+
+    <main class="mx-2 mt-2 space-y-2">
+        <header class="p-1">
             <h1 class="font-bold text-3xl">Liste des devis</h1>
         </header>
-        <section class="mb-2 px-4 py-2 bg-white shadow-sm rounded-lg">
-            <details>
+        <section class="px-4 py-2 bg-white shadow-sm rounded-lg">
+            <details class="animate-details">
                 <summary class="font-bold">Filtres</summary>
                 {{ form_start(searchForm, {'method': 'POST' }) }}
-                {{ form_label(searchForm.status) }}
-                {{ form_widget(searchForm.status, {widget_class: "mb-2 flex gap-2" }) }}
+                {{ form_row(searchForm.status) }}
                 {{ form_rest(searchForm) }}
-                <button id="quote_search_submit" type="submit"
+                <button type="submit" id="quote_search_submit"
                         class="rounded px-2 py-1 bg-blue-800 font-bold text-white disabled:bg-blue-200">Filtrer
                 </button>
                 {{ form_end(searchForm) }}
-
             </details>
         </section>
-        <section class="flex flex-col w-full gap-2">
-            {% for quote in quotes %}
-                <twig:QuoteListItem :quote="quote"/>
-            {% endfor %}
+        <section>
+            {% if quotes|length == 0 %}
+                <p class="mt-2">Aucun devis trouvé</p>
+            {% endif %}
+            <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-3 md:gap-2 xl:grid-cols-4 xl:gap-3 2xl:grid-cols-5 2xl:gap-4">
+                {% for quote in quotes %}
+                    <twig:Quote:QuoteListItem :quote="quote"/>
+                {% endfor %}
+            </div>
         </section>
     </main>
     <script>
         const formEl = document.querySelector("form");
         const submitBtn = document.getElementById("quote_search_submit");
-        let isSubmitDisabled = true;
+        submitBtn.disabled = isFormEmpty();
 
-        /**
-         *
-         * @type {NodeListOf<HTMLInputElement>}
-         */
-        const checkboxesEl = formEl.querySelectorAll("input[type='checkbox']");
-        /**
-         *
-         * @type {NodeListOf<HTMLInputElement>}
-         */
-        const inputTextEl = formEl.querySelectorAll("input[type='text']");
-
-
-        /**
-         *
-         * @type EventListener
-         */
-        const handleForm = () => {
-            for (const checkbox of checkboxesEl) {
-                if (checkbox.checked) {
-                    isSubmitDisabled = false;
-                    break;
-                } else {
-                    isSubmitDisabled = true;
-                }
-            }
-
-            // Check for non-empty text fields if no checkbox is checked
-            if (isSubmitDisabled) {
-                for (const input of inputTextEl) {
-                    if (input.value.trim() !== '') {
-                        isSubmitDisabled = false;
-                        break;
-                    }
-                }
-            }
-
-            if (isSubmitDisabled) {
-                submitBtn.setAttribute("disabled", '');
+        formEl.addEventListener("input", function (e) {
+            if (isFormEmpty()) {
+                submitBtn.disabled = true;
             } else {
-                submitBtn.removeAttribute("disabled");
+                submitBtn.disabled = false;
             }
-        }
+        });
 
-        for (const checkbox of checkboxesEl) {
-            checkbox.addEventListener('change', handleForm);
-        }
-        for (const input of inputTextEl) {
-            input.addEventListener('input', handleForm);
-        }
+        function isFormEmpty() {
+            let isEmpty = true;
+            const fd = new FormData(formEl);
+            for (const value of fd.values()) {
+                if (value.trim() !== '') {
+                    isEmpty = false;
+                    break;
+                }
+            }
 
-        handleForm()
+            console.log(isEmpty);
+            return isEmpty;
+        }
     </script>
+
 {% endblock %}
 
 

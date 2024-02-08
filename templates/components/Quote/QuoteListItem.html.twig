@@ -1,0 +1,29 @@
+<a href="{{ path('quote_show', {id: quote.id }) }}" class="px-4 py-6 bg-white shadow flex-col justify-start items-start flex rounded-xl gap-1 w-full">
+    <section class="justify-between items-center flex self-stretch">
+            <span class="grow text-black text-sm font-bold  leading-tight tracking-tight">N° devis</span>
+            <span class="shrink text-black text-sm font-normal leading-tight">{{ quote.quoteNumber }}</span>
+    </section>
+    
+    <section class="justify-between items-center flex self-stretch">
+        <span class="grow shrink basis-0 text-black text-sm font-bold  leading-tight tracking-tight">Date de création</span>
+        <span class="text-black text-sm font-normal  leading-tight">{{ quote.createdAt|date('d/m/Y') }}</span>
+    </section>
+    <section class="justify-between items-center flex self-stretch">
+        <span class="grow shrink basis-0 text-black text-sm font-bold  leading-tight tracking-tight">Client</span>
+        <span class="text-black text-sm font-normal  leading-tight">{{ quote.customer.name }}</span>
+    </section>
+    <section class="justify-between items-center flex self-stretch">
+        <span class="text-center text-black text-sm font-bold  leading-tight tracking-tight">Montant HT</span>
+        <span class="text-center text-black text-sm font-normal  leading-tight">{{ quote.totalExcludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+    </section>
+    <section class="justify-between items-center flex self-stretch">
+        <span class="text-center text-black text-sm font-bold  leading-tight tracking-tight">Montant TTC</span>
+        <span class="text-center text-black text-sm font-normal  leading-tight">{{ quote.totalIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+    </section>
+    <section class="justify-between items-center flex self-stretch">
+         <span class="text-center text-black text-sm font-bold  leading-tight tracking-tight">Statut</span>
+        <twig:Quote:QuoteStatusBadge :quoteStatus="quote.status" />
+    </section>
+    
+    
+</a>

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Quote;
 
-use DateTimeImmutable;
 use App\Entity\Customer;
 use App\Form\CustomerType;
 use App\Form\QuoteCreateType;
@@ -15,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/quotes', name: 'quote_')]
@@ -28,20 +26,22 @@ class QuoteController extends AbstractController
         Request         $request
     ): Response {
         $form = $this->createForm(QuoteSearchType::class, null, ["method" => "POST"]);
+        $form->handleRequest($request);
 
-        if ($request->isMethod("POST")) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $searchResult = $request->request->all("quote_search");
             $quotes = $quoteRepository->findBySearch($searchResult);
         } else {
-            $user = $this->getUser();
-            if (!$user instanceof UserInterface) {
-                throw $this->createNotFoundException('Utilisateur non trouvé');
-            }
-            $company = $user->getCompany();
-            if (!$company) {
-                throw $this->createNotFoundException('Entreprise non trouvée');
-            }
-            $quotes = $quoteRepository->findBy(['company' => $company]);
+            // $user = $this->getUser()->getRoles();
+            // if (!$user instanceof UserInterface) {
+            //     throw $this->createNotFoundException('Utilisateur non trouvé');
+            // }
+            // $company = $user->getCompany();
+            // if (!$company) {
+            //     throw $this->createNotFoundException('Entreprise non trouvée');
+            // }
+            // $quotes = $quoteRepository->findBy(['company' => $company]);
+            $quotes = $quoteRepository->findAll();
         }
 
         return $this->render('quote/index.html.twig', [

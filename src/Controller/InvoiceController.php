@@ -68,7 +68,6 @@ class InvoiceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $searchResult = $request->request->all("invoice_search");
-            dump($searchResult);
             $invoices = $invoiceRepository->findBySearch($searchResult);
         } else {
             $invoices = $invoiceRepository->findAll();
