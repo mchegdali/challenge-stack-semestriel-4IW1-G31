@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use DateTimeImmutable;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -81,6 +82,8 @@ class InvoiceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $invoice->setCompany($this->getUser()->getCompany());
+            $currentDate = new DateTimeImmutable();
+            $invoice->setDueAt($currentDate->modify('+30 days'));
 
 
             foreach ($invoice->getInvoiceItems() as $item) {
