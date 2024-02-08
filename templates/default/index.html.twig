@@ -19,7 +19,21 @@
 			<h2>En retard (+ de 30 jours) ({{ invoiceCountLate2 }})</h2>
 			<div class="h-screen flex justify-center items-center">
 				<div class="w-1/2">
-					<canvas id="myChart" class="w-full h-full"></canvas>
+					<canvas id="myChartRound" class="w-full h-full"></canvas>
+				</div>
+			</div>
+		</section>
+
+        <section class="mb-2 px-4 py-2 bg-white shadow-sm rounded-lg">
+			<h2>Ventes ({{ invoiceCount }})</h2>
+			<h2>12 derniers mois</h2>
+			<h2>{{paymentLast12Months}} €</h2>
+			<h2>Ce mois</h2> 
+			<h2>{{paymentThisMonth}} €</h2>
+			<div class="h-screen flex justify-center items-center">
+				<div class="w-1/2">
+					<canvas id="myChartBar" class="w-full h-full"></canvas>
+                    {# TODO #}
 				</div>
 			</div>
 		</section>
@@ -31,7 +45,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var ctx = document.getElementById('myChart').getContext('2d');
+            var ctx = document.getElementById('myChartRound').getContext('2d');
             var myChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
