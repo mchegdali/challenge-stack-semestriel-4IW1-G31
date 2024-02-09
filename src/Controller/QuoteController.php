@@ -153,6 +153,16 @@ class QuoteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            foreach ($quote->getQuoteItems() as $item) {
+                //calcul de priceIncludingTax pour chaque quoteItem
+                $tax = $item->getTax()->getValue() * $item->getPriceExcludingTax() / 100;
+
+                $item->setTaxAmount($tax);
+
+                $item->setPriceIncludingTax($item->getPriceExcludingTax() + $tax);
+            }
+            
             $em->flush();
 
             return $this->redirectToRoute('quote_show', ['id' => $quote->getId()]);
