@@ -1,24 +1,59 @@
 {% use 'tailwind_2_layout.html.twig' %}
 
-{% block form_row %}
-    {% set row_class = row_class|default('mb-2') %}
-    {{ parent() }}
-{% endblock form_row %}
+{%- block form_start -%}
+    {%- do form.setMethodRendered() -%}
+    {% set method = method|upper %}
+    {%- if method in ["GET", "POST"] -%}
+        {% set form_method = method %}
+    {%- else -%}
+        {% set form_method = "POST" %}
+    {%- endif -%}
+<form{% if name != '' %} name="{{ name }}"{% endif %}
+        method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}
+        class="flex flex-col gap-2">
+    {%- if form_method != method -%}
+        <input type="hidden" name="_method" value="{{ method }}"/>
+    {%- endif -%}
+    {%- endblock form_start -%}
 
-{% block textarea_widget  %}
-    {% set widget_class = widget_class|default('w-full rounded-sm border-1 border-blue-600 justify-start items-center placeholder:text-gray-500 focus:ring-1') %}
-    {{ parent() }}
-{% endblock textarea_widget  %}
+    {%- block form_row -%}
+        {%- set row_attr = row_attr|merge({ class: row_attr.class|default(row_class|default('mb-2')) }) -%}
+        {{- parent() -}}
+    {%- endblock form_row -%}
 
-{% block checkbox_widget  %}
-    {% set widget_class = widget_class|default('focus:ring-1 focus:ring-offset-1 mr-2') %}
-    {{ parent() }}
-{% endblock checkbox_widget  %}
+    {% block textarea_widget %}
+        {% set widget_class = widget_class|default('w-full rounded-sm border-1 border-blue-600 justify-start items-center placeholder:text-gray-500 focus:ring-1') %}
+        {{ parent() }}
+    {% endblock textarea_widget %}
 
-{% block form_label %}
-    {% set label_class = label_class|default('block text-base text-blue-950') %}
-    {{ parent() }}
-{% endblock form_label %}
+    {%- block choice_widget_expanded -%}
+        {%- set attr = attr|merge({ class: attr.class|default('flex gap-4 flex-wrap w-full') }) -%}
+        <div {{ block('widget_container_attributes') }} >
+            {%- for child in form %}
+                <div class="flex items-center">
+                    {{- form_widget(child) -}}
+                    {{- form_label(child, null, { translation_domain: choice_translation_domain }) -}}
+                </div>
+            {% endfor -%}
+        </div>
+    {%- endblock choice_widget_expanded -%}
+
+
+    {%- block form_label -%}
+    {% if label is not same as(false) -%}
+    {% if not compound -%}
+        {% set label_attr = label_attr|merge({'for': id}) %}
+    {%- endif -%}
+    {% if required -%}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+    {%- endif -%}
+    <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}
+    class="text-blue-950">
+    {{- block('form_label_content') -}}
+</{{ element|default('label') }}>
+    {%- endif -%}
+{%- endblock form_label -%}
+
 
 {%- block form_errors -%}
     {%- set error_item_class = error_item_class|default('text-red-500 font-medium ') -%}
