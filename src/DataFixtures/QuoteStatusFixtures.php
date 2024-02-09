@@ -10,25 +10,37 @@ class QuoteStatusFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $draftStatus = new QuoteStatus();
-        $draftStatus->setName("Brouillon");
-        $draftStatus->setColor("gray");
-        $manager->persist($draftStatus);
+        $status = new QuoteStatus();
+        $status->setDisplayName("Brouillon");
+        $status->setName("draft");
+        $status->setBgColor("gray-700");
+        $status->setTextColor("white");
+        $status->setBorderColor("gray-700");
+        $manager->persist($status);
 
-        $sentStatus = new QuoteStatus();
-        $sentStatus->setName("Envoyé");
-        $sentStatus->setColor("blue");
-        $manager->persist($sentStatus);
+        $status = new QuoteStatus();
+        $status->setDisplayName("Envoyé");
+        $status->setName("sent");
+        $status->setBgColor("blue-600");
+        $status->setTextColor("white");
+        $status->setBorderColor("blue-600");
+        $manager->persist($status);
 
-        $validatedStatus = new QuoteStatus();
-        $validatedStatus->setName("Validé");
-        $validatedStatus->setColor("green");
-        $manager->persist($validatedStatus);
+        $status = new QuoteStatus();
+        $status->setDisplayName("Validé");
+        $status->setName("accepted");
+        $status->setBgColor("green-700");
+        $status->setTextColor("white");
+        $status->setBorderColor("green-700");
+        $manager->persist($status);
 
-        $rejectedStatus = new QuoteStatus();
-        $rejectedStatus->setName("Refusé");
-        $rejectedStatus->setColor("red");
-        $manager->persist($rejectedStatus);
+        $status = new QuoteStatus();
+        $status->setDisplayName("Refusé");
+        $status->setName("refused");
+        $status->setBgColor("red-500");
+        $status->setTextColor("white");
+        $status->setBorderColor("red-500");
+        $manager->persist($status);
 
         $manager->flush();
     }

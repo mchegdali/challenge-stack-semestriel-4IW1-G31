@@ -3,12 +3,13 @@
 {% block title %}Plumbill{% endblock %}
 
 {% block body %}
-   {% include 'components/Navbar.html.twig' %}
-   
+    {% include 'components/Navbar.html.twig' %}
+
     <main class="mx-auto px-1 pt-2 sm:px-0">
         <header class="px-1 sm:px-0 mb-2">
-            <h1><span class="text-3xl font-bold">Facture</span> <span class="text-2xl font-medium">{{ quote.quoteNumber }}</span></h1>
-            <twig:QuoteStatusBadge :quoteStatus="quote.status" />
+            <h1><span class="text-3xl font-bold">Facture</span> <span
+                        class="text-2xl font-medium">{{ quote.quoteNumber }}</span></h1>
+            <twig:StatusBadge :status="quote.status"/>
         </header>
         <article class="px-1 sm:px-0">
             <twig:Card>

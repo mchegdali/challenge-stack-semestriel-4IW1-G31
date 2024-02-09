@@ -3,9 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Quote;
-use App\Entity\QuoteStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -48,7 +46,7 @@ class QuoteRepository extends ServiceEntityRepository
         SELECT q.*, tp.total
         FROM quote q
         INNER JOIN total_prices tp ON q.id = tp.id
-    ';
+        WHERE 1 = 1';
 
         $params = [];
         if (!empty($searchResult)) {
@@ -66,6 +64,16 @@ class QuoteRepository extends ServiceEntityRepository
                 $sql .= ' AND tp.total <= :priceMax';
                 $params['priceMax'] = $searchResult["priceMax"];
             }
+
+            if (array_key_exists("minDate", $searchResult)) {
+                $sql .= ' AND q.created_at >= :minDate';
+                $params['minDate'] = $searchResult["minDate"];
+            }
+
+            if (array_key_exists("maxDate", $searchResult)) {
+                $sql .= ' AND q.created_at <= :maxDate';
+                $params['maxDate'] = $searchResult["maxDate"];
+            }
         }
 
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
@@ -73,5 +81,4 @@ class QuoteRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Config\InvoiceStatusEnum;
 use App\Entity\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
@@ -22,33 +23,9 @@ class InvoiceRepository extends ServiceEntityRepository
         parent::__construct($registry, Invoice::class);
     }
 
-//    /**
-//     * @return Invoice[] Returns an array of Invoice objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('i.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Invoice
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
     /**
      * @param array $searchResult
-     * @return Invoice[] Returns an array of Quote objects
+     * @return Invoice[] Returns an array of Invoice objects
      */
     public function findBySearch(array $searchResult): array
     {
@@ -56,27 +33,55 @@ class InvoiceRepository extends ServiceEntityRepository
             return !empty($value);
         });
 
-        $qb = $this->createQueryBuilder('i');
-        $qb->innerJoin('i.invoiceItems', 'ii');
-        $qb->addSelect('ii');
+        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+        $rsm->addRootEntityFromClassMetadata(Invoice::class, 'i');
 
+        $sql = '
+        WITH total_prices AS (
+            SELECT i.id, SUM(ii.price_including_tax * ii.quantity) as total
+            FROM invoice i
+            INNER JOIN invoice_item ii ON i.id = ii.invoice_id
+            GROUP BY i.id
+        )
+        SELECT i.*, tp.total
+        FROM invoice i
+        INNER JOIN total_prices tp ON i.id = tp.id
+        WHERE 1 = 1';
+
+        $params = [];
         if (!empty($searchResult)) {
             if (array_key_exists("status", $searchResult)) {
-                $qb->andWhere('i.status IN (:status)');
-                $qb->setParameter('status', $searchResult["status"]);
+                $sql .= ' AND i.status_id IN (:status)';
+                $params['status'] = $searchResult["status"];
             }
 
             if (array_key_exists("priceMin", $searchResult)) {
-                $qb->andWhere('ii.priceIncludingTax * ii.quantity >= :priceMin');
-                $qb->setParameter('priceMin', $searchResult["priceMin"]);
+                $sql .= ' AND tp.total >= :priceMin';
+                $params['priceMin'] = $searchResult["priceMin"];
             }
 
             if (array_key_exists("priceMax", $searchResult)) {
-                $qb->andWhere('ii.priceIncludingTax * ii.quantity <= :priceMax');
-                $qb->setParameter('priceMax', $searchResult["priceMax"]);
+                $sql .= ' AND tp.total <= :priceMax';
+                $params['priceMax'] = $searchResult["priceMax"];
+            }
+
+            if (array_key_exists("minDate", $searchResult)) {
+                $sql .= ' AND i.created_at >= :minDate';
+                $params['minDate'] = $searchResult["minDate"];
+            }
+
+            if (array_key_exists("maxDate", $searchResult)) {
+                $sql .= ' AND i.created_at <= :maxDate';
+                $params['maxDate'] = $searchResult["maxDate"];
             }
         }
-        return $qb->getQuery()->getResult();
+
+        $sql .= ' ORDER BY i.created_at DESC';
+
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameters($params);
+
+        return $query->getResult();
     }
 
     /**
@@ -85,7 +90,7 @@ class InvoiceRepository extends ServiceEntityRepository
      * - status différent de "Annulé"
      * - (date d'échéance (dueAt) + 30 jours) > date actuelle
      * - la somme des paiements pour chaque invoice est inférieure aux prix de la facture sum(invoiceitems.priceIncludingTax * quantity)
-     * 
+     *
      * @return int Le nombre d'invoices en retard (- de 30 jours)
      */
     public function countLateInvoices1(): int
@@ -98,10 +103,10 @@ class InvoiceRepository extends ServiceEntityRepository
             ->groupBy('i.id')
             ->having('SUM(p.amount) < SUM(ii.priceIncludingTax * ii.quantity)')
             ->andWhere('s.name != :cancelledStatus')
-            ->setParameter('cancelledStatus', 'Annulé')
+            ->setParameter('cancelledStatus', InvoiceStatusEnum::CANCELLED->value)
             ->andWhere('DATE_ADD(i.dueAt, 30, \'day\') > CURRENT_DATE()');
 
-        return (int) $qb->getQuery()->getResult();
+        return (int)$qb->getQuery()->getResult();
     }
 
     /**
@@ -110,7 +115,7 @@ class InvoiceRepository extends ServiceEntityRepository
      * - status différent de "Annulé"
      * - (date d'échéance (dueAt) + 30 jours) < date actuelle
      * - la somme des paiements pour chaque invoice est inférieure aux prix de la facture sum(invoiceitems.priceIncludingTax * quantity)
-     * 
+     *
      * @return int Le nombre d'invoices en retard (+ de 30 jours)
      */
     public function countLateInvoices2(): int
@@ -123,19 +128,19 @@ class InvoiceRepository extends ServiceEntityRepository
             ->groupBy('i.id')
             ->having('SUM(p.amount) < SUM(ii.priceIncludingTax * ii.quantity)')
             ->andWhere('s.name != :cancelledStatus')
-            ->setParameter('cancelledStatus', 'Annulé')
+            ->setParameter('cancelledStatus', InvoiceStatusEnum::CANCELLED->value)
             ->andWhere('DATE_ADD(i.dueAt, 30, \'day\') < CURRENT_DATE()');
 
-        return (int) $qb->getQuery()->getResult();
+        return (int)$qb->getQuery()->getResult();
     }
-    
-/**
+
+    /**
      * Compte le nombre d'invoices non échues
      *
      * - status différent de "Annulé"
      * - date d'échéance (dueAt) < date actuelle
      * - la somme des paiements pour chaque invoice est inférieure aux prix de la facture sum(invoiceitems.priceIncludingTax * quantity)
-     * 
+     *
      * @return int Le nombre d'invoices non échues
      */
     public function countUnpaindInvoices(): int
@@ -151,7 +156,7 @@ class InvoiceRepository extends ServiceEntityRepository
             ->setParameter('cancelledStatus', 'Annulé')
             ->andWhere('i.dueAt < CURRENT_DATE()');
 
-        return (int) $qb->getQuery()->getResult();
+        return (int)$qb->getQuery()->getResult();
     }
 
 }

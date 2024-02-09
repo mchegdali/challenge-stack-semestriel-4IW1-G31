@@ -6,15 +6,62 @@
 {% block body %}
     {% include 'components/Navbar.html.twig' %}
 
-    <main class="mx-auto container">
-        <header class="mb-2 p-1 flex justify-between items-center">
+    <main class="container mx-auto space-y-2 px-4 pt-4 md:px-0">
+        <header>
             <h1 class="font-bold text-3xl">Liste des factures</h1>
-            <a href="{{ path('invoice_search') }}">Filtrer</a>
         </header>
-        <section class="flex flex-col w-full gap-1">
-            {% for invoice in invoices %}
-                <twig:Invoice:InvoiceListItem :invoice="invoice"/>
-            {% endfor %}
+        <section class="px-4 py-2 bg-white shadow-sm rounded-lg">
+            <details class="animate-details">
+                <summary class="font-bold">Filtres</summary>
+                {{ form_start(searchForm, {'method': 'POST' }) }}
+                {{ form_row(searchForm.status) }}
+                {{ form_rest(searchForm) }}
+                <button type="submit" id="invoice_search_submit"
+                        class="rounded px-2 py-1 bg-blue-800 font-bold text-white disabled:bg-blue-200">Filtrer
+                </button>
+                {{ form_end(searchForm) }}
+            </details>
+        </section>
+        <section>
+            {% if invoices|length == 0 %}
+                <p class="mt-2">Aucune facture trouvée</p>
+            {% endif %}
+            <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-2 md:gap-2 xl:grid-cols-4 xl:gap-3 2xl:grid-cols-4 2xl:gap-4">
+                {% for invoice in invoices %}
+                    <twig:Invoice:InvoiceListItem :invoice="invoice"/>
+                {% endfor %}
+            </div>
         </section>
     </main>
+    <script>
+        const formEl = document.querySelector("form");
+        const submitBtn = document.getElementById("invoice_search_submit");
+        submitBtn.disabled = isFormEmpty();
+
+        formEl.addEventListener("input", function (e) {
+            if (isFormEmpty()) {
+                submitBtn.disabled = true;
+            } else {
+                submitBtn.disabled = false;
+            }
+        });
+
+        function isFormEmpty() {
+            let isEmpty = true;
+            const fd = new FormData(formEl);
+            for (const [key, value] of fd.entries()) {
+                if (key.includes("_token")) continue;
+
+                if (value.trim() !== '') {
+                    isEmpty = false;
+                    break;
+                }
+            }
+
+            return isEmpty;
+        }
+    </script>
+
 {% endblock %}
+
+

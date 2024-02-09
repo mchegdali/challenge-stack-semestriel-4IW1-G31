@@ -30,14 +30,16 @@ class QuoteFixtures extends Fixture implements DependentFixtureInterface
         foreach ($customers as $customer) {
             $nbCustomerQuotes = count($customer->getQuotes());
             $uuidParts = explode("-", $customer->getId()->toRfc4122());
-            for ($i = $nbCustomerQuotes + 1; $i <= $nbCustomerQuotes + 10; $i++) {
+            for ($i = 1; $i <= $nbCustomerQuotes; $i++) {
 
                 $quote = new Quote();
-                $quoteNumber = date("Y") . "-" . $uuidParts[array_key_last($uuidParts)] . "-" . str_pad($i, 3, "0", STR_PAD_LEFT);
+                $createdAt = $faker->dateTimeBetween('2020-01-01', '2024-01-01');
+
+                $quoteNumber = $createdAt->format('Y') . "-" . $uuidParts[array_key_last($uuidParts)] . "-" . str_pad($i, 3, "0", STR_PAD_LEFT);
                 $quote->setCustomer($customer);
                 $quote->setStatus($faker->randomElement($status));
                 $quote->setCompany($faker->randomElement($companies));
-                $quote->setCreatedAt($faker->dateTimeBetween('2020-01-01', '2024-01-01'));
+                $quote->setCreatedAt($createdAt);
                 $quote->setQuoteNumber($quoteNumber);
 
                 $manager->persist($quote);
