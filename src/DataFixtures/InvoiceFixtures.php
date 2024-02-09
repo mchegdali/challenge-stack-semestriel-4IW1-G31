@@ -38,18 +38,20 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
             for ($i = $nbCustomerQuotes + 1; $i <= $nbCustomerQuotes + 10; $i++) {
 
                 $invoice = new Invoice();
-                $invoiceNumber = date("Y") . "-" . $uuidParts[array_key_last($uuidParts)] . "-" . str_pad($i, 3, "0", STR_PAD_LEFT);
+                $createdAt = $faker->dateTimeBetween('2020-01-01', '2024-01-01');
+
+                $invoiceNumber = $createdAt->format('Y') . "-" . $uuidParts[array_key_last($uuidParts)] . "-" . str_pad($i, 3, "0", STR_PAD_LEFT);
                 $invoice->setCustomer($customer);
                 $invoice->setStatus($faker->randomElement($status));
                 $invoice->setCompany($faker->randomElement($companies));
-                $invoice->setCreatedAt($faker->dateTimeBetween('2020-01-01', '2024-01-01'));
-                $invoice->setDueAt(DateTimeImmutable::createFromMutable($invoice->getCreatedAt()->modify('+ 30 days')));
+                $invoice->setDueAt(DateTimeImmutable::createFromMutable($createdAt->modify('+ 30 days')));
+                $invoice->setCreatedAt($createdAt);
                 $invoice->setInvoiceNumber($invoiceNumber);
                 $manager->persist($invoice);
 
-                for ($j=0; $j < 2; $j++) { 
+                for ($j = 0; $j < 2; $j++) {
                     $payment = new Payment();
-                    $payment->setPaidAt(DateTimeImmutable::createFromMutable($faker->dateTimeInInterval($invoice->getCreatedAt()->format("Y-m-d"), '+ 90 days')));
+                    $payment->setPaidAt(DateTimeImmutable::createFromMutable($faker->dateTimeInInterval($createdAt->format("Y-m-d"), '+ 90 days')));
                     $payment->setInvoice($invoice);
                     $payment->setPaymentMethod($faker->randomElement($paymentMethods));
                     $payment->setAmount($faker->randomFloat(2, 100, 1000));
