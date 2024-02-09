@@ -2,11 +2,13 @@
 
 namespace App\Form;
 
+use App\Config\RolesEnum;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -58,18 +60,11 @@ class CreateAccountType extends AbstractType
                     'placeholder' => 'Saisir un nom de entreprise',
                 ],
             ])
-            ->add('roles', ChoiceType::class, [
+            ->add('roles', EnumType::class, [
                 'label' => 'Roles',
-                'multiple' => true,
-                'expanded' => false,
-                'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Administrateur' => 'ROLE_ADMIN',
-                    'Comptable' => 'ROLE_COMPTABLE',
-                    'Entreprise' => 'ROLE_COMPANY'
-                ],
+                'class' => RolesEnum::class,
                 'attr' => [
-                    'placeholder' => 'Sélectionner des rôles',
+                    'placeholder' => 'Sélectionner un rôle',
                 ],
             ])
             ->add('save', SubmitType::class, [
