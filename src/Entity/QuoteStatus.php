@@ -15,14 +15,25 @@ class QuoteStatus
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'status', targetEntity: Invoice::class)]
     private Collection $quotes;
 
-    #[ORM\Column(length: 255, unique: true)]
-    private ?string $color = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $bgColor = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $textColor = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $borderColor = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $displayName = null;
 
 
     public function __construct()
@@ -55,14 +66,51 @@ class QuoteStatus
         return $this->quotes;
     }
 
-    public function getColor(): string
+
+    public function getBgColor(): ?string
     {
-        return $this->color;
+        return $this->bgColor;
     }
 
-    public function setColor(string $color): static
+    public function setBgColor(string $bgColor): static
     {
-        $this->color = $color;
+        $this->bgColor = $bgColor;
+
+        return $this;
+    }
+
+    public function getTextColor(): ?string
+    {
+        return $this->textColor;
+    }
+
+    public function setTextColor(string $textColor): static
+    {
+        $this->textColor = $textColor;
+
+        return $this;
+    }
+
+    public function getBorderColor(): ?string
+    {
+        return $this->borderColor;
+    }
+
+    public function setBorderColor(string $borderColor): static
+    {
+        $this->borderColor = $borderColor;
+
+        return $this;
+    }
+
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName(string $displayName): static
+    {
+        $this->displayName = $displayName;
 
         return $this;
     }

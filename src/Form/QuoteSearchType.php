@@ -17,7 +17,7 @@ class QuoteSearchType extends AbstractType
         $builder
             ->add('status', EntityType::class, [
                 'class' => QuoteStatus::class,
-                'choice_label' => 'name',
+                'choice_label' => 'displayName',
                 "expanded" => true,
                 "multiple" => true,
                 "mapped" => false,

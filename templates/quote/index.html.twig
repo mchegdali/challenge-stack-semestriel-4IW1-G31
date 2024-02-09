@@ -7,8 +7,8 @@
     {% include 'components/Navbar.html.twig' %}
 
 
-    <main class="mx-2 mt-2 space-y-2">
-        <header class="p-1">
+    <main class="container mx-auto space-y-2 px-4 pt-4 md:px-0">
+        <header>
             <h1 class="font-bold text-3xl">Liste des devis</h1>
         </header>
         <section class="px-4 py-2 bg-white shadow-sm rounded-lg">
@@ -27,7 +27,7 @@
             {% if quotes|length == 0 %}
                 <p class="mt-2">Aucun devis trouvé</p>
             {% endif %}
-            <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-3 md:gap-2 xl:grid-cols-4 xl:gap-3 2xl:grid-cols-5 2xl:gap-4">
+            <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-2 md:gap-2 xl:grid-cols-4 xl:gap-3 2xl:grid-cols-4 2xl:gap-4">
                 {% for quote in quotes %}
                     <twig:Quote:QuoteListItem :quote="quote"/>
                 {% endfor %}
@@ -50,14 +50,16 @@
         function isFormEmpty() {
             let isEmpty = true;
             const fd = new FormData(formEl);
-            for (const value of fd.values()) {
+
+            for (const [key, value] of fd.entries()) {
+                if (key.includes("_token")) continue;
+
                 if (value.trim() !== '') {
                     isEmpty = false;
                     break;
                 }
             }
 
-            console.log(isEmpty);
             return isEmpty;
         }
     </script>
