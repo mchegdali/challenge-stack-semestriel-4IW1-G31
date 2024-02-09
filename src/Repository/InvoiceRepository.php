@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Config\InvoiceStatusEnum;
 use App\Entity\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
@@ -89,7 +90,7 @@ class InvoiceRepository extends ServiceEntityRepository
      * - status différent de "Annulé"
      * - (date d'échéance (dueAt) + 30 jours) > date actuelle
      * - la somme des paiements pour chaque invoice est inférieure aux prix de la facture sum(invoiceitems.priceIncludingTax * quantity)
-     * 
+     *
      * @return int Le nombre d'invoices en retard (- de 30 jours)
      */
     public function countLateInvoices1(): int
@@ -102,10 +103,10 @@ class InvoiceRepository extends ServiceEntityRepository
             ->groupBy('i.id')
             ->having('SUM(p.amount) < SUM(ii.priceIncludingTax * ii.quantity)')
             ->andWhere('s.name != :cancelledStatus')
-            ->setParameter('cancelledStatus', 'Annulé')
+            ->setParameter('cancelledStatus', InvoiceStatusEnum::CANCELLED->value)
             ->andWhere('DATE_ADD(i.dueAt, 30, \'day\') > CURRENT_DATE()');
 
-        return (int) $qb->getQuery()->getResult();
+        return (int)$qb->getQuery()->getResult();
     }
 
     /**
@@ -114,7 +115,7 @@ class InvoiceRepository extends ServiceEntityRepository
      * - status différent de "Annulé"
      * - (date d'échéance (dueAt) + 30 jours) < date actuelle
      * - la somme des paiements pour chaque invoice est inférieure aux prix de la facture sum(invoiceitems.priceIncludingTax * quantity)
-     * 
+     *
      * @return int Le nombre d'invoices en retard (+ de 30 jours)
      */
     public function countLateInvoices2(): int
@@ -127,19 +128,19 @@ class InvoiceRepository extends ServiceEntityRepository
             ->groupBy('i.id')
             ->having('SUM(p.amount) < SUM(ii.priceIncludingTax * ii.quantity)')
             ->andWhere('s.name != :cancelledStatus')
-            ->setParameter('cancelledStatus', 'Annulé')
+            ->setParameter('cancelledStatus', InvoiceStatusEnum::CANCELLED->value)
             ->andWhere('DATE_ADD(i.dueAt, 30, \'day\') < CURRENT_DATE()');
 
-        return (int) $qb->getQuery()->getResult();
+        return (int)$qb->getQuery()->getResult();
     }
-    
-/**
+
+    /**
      * Compte le nombre d'invoices non échues
      *
      * - status différent de "Annulé"
      * - date d'échéance (dueAt) < date actuelle
      * - la somme des paiements pour chaque invoice est inférieure aux prix de la facture sum(invoiceitems.priceIncludingTax * quantity)
-     * 
+     *
      * @return int Le nombre d'invoices non échues
      */
     public function countUnpaindInvoices(): int
@@ -155,7 +156,7 @@ class InvoiceRepository extends ServiceEntityRepository
             ->setParameter('cancelledStatus', 'Annulé')
             ->andWhere('i.dueAt < CURRENT_DATE()');
 
-        return (int) $qb->getQuery()->getResult();
+        return (int)$qb->getQuery()->getResult();
     }
 
 }
