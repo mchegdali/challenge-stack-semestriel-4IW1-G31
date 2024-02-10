@@ -83,14 +83,14 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-        const labels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+        const labels = {{ json12Months | raw }};
 
         // Configuration des données
         const data = {
             labels: labels,
             datasets: [{
             label: 'Mon premier jeu de données',
-            data: {{ paymentsData|json_encode|raw }}, 
+            data: {{ paymentsDataJsonPayment | raw }}, 
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(255, 159, 64, 0.2)',

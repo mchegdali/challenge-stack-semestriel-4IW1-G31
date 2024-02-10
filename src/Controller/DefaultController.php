@@ -36,19 +36,19 @@ class DefaultController extends AbstractController
         $totalInvoices = $invoiceRepository->totalInvoicesForCompany($user->getCompany());
         $amountToReceive = $totalInvoices - $amountReceivedAllTimes;
 
-        $companyId = $user->getCompany()->getId();
+        $companyId = $user->getCompany()->getId()->toRfc4122();
 
         for ($i = 11; $i >= 0; $i--) {
             $month = (new \DateTime())->modify("-$i months")->format('m');
             $year = (new \DateTime())->modify("-$i months")->format('Y');
             
-            $totalPayments = $paymentRepository->findTotalPaymentsForCompanyInMonth($companyId->toRfc4122(), $month, $year);
+            $totalPayments = $paymentRepository->findTotalPaymentsForCompanyInMonth($companyId, $month, $year);
             
             $paymentsData[] = $totalPayments ?: 0; // Ajoute 0 si null
-
-            dd($companyId->toRfc4122(), $month, $year, $totalPayments);
         }
-    
+        $jsonDataPayment = json_encode($paymentsData);
+
+        $json12Months = json_encode($this->getLast12MonthsLabels());
     
 
         return $this->render('default/index.html.twig', [
@@ -61,8 +61,8 @@ class DefaultController extends AbstractController
             'amountToReceive' => $amountToReceive,
             'totalInvoices' => $totalInvoices,
             'amountReceivedAllTimes' => $amountReceivedAllTimes,
-            'last12MonthsLabels' => $this->getLast12MonthsLabels(),
-            'paymentsData' => $paymentsData,
+            'json12Months' => $json12Months,
+            'paymentsDataJsonPayment' => $jsonDataPayment
         ]);
     }
 

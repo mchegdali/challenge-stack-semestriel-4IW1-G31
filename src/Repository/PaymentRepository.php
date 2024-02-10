@@ -68,31 +68,35 @@ class PaymentRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    //Récupère la somme des paiements liés à l'entreprise de l'utilisateur connecté sur un mois en particulier
     public function findTotalPaymentsForCompanyInMonth($companyId, $month, $year)
     {
         $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('totalPayments', 'totalPayments');
-
-        // Écriture de la requête SQL native adaptée à PostgreSQL
-        $sql = 'SELECT SUM(p.amount) as totalPayments
-                FROM payment p
-                INNER JOIN invoice i ON p.invoice_id = i.id
-                WHERE i.company_id = :companyId
-                  AND EXTRACT(MONTH FROM p.paid_at) = :month
-                  AND EXTRACT(YEAR FROM p.paid_at) = :year';
+        $rsm->addScalarResult('total_payments', 'totalPayments');
+    
+        $sql = "
+            SELECT SUM(p.amount) as total_payments
+            FROM payment p
+            INNER JOIN invoice i ON p.invoice_id = i.id
+            WHERE i.company_id = :companyId
+            AND EXTRACT(MONTH FROM p.paid_at) = :month
+            AND EXTRACT(YEAR FROM p.paid_at) = :year
+        ";
 
         $params = [];
-        $params['companyId'] = $companyId;
         $params['month'] = $month;
         $params['year'] = $year;
-
+        $params['companyId'] = $companyId;
+    
+    
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-        
         $query->setParameters($params);
 
-
-        return $query->getSingleScalarResult();
+    
+        $result = $query->getSingleScalarResult();
+    
+        // Si le résultat est null, on retourne 0
+        return $result ?? 0.0;
     }
 
+    
 }
