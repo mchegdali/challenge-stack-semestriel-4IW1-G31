@@ -30,6 +30,12 @@
 			<h2>{{paymentLast12Months}} €</h2>
 			<h2>Ce mois</h2> 
 			<h2>{{paymentThisMonth}} €</h2>
+            <h2>Total argent entrant</h2> 
+			<h2>{{ amountReceivedAllTimes }} €</h2>
+            <h2>Total factures</h2> 
+			<h2>{{ totalInvoices }} €</h2>
+            <h2>Somme d'argent en attente</h2> 
+			<h2>{{ amountToReceive }} €</h2>
 			<div class="h-screen flex justify-center items-center">
 				<div class="w-1/2">
 					<canvas id="myChartBar" class="w-full h-full"></canvas>
@@ -43,6 +49,7 @@
 
 {% block javascripts %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var ctx = document.getElementById('myChartRound').getContext('2d');
@@ -70,16 +77,60 @@
                         borderWidth: 1
                     }]
                 },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const labels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+
+        // Configuration des données
+        const data = {
+            labels: labels,
+            datasets: [{
+            label: 'Mon premier jeu de données',
+            data: {{ paymentsData|json_encode|raw }}, 
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1
+            }]
+        };
+
+        // Configuration du graphique
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+            scales: {
+                y: {
+                beginAtZero: true
+                }
+            }
+            },
+        };
+
+        // Initialisation du graphique
+        const myChart = new Chart(
+            document.getElementById('myChartBar'),
+            config
+        );
         });
     </script>
 {% endblock %}

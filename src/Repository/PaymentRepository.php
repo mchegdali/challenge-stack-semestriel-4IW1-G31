@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Payment;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Payment>
@@ -61,7 +62,37 @@ class PaymentRepository extends ServiceEntityRepository
                 $qb->andWhere('p.paidAt > :startOfMonth')
                 ->setParameter('startOfMonth', $startOfMonth);
                 break;
+            default:
+                break;
         }
         return $qb->getQuery()->getSingleScalarResult();
     }
+
+    //Récupère la somme des paiements liés à l'entreprise de l'utilisateur connecté sur un mois en particulier
+    public function findTotalPaymentsForCompanyInMonth($companyId, $month, $year)
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('totalPayments', 'totalPayments');
+
+        // Écriture de la requête SQL native adaptée à PostgreSQL
+        $sql = 'SELECT SUM(p.amount) as totalPayments
+                FROM payment p
+                INNER JOIN invoice i ON p.invoice_id = i.id
+                WHERE i.company_id = :companyId
+                  AND EXTRACT(MONTH FROM p.paid_at) = :month
+                  AND EXTRACT(YEAR FROM p.paid_at) = :year';
+
+        $params = [];
+        $params['companyId'] = $companyId;
+        $params['month'] = $month;
+        $params['year'] = $year;
+
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        
+        $query->setParameters($params);
+
+
+        return $query->getSingleScalarResult();
+    }
+
 }
