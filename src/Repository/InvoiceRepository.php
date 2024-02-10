@@ -159,4 +159,16 @@ class InvoiceRepository extends ServiceEntityRepository
         return (int)$qb->getQuery()->getResult();
     }
 
+    //Renvoie le montant total des factures pour une entreprise
+    public function totalInvoicesForCompany($companyId)
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->select('SUM(item.quantity * item.priceIncludingTax) as totalAmount')
+            ->join('i.invoiceItems', 'item')
+            ->where('i.company = :companyId')
+            ->setParameter('companyId', $companyId);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
 }
