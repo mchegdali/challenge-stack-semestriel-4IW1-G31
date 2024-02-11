@@ -49,7 +49,7 @@
         {% set label_attr = label_attr|merge({'for': id}) %}
     {%- endif -%}
     {% if required -%}
-        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('text-blue-950') ~ ' required')|trim}) %}
     {%- endif -%}
     <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}
     class="text-blue-950">

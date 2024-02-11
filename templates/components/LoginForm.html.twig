@@ -4,16 +4,15 @@
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-
         <div class="space-y-1">
             <label for="username" class="text-base">Adresse email</label>
             <input type="text" id="username" value="{{ last_username }}" name="email"
-                   class="w-full rounded-sm" placeholder="bill@plumbill.fr" required autofocus>
+                   class="w-full" placeholder="bill@plumbill.fr" required autofocus>
         </div>
 
         <div class="space-y-1">
             <label for="password" class="text-base">Mot de passe</label>
-            <input type="password" id="password" name="password" class="border-2 w-full p-2"
+            <input type="password" id="password" name="password" class="w-full"
                    placeholder="Mot de passe" required>
         </div>
 
@@ -30,7 +29,6 @@
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         </div>
     </form>
-
 
     <a href="">Mot de passe oublié ?</a>
 </div>
