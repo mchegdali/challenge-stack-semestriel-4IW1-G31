@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class CompanyType extends AbstractType
 {
@@ -38,6 +39,11 @@ class CompanyType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Entrer une ville',
                 ],
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'required' => false,
+                'allow_delete' => true,
+                'download_uri' => true,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Ajouter',

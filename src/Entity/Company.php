@@ -8,8 +8,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
+#[Vich\Uploadable]
 class Company
 {
     #[ORM\Id]
@@ -41,6 +45,23 @@ class Company
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: User::class)]
     private Collection $users;
+
+    #[Vich\UploadableField(mapping: 'companyImage', fileNameProperty: 'imageName', size: 'imageSize')]
+    #[Assert\Image(
+        maxSize: '1000k',
+        mimeTypes: ['image/jpeg', 'image/png'],
+        maxRatio: '175',
+        minRatio: '1.70',
+        maxSizeMessage: 'Le fichier ne doit pas faire plus de {{ limit }}ko, mais il fait {{ size }}',
+        mimeTypesMessage: 'Le fichier doit être au format JPG ou PNG',
+    )]
+    private ?File $imageFile = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $imageName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $imageSize = null;
 
     public function __construct()
     {
@@ -111,6 +132,44 @@ class Company
     {
         $this->city = $city;
 
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): Company
+    {
+        $this->imageFile = $imageFile;
+
+        // if (null !== $imageFile) {
+        //     $this->updatedAt = new \DateTime();
+        // }
+
+        return $this;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): Company
+    {
+        $this->imageName = $imageName;
+        return $this;
+    }
+
+    public function getImageSize(): ?int
+    {
+        return $this->imageSize;
+    }
+
+    public function setImageSize(?int $imageSize): Company
+    {
+        $this->imageSize = $imageSize;
         return $this;
     }
 
