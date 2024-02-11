@@ -39,15 +39,14 @@ class QuoteCreateType extends AbstractType
                 'label' => 'Statut',
                 'placeholder' => '-- Choisir un statut --',
                 'class' => QuoteStatus::class,
-                'choice_label' => function (QuoteStatus $status) {
-                    return $status->getName();
-                }
+                'choice_label' => 'displayName'
             ])
             ->add('valider', SubmitType::class, [
-                'attr' => [
-                    'class' => 'bg-blue-800 text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm mt-4',
-                ],
-            ]);
+//                'attr' => [
+//                    'class' => 'bg-blue-800 text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm mt-4',
+//                ],
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

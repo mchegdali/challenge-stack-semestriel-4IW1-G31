@@ -60,7 +60,7 @@
 
 
 {%- block form_errors -%}
-    {%- set error_item_class = error_item_class|default('text-red-500 font-medium ') -%}
+    {%- set error_item_class = error_item_class|default('text-sm text-red-500 font-medium ') -%}
     {{- parent() -}}
 {%- endblock form_errors -%}
 
@@ -68,3 +68,43 @@
     {%- set help_class = help_class|default('block text-gray-800') -%}
     {{- parent() -}}
 {%- endblock form_help -%}
+
+{%- block button_widget -%}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- elseif label is not same as(false) -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    {% set class = "font-bold py-2 px-4 rounded text-sm" %}
+
+    {%- if type in ['submit', 'reset'] -%}
+        {% set class = class ~ ' bg-blue-800 hover:bg-blue-900 text-white' %}
+    {%- elseif type == 'button' -%}
+        {% set class = class ~ ' border-blue-800 bg-white text-blue-800 hover:bg-blue-800 hover:text-white' %}
+    {%- endif -%}
+    {%- if attr.class is defined -%}
+        {% set class = class ~ ' ' ~ attr.class %}
+    {%- endif -%}
+    {% set attr = attr|merge({ class: class }) %}
+
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+        {%- if translation_domain is same as(false) -%}
+            {%- if label_html is same as(false) -%}
+                {{- label -}}
+            {%- else -%}
+                {{- label|raw -}}
+            {%- endif -%}
+        {%- else -%}
+            {%- if label_html is same as(false) -%}
+                {{- label|trans(label_translation_parameters, translation_domain) -}}
+            {%- else -%}
+                {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
+            {%- endif -%}
+        {%- endif -%}
+    </button>
+{%- endblock button_widget -%}
