@@ -2,9 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\Company;
-use App\Entity\Invoice;
 use App\Entity\InvoiceStatus;
+use App\Validator\PriceMax;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -26,7 +25,8 @@ class InvoiceSearchType extends AbstractType
             ])
             ->add('priceMin', MoneyType::class, [
                 "mapped" => false,
-                "label" => "Montant minimum",
+                "label" => "Montant minimum (en €)",
+                "currency" => false,
                 "required" => false,
                 "invalid_message" => "La valeur entrée n'est pas valide",
                 "attr" => [
@@ -41,17 +41,21 @@ class InvoiceSearchType extends AbstractType
             ])
             ->add('priceMax', MoneyType::class, [
                 "mapped" => false,
-                "label" => "Montant maximum",
+                "label" => "Montant maximum (en €)",
+                "currency" => false,
                 "required" => false,
                 "invalid_message" => "La valeur entrée n'est pas valide",
                 "attr" => [
                     'placeholder' => "Entrez un montant maximum"
                 ],
                 "constraints" => [
-                    new Assert\GreaterThanOrEqual([
-                        "propertyPath" => "priceMin",
-                        'message' => "Le montant minimum ne peut pas en dessous du prix minimum ({{ compared_value }})"
-                    ])
+                    [
+                        new Assert\GreaterThanOrEqual([
+                            'value' => 0,
+                            'message' => "Le montant maximum ne peut pas être négatif"
+                        ]),
+                        new PriceMax()
+                    ]
                 ]
             ])->add('minDate', DateType::class, [
                 "mapped" => false,
@@ -70,6 +74,12 @@ class InvoiceSearchType extends AbstractType
                 "widget" => "single_text",
                 "attr" => [
                     'placeholder' => "Entrez une date de fin"
+                ],
+                "constraints" => [
+                    new Assert\GreaterThanOrEqual([
+                        'value' => $builder->get('minDate')->getData(),
+                        'message' => "La date de fin ne peut pas être antérieure à la date de début ({{ compared_value }})"
+                    ])
                 ]
             ]);
     }

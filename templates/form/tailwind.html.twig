@@ -16,6 +16,10 @@
     {%- endif -%}
     {%- endblock form_start -%}
 
+    {%- block money_widget -%}
+        {{ money_pattern|form_encode_currency(block('form_widget_simple')) }}
+    {%- endblock money_widget -%}
+
     {%- block form_row -%}
         {%- set row_attr = row_attr|merge({ class: row_attr.class|default(row_class|default('mb-2')) }) -%}
         {{- parent() -}}
