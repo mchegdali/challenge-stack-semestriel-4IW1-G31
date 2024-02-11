@@ -32,7 +32,6 @@ class UserFixtures extends Fixture
         $user->setFirstName($faker->firstName());
         $user->setLastName($faker->lastName());
         $user->setPassword($this->passwordHasher->hashPassword($user, '12345678'));
-        $user->setRole($this->getReference('ROLE_USER'));
         $user->setIsVerified(true);
 
         $userComptable->setCompany($faker->randomElement($companies));
@@ -40,14 +39,14 @@ class UserFixtures extends Fixture
         $userComptable->setFirstName($faker->firstName());
         $userComptable->setLastName($faker->lastName());
         $userComptable->setPassword($this->passwordHasher->hashPassword($userComptable, '12345678'));
-        $userComptable->setRole($this->getReference('ROLE_COMPTABLE'));
+        $userComptable->setRoles(['ROLE_COMPTABLE']);
         $userComptable->setIsVerified(true);
 
         $userAdmin->setEmail('admin@admin.fr');
         $userAdmin->setFirstName($faker->firstName());
         $userAdmin->setLastName($faker->lastName());
         $userAdmin->setPassword($this->passwordHasher->hashPassword($userAdmin, '12345678'));
-        $userAdmin->setRole($this->getReference('ROLE_ADMIN'));
+        $userAdmin->setRoles(['ROLE_ADMIN']);
         $userAdmin->setIsVerified(true);
 
         $userCompany->setCompany($faker->randomElement($companies));
@@ -55,7 +54,7 @@ class UserFixtures extends Fixture
         $userCompany->setFirstName($faker->firstName());
         $userCompany->setLastName($faker->lastName());
         $userCompany->setPassword($this->passwordHasher->hashPassword($userCompany, '12345678'));
-        $userCompany->setRole($this->getReference('ROLE_COMPANY'));
+        $userCompany->setRoles(['ROLE_COMPANY']);
         $userCompany->setIsVerified(true);
 
         for ($i = 0; $i < 10; $i++) {
@@ -65,7 +64,7 @@ class UserFixtures extends Fixture
             $userCompany->setFirstName($faker->firstName());
             $userCompany->setLastName($faker->lastName());
             $userCompany->setPassword($this->passwordHasher->hashPassword($userCompany, '12345678'));
-            $userCompany->setRole($this->getReference('ROLE_COMPANY'));
+            $userCompany->setRoles(['ROLE_COMPANY']);
             $userCompany->setIsVerified(false);
 
             $manager->persist($userCompany);

@@ -22,12 +22,6 @@ class UserType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionner une entreprise',
             ])
-            ->add('role', EntityType::class, [
-                'label' => 'Role',
-                'class' => 'App\Entity\Role',
-                'choice_label' => 'name',
-                'placeholder' => 'Sélectionner un role',
-            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Ajouter',
             ]);

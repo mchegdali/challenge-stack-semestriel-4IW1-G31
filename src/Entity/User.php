@@ -39,9 +39,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Role $role = null;
-
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
@@ -138,18 +135,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    public function getRole(): ?Role
-    {
-        return $this->role;
-    }
-
-    public function setRole(?Role $role): static
-    {
-        $this->role = $role;
 
         return $this;
     }

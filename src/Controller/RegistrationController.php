@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Company;
-use App\Entity\Role;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\CompanyUserRegistrationFormType;
@@ -57,8 +56,7 @@ class RegistrationController extends AbstractController
 
             $user->setCompany($company);
 
-            $roleCompany = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_COMPANY']);
-            $user->setRole($roleCompany);
+            $user->setRoles(['ROLE_COMPANY']);
 
             $entityManager->persist($company);
             $entityManager->persist($user);
@@ -73,6 +71,7 @@ class RegistrationController extends AbstractController
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
+            
         }
 
         return $this->render('registration/register.html.twig', [

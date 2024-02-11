@@ -10,7 +10,7 @@
 
 	<div class="flex mt-6 mx-6">
 
-	{% if 'ROLE_ADMIN' in app.user.role.name %}
+	{% if is_granted('ROLE_ADMIN') %}
 				<a href="{{ path('app_list_user_admin')}}">
 			<i class="material-icons">arrow_left</i>
 		</a>

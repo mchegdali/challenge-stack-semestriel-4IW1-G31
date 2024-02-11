@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Role;
 use App\Entity\User;
 
 use App\Form\UserType;
@@ -10,6 +9,8 @@ use App\Form\UserType;
 
 use App\Form\RegistrationFormType;
 use App\Form\CompanyUserRegistrationFormType;
+use App\Form\CreateAccountType;
+use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,15 +26,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class UserController extends AbstractController
 {
     #[Route('/user-admin', name: 'app_list_user_admin')]
+
     public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(CreateAccountType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -83,34 +86,27 @@ class UserController extends AbstractController
         return $this->render('requestCompanyAccount/index.html.twig', [
             'users' => $users,
         ]);
-
     }
 
     #[Route('/user', name: 'app_list_user')]
-    public function companyCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
+    // #[Security("is_granted('ROLE_ADMIN')")]
+    public function companyCreateUser(UserRepository $userRepository, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $loggedInUser = $this->getUser();
 
-        $comptableRole = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_COMPTABLE']);
+        // $comptableRole = "ROLE_COMPTABLE";
 
-        $existingComptable = $entityManager->getRepository(User::class)
+        $existingComptable = $userRepository
             ->createQueryBuilder('u')
             ->select('COUNT(u.id)')
             ->where('u.company = :companyName')
-            ->andWhere('u.role = :comptableRoleId') // Utiliser l'ID du rôle
+            // ->andWhere('u.roles LIKE :role')
             ->setParameter('companyName', $loggedInUser->getCompany())
-            ->setParameter('comptableRoleId', $comptableRole->getId()) // Passer l'ID du rôle
+            // ->setParameter('role', '%' . $comptableRole . '%')
             ->getQuery()
-            ->getSingleScalarResult();
+            // ->getSingleScalarResult();
+            ->getResult();
 
-        // dd($existingComptable);
-
-        // dd($existingComptable);
-
-        // if ($existingComptable) {
-        //     // Handle the case where a "comptable" user already exists (e.g., display an error message)
-        //     return $this->render('error/comptable_already_exists.html.twig');
-        // }
 
 
         $user = new User();
@@ -127,9 +123,7 @@ class UserController extends AbstractController
 
             $user->setCompany($loggedInUser->getCompany());
 
-            $comptableRole = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_COMPTABLE']);
-
-            $user->setRole($comptableRole);
+            $user->setRoles(['ROLE_COMPTABLE']);
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -231,10 +225,9 @@ class UserController extends AbstractController
         $user->setIsVerified(true);
 
         $em = $doctrine->getManager();
-       
+
         $em->flush();
 
         return $this->redirectToRoute('app_list_request_company_account');
     }
-
 }
