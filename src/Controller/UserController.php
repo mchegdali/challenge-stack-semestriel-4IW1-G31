@@ -94,23 +94,19 @@ class UserController extends AbstractController
     {
         $loggedInUser = $this->getUser();
 
-        $comptableRole = "ROLE_COMPTABLE";
+        // $comptableRole = "ROLE_COMPTABLE";
 
         $existingComptable = $userRepository
             ->createQueryBuilder('u')
-            // ->select('COUNT(u.id)')
-            // ->where('u.company = :companyName')
-            ->andWhere('u.roles LIKE :role')
-            // ->setParameter('companyName', $loggedInUser->getCompany())
-            ->setParameter('role', '%' . $comptableRole . '%')
+            ->select('COUNT(u.id)')
+            ->where('u.company = :companyName')
+            // ->andWhere('u.roles LIKE :role')
+            ->setParameter('companyName', $loggedInUser->getCompany())
+            // ->setParameter('role', '%' . $comptableRole . '%')
             ->getQuery()
             // ->getSingleScalarResult();
             ->getResult();
 
-
-
-
-        dd($existingComptable);
 
 
         $user = new User();

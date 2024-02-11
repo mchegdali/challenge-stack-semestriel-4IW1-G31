@@ -60,13 +60,18 @@ class CreateAccountType extends AbstractType
                     'placeholder' => 'Saisir un nom de entreprise',
                 ],
             ])
-            ->add('roles', EnumType::class, [
+            ->add('roles', ChoiceType::class, [
                 'label' => 'Roles',
-                'class' => RolesEnum::class,
-                'attr' => [
-                    'placeholder' => 'Sélectionner un rôle',
+                'multiple' => true,
+                'expanded' => true,  // Utilisez false si vous voulez une liste déroulante
+                'choices' => [
+                    'Utilisateur' => 'ROLE_USER',
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Comptable' => 'ROLE_COMPTABLE',
                 ],
+                'placeholder' => 'Sélectionner un rôle',  // Utilisez 'placeholder' plutôt que 'attr'
             ])
+            
             ->add('save', SubmitType::class, [
                 'label' => 'Ajouter',
             ])

@@ -8,7 +8,7 @@
 				<p>Ajouter un utilisateur</p>
 			</button>
 		{% else %}
-			{% if existingComptable > 0 %}
+			{% if existingComptable is defined and existingComptable[0][1] > 1 %}
 				<button disabled onclick="openModal()" title="Un compte comptable a déjà été créé. Il n'est possible d'avoir qu'un seul compte comptable." class="bg-gray-300 text-gray-400 font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
 					<p>Ajouter un utilisateur</p>
 				</button>

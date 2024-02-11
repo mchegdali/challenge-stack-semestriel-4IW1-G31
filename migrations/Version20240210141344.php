@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240207160746 extends AbstractMigration
+final class Version20240210141344 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -23,7 +23,6 @@ final class Version20240207160746 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE invoice_status_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE payment_method_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE quote_status_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE role_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE company (id UUID NOT NULL, name VARCHAR(255) NOT NULL, company_number VARCHAR(255) DEFAULT NULL, address VARCHAR(255) NOT NULL, postal_code VARCHAR(255) NOT NULL, city VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN company.id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE customer (id UUID NOT NULL, name VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, postal_code VARCHAR(10) NOT NULL, city VARCHAR(255) NOT NULL, customer_number VARCHAR(255) DEFAULT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
@@ -69,17 +68,15 @@ final class Version20240207160746 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN quote_item.tax_id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE quote_status (id INT NOT NULL, name VARCHAR(255) NOT NULL, color VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_41B8CB5F665648E9 ON quote_status (color)');
-        $this->addSql('CREATE TABLE role (id INT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE service (id UUID NOT NULL, tax_id UUID NOT NULL, name VARCHAR(255) NOT NULL, price DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_E19D9AD2B2A824D8 ON service (tax_id)');
         $this->addSql('COMMENT ON COLUMN service.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN service.tax_id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE tax (id UUID NOT NULL, value DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN tax.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, company_id UUID DEFAULT NULL, role_id INT DEFAULT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, is_verified BOOLEAN NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, company_id UUID DEFAULT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, is_verified BOOLEAN NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('CREATE INDEX IDX_8D93D649979B1AD6 ON "user" (company_id)');
-        $this->addSql('CREATE INDEX IDX_8D93D649D60322AC ON "user" (role_id)');
         $this->addSql('COMMENT ON COLUMN "user".id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN "user".company_id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE messenger_messages (id BIGSERIAL NOT NULL, body TEXT NOT NULL, headers TEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, available_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, delivered_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
@@ -113,7 +110,6 @@ final class Version20240207160746 extends AbstractMigration
         $this->addSql('ALTER TABLE quote_item ADD CONSTRAINT FK_8DFC7A94B2A824D8 FOREIGN KEY (tax_id) REFERENCES tax (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE service ADD CONSTRAINT FK_E19D9AD2B2A824D8 FOREIGN KEY (tax_id) REFERENCES tax (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE "user" ADD CONSTRAINT FK_8D93D649979B1AD6 FOREIGN KEY (company_id) REFERENCES company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE "user" ADD CONSTRAINT FK_8D93D649D60322AC FOREIGN KEY (role_id) REFERENCES role (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     public function down(Schema $schema): void
@@ -123,7 +119,6 @@ final class Version20240207160746 extends AbstractMigration
         $this->addSql('DROP SEQUENCE invoice_status_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE payment_method_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE quote_status_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE role_id_seq CASCADE');
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_906517449395C3F3');
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_90651744979B1AD6');
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_906517446BF700BD');
@@ -140,7 +135,6 @@ final class Version20240207160746 extends AbstractMigration
         $this->addSql('ALTER TABLE quote_item DROP CONSTRAINT FK_8DFC7A94B2A824D8');
         $this->addSql('ALTER TABLE service DROP CONSTRAINT FK_E19D9AD2B2A824D8');
         $this->addSql('ALTER TABLE "user" DROP CONSTRAINT FK_8D93D649979B1AD6');
-        $this->addSql('ALTER TABLE "user" DROP CONSTRAINT FK_8D93D649D60322AC');
         $this->addSql('DROP TABLE company');
         $this->addSql('DROP TABLE customer');
         $this->addSql('DROP TABLE invoice');
@@ -151,7 +145,6 @@ final class Version20240207160746 extends AbstractMigration
         $this->addSql('DROP TABLE quote');
         $this->addSql('DROP TABLE quote_item');
         $this->addSql('DROP TABLE quote_status');
-        $this->addSql('DROP TABLE role');
         $this->addSql('DROP TABLE service');
         $this->addSql('DROP TABLE tax');
         $this->addSql('DROP TABLE "user"');
