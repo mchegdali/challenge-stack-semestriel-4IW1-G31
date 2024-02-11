@@ -1,13 +1,12 @@
 <section class="bg-white rounded-lg p-4 shadow-xl cursor-pointer">
 	<details>
 		<summary class="list-none flex justify-between items-center">
-			<div class="flex gap-4 items-center">
-				<p class="w-10 h-10 bg-slate-300 rounded-full flex items-center justify-center font-bold">{{ user.company.name|slice(0, 1)|capitalize }}</p>
-				<div>
-					<span class="text-gray-800 text-xs uppercase font-medium leading-tight tracking-wide">ENTREPRISE</span>
-					<p class="font-bold">{{ user.company.name }}</p>
-				</div>
+
+			<div>
+				<h1 class="text-gray-500">ENTREPRISE</h1>
+				<p class="font-bold">{{ user.company.name }}</p>
 			</div>
+
 			<div class="flex gap-2 font-bold">
 				{% if user.isVerified == false %}
 					<a onclick="openModalAccept('{{ user.id }}')" class='text-green-600 cursor-pointer'>
@@ -19,55 +18,63 @@
 				{% endif %}
 			</div>
 		</summary>
-		<section
-			class="grid grid-cols-2 gap-4 mb-4 mt-4">
-			<!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
-			<div class="flex flex-col">
-				<span class="text-gray-800 text-xs uppercase font-medium leading-tight tracking-wide">DEMANDEUR</span>
-				<span class="text-black font-bold leading-tight">{{ user.firstName }}
+			
 
-					{{ user.lastName }}</span>
+		<div class="flex gap-6">
+			<div>
+				<h1 class="text-gray-500">SIRET</h1>
+				<p class="font-bold">
+					{{ user.company.CompanyNumber }}
+				</p>
 			</div>
-		</section>
+		</div>
 
-		<section
-			class="grid grid-cols-2 gap-4 mb-4 mt-4">
-			<!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
-			<div class="flex flex-col">
-				<span class="text-gray-800 text-xs uppercase font-medium leading-tight tracking-wide">EMAIL</span>
-				<span class="text-black font-bold leading-tight">{{ user.email }}</span>
-			</div>
-		</section>
+	
 
-		<section
-			class="grid grid-cols-2 gap-4 mb-4">
-			<!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
-			<div class="flex flex-col">
-				<span class="text-gray-800 text-xs uppercase font-medium leading-tight tracking-wide">VILLE</span>
-				<span class="text-black font-bold leading-tight">{{ user.company.city }}</span>
-			</div>
-			<div class="flex flex-col">
-				<span class="text-gray-800 text-xs uppercase font-medium leading-tight tracking-wide">CODE POSTAL</span>
-				<span class="text-black font-bold leading-tight">{{ user.company.postalCode }}</span>
-			</div>
-		</section>
+		<div class="flex gap-6">
 
-		<section
-			class="grid grid-cols-2 gap-4 mb-4">
-			<!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
-			<div class="flex flex-col">
-				<span class="text-gray-800 text-xs uppercase font-medium leading-tight tracking-wide">ADRESSE</span>
-				<span class="text-black font-bold leading-tight">{{ user.company.address }}</span>
+			<div>
+				<h1 class="text-gray-500">VILLE</h1>
+				<p class="font-bold">
+					{{ user.company.city }}
+				</p>
 			</div>
-			<div class="flex flex-col">
-				<span class="text-gray-800 text-xs uppercase font-medium leading-tight tracking-wide">SIRET</span>
-				<span class="text-black font-bold leading-tight">{{ user.company.CompanyNumber }}</span>
+			<div>
+				<h1 class="text-gray-500">CODE POSTAL</h1>
+				<p class="font-bold">
+					{{ user.company.postalCode }}
+				</p>
 			</div>
-		</section>
+		</div>
+
+
+		<div>
+			<h1 class="text-gray-500">ADRESSE</h1>
+			<p class="font-bold">
+				{{ user.company.address }}
+			</p>
+		</div>
+
+		<div class="flex gap-6">
+			<div>
+				<h1 class="text-gray-500">DEMANDEUR</h1>
+				<p class="font-bold flex gap-2">
+					{{ user.firstName }}
+					
+					{{ user.lastName }}
+				</p>
+			</div>
+
+			<div>
+				<h1 class="text-gray-500">EMAIL</h1>
+				<p class="font-bold">
+					{{ user.email }}
+				</p>
+			</div>
+		</div>
 
 	</details>
 </section>
-
 
 <!-- Modale -->
 <div id="modalAccept" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
