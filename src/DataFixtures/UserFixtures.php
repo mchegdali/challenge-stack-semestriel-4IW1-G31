@@ -32,6 +32,7 @@ class UserFixtures extends Fixture
         $user->setFirstName($faker->firstName());
         $user->setLastName($faker->lastName());
         $user->setPassword($this->passwordHasher->hashPassword($user, '12345678'));
+        $user->setRoles(['ROLE_USER']);
         $user->setIsVerified(true);
 
         $userComptable->setCompany($faker->randomElement($companies));

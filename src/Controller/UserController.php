@@ -172,7 +172,7 @@ class UserController extends AbstractController
             throw $this->createNotFoundException('Company not found');
         }
 
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(CreateAccountType::class, $user);
 
         $form->handleRequest($request);
 

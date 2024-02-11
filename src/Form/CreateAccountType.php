@@ -63,13 +63,14 @@ class CreateAccountType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'label' => 'Roles',
                 'multiple' => true,
-                'expanded' => true,  // Utilisez false si vous voulez une liste déroulante
+                'expanded' => true, 
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
                     'Administrateur' => 'ROLE_ADMIN',
                     'Comptable' => 'ROLE_COMPTABLE',
+                    'Entreprise' => 'ROLE_COMPANY',
                 ],
-                'placeholder' => 'Sélectionner un rôle',  // Utilisez 'placeholder' plutôt que 'attr'
+                'placeholder' => 'Sélectionner un rôle',
             ])
             
             ->add('save', SubmitType::class, [
