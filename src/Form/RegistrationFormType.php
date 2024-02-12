@@ -18,7 +18,7 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', TextType::class, [ 'attr' => [
+            ->add('email', TextType::class, ['attr' => [
                 'placeholder' => 'exemple@mail.com',
             ],
             ])
@@ -28,17 +28,25 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez entrer un mot de passe',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                         'max' => 4096,
                     ]),
                 ],
             ])
-            ->add('last_name')
-            ->add('first_name')
+            ->add('last_name', TextType::class, [
+                'label' => 'Nom de famille',
+                'mapped' => false,
+                'required' => true,
+            ])
+            ->add('first_name', TextType::class, [
+                'label' => 'Prénom',
+                'mapped' => false,
+                'required' => true,
+            ])
             ->add('company_name', TextType::class, [
                 'label' => 'Nom de l\'entreprise',
                 'mapped' => false,

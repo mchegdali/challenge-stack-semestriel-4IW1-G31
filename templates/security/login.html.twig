@@ -1,10 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!
-{% endblock %}
+{% block title %}Plumbill - Login{% endblock %}
 
 {% block body %}
-	<div class="items-center h-screen flex justify-center sm:bg-gray-50">
-		{% include 'components/LoginForm.html.twig' %}
-	</div>
+    <main class="h-lvh flex flex-col justify-center items-center px-4 sm:px-0 gap-4">
+        <header class="flex flex-col items-center gap-6">
+            <div class="max-w-sm">
+                <img src="{{ asset('img/logo2.png') }}" alt="Plumbill">
+            </div>
+            <h1 class="font-bold text-3xl md:text-4xl">Connexion</h1>
+        </header>
+        {% include 'components/LoginForm.html.twig' %}
+    </main>
 {% endblock %}

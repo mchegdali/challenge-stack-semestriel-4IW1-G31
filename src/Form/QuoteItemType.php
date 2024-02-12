@@ -20,9 +20,6 @@ class QuoteItemType extends AbstractType
         $builder
             ->add('service', EntityType::class, [
                 'label' => 'Service',
-                'attr' => [
-                    'class' => 'service-select'
-                ],
                 'placeholder' => '-- Choisir un service --',
                 'class' => Service::class,
                 'choice_label' => function (Service $service) {
@@ -34,19 +31,13 @@ class QuoteItemType extends AbstractType
             ])
             ->add('priceExcludingTax', MoneyType::class, [
                 'label' => 'Prix HT',
-                'attr' => [
-                    'class' => 'w-1/4'
-                ]
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'Quantité',
-                'attr' => [
-                    'class' => 'w-1/4'
-                ]
             ])
             ->add('tax', EntityType::class, [
-                'label' => 'Tax',
-                'placeholder' => '-- Choisir une tax --',
+                'label' => 'Taxe',
+                'placeholder' => '-- Choisir une taxe --',
                 'class' => Tax::class,
                 'choice_label' => function (Tax $tax) {
                     return $tax->getValue();

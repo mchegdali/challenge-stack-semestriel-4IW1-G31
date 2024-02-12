@@ -1,29 +1,27 @@
 <div class="bg-white flex flex-col justify-center items-center gap-6 p-4 sm:rounded-lg sm:w-96 sm:shadow-xl w-screen">
-	<div class="flex flex-col items-center gap-6">
-		<h1 class="font-bold text-3xl ">Création de compte entreprise</h1>
-	</div>
+    <div class="flex flex-col items-center gap-6">
+        <h1 class="font-bold text-3xl ">Création de compte entreprise</h1>
+    </div>
 
-	<div class="flex flex-col w-full gap-3">
+    <div class="flex flex-col w-full gap-3">
 
 
-		{% for flash_error in app.flashes('verify_email_error') %}
-			<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-		{% endfor %}
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
 
-		{% if app.request.method == 'POST' %}
-			{% for error in registrationForm.vars.errors %}
-				<div class="alert alert-danger" role="alert">{{ error.message }}</div>
-			{% endfor %}
-		{% endif %}
+        {% if app.request.method == 'POST' %}
+            {% for error in registrationForm.vars.errors %}
+                <div class="alert alert-danger" role="alert">{{ error.message }}</div>
+            {% endfor %}
+        {% endif %}
 
-		{{ form_start(registrationForm) }}
+        {{ form_start(registrationForm) }}
+        {{ form_end(registrationForm) }}
 
-		
-		{{ form_end(registrationForm) }}
+    </div>
 
-	</div>
-
-	<a href="">Vous avez déjà un compte ?</a>
+    <a href="">Vous avez déjà un compte ?</a>
 
 
 </div>
