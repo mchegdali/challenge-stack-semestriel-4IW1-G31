@@ -30,8 +30,8 @@ class CompanyType extends AbstractType
                     'placeholder' => 'Entrer une adresse',
                 ],
             ])
-            ->add('postal_code', NumberType::class, [
-                'label' => "Code Postale",
+            ->add('postalCode', NumberType::class, [
+                'label' => "Code postale",
                 'attr' => [
                     'placeholder' => 'Entrer un code postal',
                 ],
@@ -48,7 +48,7 @@ class CompanyType extends AbstractType
                     'placeholder' => 'Entrer une ville',
                 ],
             ])
-            ->add('company_number', TextType::class, [
+            ->add('companyNumber', TextType::class, [
                 'label' => 'Siret',
                 'attr' => [
                     'placeholder' => '45745062590556'
