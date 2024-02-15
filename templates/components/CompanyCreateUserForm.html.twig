@@ -1,10 +1,15 @@
-{{ form_start(form, {'attr': {'class': 'flex flex-col w-full gap-2'}}) }}
-
+{{ form_start(form)}}
+{{ form_row(form.last_name) }}
+{{ form_row(form.first_name) }}
+{{ form_row(form.email) }}
+{{ form_row(form.plainPassword) }}
+<div class="flex justify-between mt-3">
+	{{ form_row(form.submit)}}
+	<button onclick="openCreateUserModal()" class="bg-white text-blue-800 font-bold p-2 rounded border border-blue-800">
+		Fermer
+	</button>
+</div>
 {{ form_end(form) }}
-
-<button onclick="closeCreateUserModal()" class="bg-white flex-1 text-blue-800 font-bold p-2 rounded border border-blue-800">
-	Fermer
-</button>
 
 
 <script>
