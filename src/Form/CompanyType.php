@@ -23,11 +23,24 @@ class CompanyType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Entrer un nom',
                 ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/[a-zA-Z]/',
+                        'message' => 'Veuillez renseigner un nom valide',
+                    ])
+                ],
+
             ])
             ->add('address', TextType::class, [
                 'label' => "Adresse",
                 'attr' => [
                     'placeholder' => 'Entrer une adresse',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^(\d+)\s([A-Za-z\s]+)/',
+                        'message' => 'Veuillez renseigner une adresse valide',
+                    ])
                 ],
             ])
             ->add('postalCode', NumberType::class, [
@@ -38,7 +51,7 @@ class CompanyType extends AbstractType
                 'constraints' => [
                     new Regex([
                         'pattern' => '/^[0-9]{5}$/',
-                        'message' => 'Code postal invalide',
+                        'message' => 'Veuillez renseigner un code postale valide',
                     ]),
                 ],
             ])
@@ -46,6 +59,12 @@ class CompanyType extends AbstractType
                 'label' => "Ville",
                 'attr' => [
                     'placeholder' => 'Entrer une ville',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[A-Za-z\s-]+$/',
+                        'message' => 'Veuillez renseigner une ville valide',
+                    ]),
                 ],
             ])
             ->add('companyNumber', TextType::class, [
