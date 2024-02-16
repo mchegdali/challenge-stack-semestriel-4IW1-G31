@@ -9,7 +9,7 @@
 			</button>
 		{% else %}
 			{% if existingComptable is defined and existingComptable[0][1] > 1 %}
-				<button disabled onclick="openModal()" title="Un compte comptable a déjà été créé. Il n'est possible d'avoir qu'un seul compte comptable." class="bg-gray-300 text-gray-400 font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
+				<button disabled onclick="openModal()" title="Un compte comptable a déjà été créé. Il n'est possible d'avoir qu'un seul compte comptable." class="bg-gray-300 text-gray-400 font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm cursor-not-allowed">
 					<p>Ajouter un utilisateur</p>
 				</button>
 			{% else %}
@@ -22,7 +22,7 @@
 
 	</div>
 	<!-- Modale -->
-	<div id="myModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+	<div id="myModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-6">
 		<button onclick="closeModal()" class='bg-black'></button>
 		<div class="bg-white p-8 rounded shadow-lg">
 			<h2 class="text-lg font-bold mb-4">Ajout d'un utilisateur</h2>
@@ -30,9 +30,8 @@
 			{% if is_granted('ROLE_ADMIN') %}
 				{% include 'components/AdminCreateUserForm.html.twig' %}
 			{% else %}
-				{% include 'components/CreateUserForm.html.twig' %}
+				{% include 'components/CompanyCreateUserForm.html.twig' %}
 			{% endif %}
-
 
 		</div>
 	</div>

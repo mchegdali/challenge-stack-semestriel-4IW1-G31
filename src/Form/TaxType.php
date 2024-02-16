@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class TaxType extends AbstractType
 {
@@ -14,9 +15,16 @@ class TaxType extends AbstractType
     {
         $builder
             ->add('value', NumberType::class, [
-                'label' => false,
+                'label' => 'Taxe',
+                'invalid_message' => 'Veuillez saisir un nombre',
                 'attr' => [
                     'placeholder' => 'Entrer une taxe',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^^(\d{1,2}(\.\d{1})?|100)$/',
+                        'message' => 'Veuillez rentrer une taxe valide',
+                    ]),
                 ],
             ])
             ->add('save', SubmitType::class, [

@@ -24,15 +24,6 @@ class CompanyController extends AbstractController
             $em = $doctrine->getManager();
             $em->persist($company);
             $em->flush();
-
-            $id = $company->getId();
-
-            $companyNumber = substr($id, -12);
-
-            $company->setCompanyNumber($companyNumber);
-
-            $em->persist($company);
-            $em->flush();
         }
 
         $companys = $doctrine->getManager()->getRepository(Company::class)->findAll();

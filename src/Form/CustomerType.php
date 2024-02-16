@@ -10,6 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class CustomerType extends AbstractType
 {
@@ -17,36 +18,57 @@ class CustomerType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Exemple: John Doe',
+                'label' => 'Nom',
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z]+(?:\s[a-zA-Z]+)?$/',
+                        'message' => 'Veuillez renseigner un nom valide',
+                    ])
                 ],
             ])
             ->add('address', TextType::class, [
-                'label' => false,
+                'label' => "Adresse",
                 'attr' => [
-                    'placeholder' => 'Exemple: 123 Main Street',
+                    'placeholder' => 'Ex: 12 rue des fontaines',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^(\d+\s*,?\s*\w+(?:\s+\w+)*\d*\s+[A-Za-z\s]+)$/',
+                        'message' => 'Veuillez renseigner une adresse valide',
+                    ])
                 ],
             ])
             ->add('postal_code', NumberType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Exemple: 12345',
+                'label' => "Code postal",
+                'invalid_message' => 'Veuillez saisir un nombre valide pour le code postal',
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[0-9]{5}$/',
+                        'message' => 'Veuillez renseigner un code postal valide',
+                    ]),
                 ],
             ])
             ->add('city', TextType::class, [
-                'label' => false,
+                'label' => "Ville",
                 'attr' => [
-                    'placeholder' => 'Exemple: Anytown',
+                    'placeholder' => 'Entrer une ville',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[A-Za-z\s-]+$/',
+                        'message' => 'Veuillez renseigner une ville valide',
+                    ]),
                 ],
             ])
-            ->add('email', EmailType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Exemple: john@example.com',
+            ->add('email', TextType::class, [
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                        'message' => 'Veuillez renseigner un email valide',
+                    ])
                 ],
             ])
-            ->add('save', SubmitType::class, [
+            ->add('submit', SubmitType::class, [
                 'label' => 'Ajouter',
             ]);;
     }

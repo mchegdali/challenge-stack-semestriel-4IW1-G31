@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\AdminCreateAccountType;
+use App\Form\CompanyCreateAccountType;
 
-use App\Form\UserType;
 
 
 use App\Form\RegistrationFormType;
@@ -36,7 +37,7 @@ class UserController extends AbstractController
     public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $user = new User();
-        $form = $this->createForm(CreateAccountType::class, $user);
+        $form = $this->createForm(AdminCreateAccountType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -110,7 +111,7 @@ class UserController extends AbstractController
 
 
         $user = new User();
-        $form = $this->createForm(CompanyUserRegistrationFormType::class, $user);
+        $form = $this->createForm(CompanyCreateAccountType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -172,7 +173,7 @@ class UserController extends AbstractController
             throw $this->createNotFoundException('Company not found');
         }
 
-        $form = $this->createForm(CreateAccountType::class, $user);
+        $form = $this->createForm(AdminCreateAccountType::class, $user);
 
         $form->handleRequest($request);
 

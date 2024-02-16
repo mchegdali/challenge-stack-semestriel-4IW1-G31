@@ -9,6 +9,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class CompanyType extends AbstractType
 {
@@ -16,30 +19,65 @@ class CompanyType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => false,
+                'label' => "Nom de l'entreprise",
                 'attr' => [
                     'placeholder' => 'Entrer un nom',
                 ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/[a-zA-Z]/',
+                        'message' => 'Veuillez renseigner un nom valide',
+                    ])
+                ],
+
             ])
             ->add('address', TextType::class, [
-                'label' => false,
+                'label' => "Adresse",
                 'attr' => [
-                    'placeholder' => 'Entrer une adresse',
+                    'placeholder' => 'Ex: 12 rue des fontaines',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^(\d+\s*,?\s*\w+(?:\s+\w+)*\d*\s+[A-Za-z\s]+)$/',
+                        'message' => 'Veuillez renseigner une adresse valide',
+                    ])
                 ],
             ])
-            ->add('postal_code', NumberType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Entrer un code postal',
+            ->add('postalCode', NumberType::class, [
+                'label' => "Code postal",
+                'invalid_message' => 'Veuillez saisir un nombre valide pour le code postal',
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[0-9]{5}$/',
+                        'message' => 'Veuillez renseigner un code postal valide',
+                    ]),
                 ],
             ])
             ->add('city', TextType::class, [
-                'label' => false,
+                'label' => "Ville",
                 'attr' => [
                     'placeholder' => 'Entrer une ville',
                 ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[A-Za-z\s-]+$/',
+                        'message' => 'Veuillez renseigner une ville valide',
+                    ]),
+                ],
             ])
-            ->add('save', SubmitType::class, [
+            ->add('companyNumber', TextType::class, [
+                        'label' => 'Siret',
+                        'attr' => [
+                            'placeholder' => '123 123 123 12345'
+                        ],
+                        'constraints' => [
+                            new Regex([
+                                'pattern' => '/^(\d{3}\s){3}\d{5}$/',
+                                'message' => 'Siret invalide, veuillez respecter le format suivant ex: 123 123 123 12345',
+                            ]),
+                        ],
+                    ])
+            ->add('submit', SubmitType::class, [
                 'label' => 'Ajouter',
             ]);;
     }

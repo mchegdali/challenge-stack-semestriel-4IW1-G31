@@ -3,16 +3,13 @@
 {{ form_row(form.first_name) }}
 {{ form_row(form.email) }}
 {{ form_row(form.plainPassword) }}
-{{ form_row(form.company) }}
-{{ form_row(form.roles) }}
 <div class="flex justify-between mt-3">
 	{{ form_row(form.submit)}}
-	{{ form_end(form) }}
-	<button onclick="closeCreateUserModal()" class="bg-white text-blue-800 font-bold p-2 rounded border border-blue-800">
+	<button onclick="openCreateUserModal()" class="bg-white text-blue-800 font-bold p-2 rounded border border-blue-800">
 		Fermer
 	</button>
 </div>
-
+{{ form_end(form) }}
 
 
 <script>
