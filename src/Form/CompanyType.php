@@ -34,24 +34,25 @@ class CompanyType extends AbstractType
             ->add('address', TextType::class, [
                 'label' => "Adresse",
                 'attr' => [
-                    'placeholder' => 'Entrer une adresse',
+                    'placeholder' => 'Ex: 12 rue des fontaines',
                 ],
                 'constraints' => [
                     new Regex([
-                        'pattern' => '/^(\d+)\s([A-Za-z\s]+)/',
+                        'pattern' => '/^(\d+\s*,?\s*\w+(?:\s+\w+)*\d*\s+[A-Za-z\s]+)$/',
                         'message' => 'Veuillez renseigner une adresse valide',
                     ])
                 ],
             ])
             ->add('postalCode', NumberType::class, [
-                'label' => "Code postale",
+                'label' => "Code postal",
                 'attr' => [
-                    'placeholder' => 'Entrer un code postal',
+                    'placeholder' => 'Exemple: 12345',
                 ],
+                'invalid_message' => 'Veuillez saisir un nombre valide pour le code postal',
                 'constraints' => [
                     new Regex([
                         'pattern' => '/^[0-9]{5}$/',
-                        'message' => 'Veuillez renseigner un code postale valide',
+                        'message' => 'Veuillez renseigner un code postal valide',
                     ]),
                 ],
             ])
@@ -64,18 +65,6 @@ class CompanyType extends AbstractType
                     new Regex([
                         'pattern' => '/^[A-Za-z\s-]+$/',
                         'message' => 'Veuillez renseigner une ville valide',
-                    ]),
-                ],
-            ])
-            ->add('companyNumber', TextType::class, [
-                'label' => 'Siret',
-                'attr' => [
-                    'placeholder' => '45745062590556'
-                ],
-                'constraints' => [
-                    new Regex([
-                        'pattern' => '/^[0-9]{15}$/',
-                        'message' => 'Siret invalide',
                     ]),
                 ],
             ])

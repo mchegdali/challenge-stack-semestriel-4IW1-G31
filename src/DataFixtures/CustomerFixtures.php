@@ -11,7 +11,7 @@ class CustomerFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create();
+        $faker = Factory::create('fr_FR');
 
         for ($i = 0; $i < 10; $i++) { //10 clients générés
             $customer = new Customer();

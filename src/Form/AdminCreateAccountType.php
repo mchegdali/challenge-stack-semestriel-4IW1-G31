@@ -26,6 +26,7 @@ class AdminCreateAccountType extends AbstractType
     {
         $builder
             ->add('last_name', TextType::class, [
+                'label' => 'Nom',
                 'constraints' => [
                     new Regex([
                         'pattern' => '/^[a-zA-Z]+$/',
@@ -34,6 +35,7 @@ class AdminCreateAccountType extends AbstractType
                 ],
             ])
             ->add('first_name', TextType::class, [
+                'label' => 'Prénom',
                 'constraints' => [
                     new Regex([
                         'pattern' => '/^[a-zA-Z]+$/',
@@ -93,7 +95,7 @@ class AdminCreateAccountType extends AbstractType
             ])
 
             ->add('submit', SubmitType::class, [
-                'label' => 'Créer',
+                'label' => 'Soumettre',
             ]);
     }
 
