@@ -19,37 +19,37 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('email', TextType::class, [
-            'constraints' => [
-                new Regex([
-                    'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
-                    'message' => 'Veuillez renseigner un email valide',
-                ])
-            ],
-        ])
-        ->add('plainPassword', PasswordType::class, [
-            // instead of being set onto the object directly,
-            // this is read and encoded in the controller
-            'label' => 'Mot de passe',
-            'mapped' => false,
-            'attr' => ['autocomplete' => 'new-password'],
-            'constraints' => [
-                new NotBlank([
-                    'message' => 'Entrer un mot de passe',
-                ]),
-                new Length([
-                    'min' => 12,
-                    'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
-                    // max length allowed by Symfony for security reasons
-                    'max' => 4096,
-                ]),
-                new Regex([
-                    'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/',
-                    'message' => 'Le mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial.',
-                ]),
-            ],
-        ])
-             ->add('last_name', TextType::class, [
+            ->add('email', TextType::class, [
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                        'message' => 'Veuillez renseigner un email valide',
+                    ])
+                ],
+            ])
+            ->add('plainPassword', PasswordType::class, [
+                // instead of being set onto the object directly,
+                // this is read and encoded in the controller
+                'label' => 'Mot de passe',
+                'mapped' => false,
+                'attr' => ['autocomplete' => 'new-password'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Entrer un mot de passe',
+                    ]),
+                    new Length([
+                        'min' => 12,
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/',
+                        'message' => 'Le mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial.',
+                    ]),
+                ],
+            ])
+            ->add('last_name', TextType::class, [
                 'label' => 'Nom',
                 'constraints' => [
                     new Regex([
@@ -78,20 +78,22 @@ class RegistrationFormType extends AbstractType
                     ])
                 ],
             ])
+
             ->add('company_number', TextType::class, [
                 'label' => 'Siret',
                 'mapped' => false,
                 'required' => true,
                 'attr' => [
-                    'placeholder' => '457 450 625 90556'
+                    'placeholder' => '12312312312345'
                 ],
                 'constraints' => [
                     new Regex([
-                        'pattern' => '/^(\d{3}\s){3}\d{5}$/',
-                        'message' => 'Veuillez renseigner un nom valide',
-                    ])
+                        'pattern' => '/^[0-9]{14}$/',
+                        'message' => 'Siret invalide, veuillez respecter le format suivant ex: 12312312312345',
+                    ]),
                 ],
             ])
+
             ->add('postal_code', TextType::class, [
                 'label' => 'Code Postal',
                 'mapped' => false,

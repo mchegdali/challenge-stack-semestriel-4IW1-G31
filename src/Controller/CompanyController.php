@@ -25,11 +25,9 @@ class CompanyController extends AbstractController
             $em->persist($company);
             $em->flush();
 
-            $id = $company->getId();
-
-            $companyNumber = substr($id, -12);
-
-            $company->setCompanyNumber($companyNumber);
+            $companyNumber = $company->getCompanyNumber();
+            $formattedCompanyNumber = substr($companyNumber, 0, 3) . ' ' . substr($companyNumber, 3, 3) . ' ' . substr($companyNumber, 6, 3) . ' ' . substr($companyNumber, 9);
+            $company->setCompanyNumber($formattedCompanyNumber);
 
             $em->persist($company);
             $em->flush();
