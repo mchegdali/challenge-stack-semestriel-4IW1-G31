@@ -40,9 +40,6 @@ class CustomerType extends AbstractType
             ])
             ->add('postal_code', NumberType::class, [
                 'label' => "Code postal",
-                'attr' => [
-                    'placeholder' => 'Exemple: 12345',
-                ],
                 'invalid_message' => 'Veuillez saisir un nombre valide pour le code postal',
                 'constraints' => [
                     new Regex([

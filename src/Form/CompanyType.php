@@ -45,9 +45,6 @@ class CompanyType extends AbstractType
             ])
             ->add('postalCode', NumberType::class, [
                 'label' => "Code postal",
-                'attr' => [
-                    'placeholder' => 'Exemple: 12345',
-                ],
                 'invalid_message' => 'Veuillez saisir un nombre valide pour le code postal',
                 'constraints' => [
                     new Regex([
