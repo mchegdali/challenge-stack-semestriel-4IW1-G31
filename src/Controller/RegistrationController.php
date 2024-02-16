@@ -52,10 +52,7 @@ class RegistrationController extends AbstractController
             $company->setCity($form->get('city')->getData());
             $company->setAddress($form->get('address')->getData());
             $company->setPostalCode($form->get('postal_code')->getData());
-
-            $companyNumber = $form->get('company_number')->getData();
-            $formattedCompanyNumber = substr($companyNumber, 0, 3) . ' ' . substr($companyNumber, 3, 3) . ' ' . substr($companyNumber, 6, 3) . ' ' . substr($companyNumber, 9);
-            $company->setCompanyNumber($formattedCompanyNumber);
+            $company->setCompanyNumber($form->get('company_number')->getData());
 
             $user->setCompany($company);
 

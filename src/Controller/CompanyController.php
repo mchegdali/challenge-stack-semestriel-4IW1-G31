@@ -24,13 +24,6 @@ class CompanyController extends AbstractController
             $em = $doctrine->getManager();
             $em->persist($company);
             $em->flush();
-
-            $companyNumber = $company->getCompanyNumber();
-            $formattedCompanyNumber = substr($companyNumber, 0, 3) . ' ' . substr($companyNumber, 3, 3) . ' ' . substr($companyNumber, 6, 3) . ' ' . substr($companyNumber, 9);
-            $company->setCompanyNumber($formattedCompanyNumber);
-
-            $em->persist($company);
-            $em->flush();
         }
 
         $companys = $doctrine->getManager()->getRepository(Company::class)->findAll();

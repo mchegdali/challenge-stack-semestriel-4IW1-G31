@@ -68,12 +68,12 @@ class CompanyType extends AbstractType
             ->add('companyNumber', TextType::class, [
                         'label' => 'Siret',
                         'attr' => [
-                            'placeholder' => '12312312312345'
+                            'placeholder' => '123 123 123 12345'
                         ],
                         'constraints' => [
                             new Regex([
-                                'pattern' => '/^[0-9]{14}$/',
-                                'message' => 'Siret invalide, veuillez respecter le format suivant ex: 12312312312345',
+                                'pattern' => '/^(\d{3}\s){3}\d{5}$/',
+                                'message' => 'Siret invalide, veuillez respecter le format suivant ex: 123 123 123 12345',
                             ]),
                         ],
                     ])
