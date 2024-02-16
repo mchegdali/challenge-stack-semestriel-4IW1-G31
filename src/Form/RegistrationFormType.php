@@ -73,7 +73,7 @@ class RegistrationFormType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Regex([
-                        'pattern' => '/[a-zA-Z]/',
+                        'pattern' => '/^[^!@#$%^&*(),.?":{}|<>][a-zA-Z0-9\s\-]*$/',
                         'message' => 'Veuillez renseigner un nom valide',
                     ])
                 ],
