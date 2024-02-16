@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\InvoiceStatus;
+use App\Validator\MaxDate;
 use App\Validator\PriceMax;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -49,13 +50,11 @@ class InvoiceSearchType extends AbstractType
                     'placeholder' => "Entrez un montant maximum"
                 ],
                 "constraints" => [
-                    [
-                        new Assert\GreaterThanOrEqual([
-                            'value' => 0,
-                            'message' => "Le montant maximum ne peut pas être négatif"
-                        ]),
-                        new PriceMax()
-                    ]
+                    new Assert\GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => "Le montant maximum ne peut pas être négatif"
+                    ]),
+                    new PriceMax()
                 ]
             ])->add('minDate', DateType::class, [
                 "mapped" => false,
@@ -76,10 +75,7 @@ class InvoiceSearchType extends AbstractType
                     'placeholder' => "Entrez une date de fin"
                 ],
                 "constraints" => [
-                    new Assert\GreaterThanOrEqual([
-                        'value' => $builder->get('minDate')->getData(),
-                        'message' => "La date de fin ne peut pas être antérieure à la date de début ({{ compared_value }})"
-                    ])
+                    new MaxDate()
                 ]
             ]);
     }
