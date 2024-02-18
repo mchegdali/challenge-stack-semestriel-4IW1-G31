@@ -33,6 +33,9 @@
                 {% endfor %}
             </div>
         </section>
+        <div class="navigation flex justify-center mb-8">
+            {{ knp_pagination_render(quotes, 'components/TailwindPagination.html.twig') }}
+        </div>
     </main>
     <script>
         const formEl = document.querySelector("form");

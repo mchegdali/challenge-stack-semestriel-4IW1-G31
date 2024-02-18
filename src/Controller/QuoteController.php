@@ -10,6 +10,8 @@ use App\Form\QuoteCreateType;
 use App\Form\QuoteSearchType;
 use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,8 +24,9 @@ class QuoteController extends AbstractController
 
     #[Route('', name: 'index', methods: ['GET', 'POST'])]
     public function index(
-        QuoteRepository $quoteRepository,
-        Request         $request
+        QuoteRepository    $quoteRepository,
+        Request            $request,
+        PaginatorInterface $paginator
     ): Response {
         $form = $this->createForm(QuoteSearchType::class, null, ["method" => "POST"]);
         $form->handleRequest($request);
@@ -31,6 +34,11 @@ class QuoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $searchResult = $request->request->all("quote_search");
             $quotes = $quoteRepository->findBySearch($searchResult);
+            $quotes = $paginator->paginate(
+                $quotes,
+                $request->query->getInt('page', 1),
+                20
+            );
         } else {
             // $user = $this->getUser()->getRoles();
             // if (!$user instanceof UserInterface) {
@@ -42,6 +50,11 @@ class QuoteController extends AbstractController
             // }
             // $quotes = $quoteRepository->findBy(['company' => $company]);
             $quotes = $quoteRepository->findAll();
+            $quotes = $paginator->paginate(
+                $quotes,
+                $request->query->getInt('page', 1),
+                20
+            );
         }
 
         return $this->render('quote/index.html.twig', [
