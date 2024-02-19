@@ -11,4 +11,7 @@
 	{% for service in services %}
 		{% include 'components/ServiceData.html.twig' %}
 	{% endfor %}
+	<div class="navigation flex justify-center mb-8">
+		{{ knp_pagination_render(services, 'components/TailwindPagination.html.twig') }}
+	</div>
 {% endblock %}

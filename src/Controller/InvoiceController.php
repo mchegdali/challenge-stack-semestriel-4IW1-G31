@@ -2,26 +2,27 @@
 
 namespace App\Controller;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use DateTimeImmutable;
 use App\Entity\Invoice;
 use App\Entity\InvoiceItem;
 use App\Entity\InvoiceStatus;
 use App\Form\InvoiceCreateType;
-use App\Form\InvoiceSearchType;
-use App\Repository\InvoiceRepository;
-use Doctrine\ORM\EntityManagerInterface;
 
+use App\Form\InvoiceSearchType;
 use Symfony\Component\Mime\Email;
+use App\Repository\InvoiceRepository;
+use Symfony\Component\Mime\Attachment;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Mime\Attachment;
-use Symfony\Component\Mailer\MailerInterface;
-use DateTimeImmutable;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 
 #[Route('/invoices', name: 'invoice_')]
 class InvoiceController extends AbstractController
@@ -36,7 +37,8 @@ class InvoiceController extends AbstractController
     #[Route('', name: 'index', methods: ['GET', 'POST'])]
     public function index(
         InvoiceRepository $invoiceRepository,
-        Request           $request
+        Request           $request,
+        PaginatorInterface $paginator
     ): Response
     {
         $form = $this->createForm(InvoiceSearchType::class, null, ["method" => "POST"]);
@@ -44,6 +46,11 @@ class InvoiceController extends AbstractController
 
         if ($request->isMethod('GET')) {
             $invoices = $invoiceRepository->findAll();
+            $invoices = $paginator->paginate(
+                $invoices,
+                $request->query->getInt('page', 1),
+                20
+            );
             return $this->render('invoice/index.html.twig', [
                 "searchForm" => $form->createView(),
                 'invoices' => $invoices
@@ -55,6 +62,11 @@ class InvoiceController extends AbstractController
             $invoices = $invoiceRepository->findBySearch($searchResult);
         } else {
             $invoices = $invoiceRepository->findAll();
+            $invoices = $paginator->paginate(
+                $invoices,
+                $request->query->getInt('page', 1),
+                20
+            );
         }
 
 
