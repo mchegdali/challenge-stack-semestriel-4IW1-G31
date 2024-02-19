@@ -11,4 +11,7 @@
 	{% for customer in customers %}
 		{% include 'components/CustomerData.html.twig' %}
 	{% endfor %}
+	<div class="navigation flex justify-center mb-8">
+		{{ knp_pagination_render(customers, 'components/TailwindPagination.html.twig') }}
+	</div>
 {% endblock %}	

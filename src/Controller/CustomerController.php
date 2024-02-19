@@ -4,16 +4,19 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Form\CustomerType;
+use App\Repository\CustomerRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 class CustomerController extends AbstractController
 {
     #[Route('/customer', name: 'app_customer')]
-    public function createCompany(Request $request, PersistenceManagerRegistry $doctrine): Response
+    public function createCompany(Request $request, EntityManagerInterface $em, CustomerRepository $customerRepository, PaginatorInterface $paginator): Response
     {
         $customer = new Customer();
         $form = $this->createForm(CustomerType::class, $customer);
@@ -21,12 +24,17 @@ class CustomerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $doctrine->getManager();
             $em->persist($customer);
             $em->flush();
         }
 
-        $customers = $doctrine->getManager()->getRepository(Customer::class)->findAll();
+        $customers = $customerRepository->findAll();
+
+        $customers = $paginator->paginate(
+            $customers,
+            $request->query->getInt('page', 1),
+            10
+        );
 
         return $this->render('customer/Customer.html.twig', [
             'form' => $form->createView(),
