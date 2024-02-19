@@ -4,17 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Service;
 use App\Form\ServiceType;
+use App\Repository\ServiceRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 class ServiceController extends AbstractController
 {
     #[Route('/service', name: 'app_service')]
-    public function createService(Request $request, PersistenceManagerRegistry $doctrine): Response
+    public function createService(Request $request, ServiceRepository $serviceRepository, PaginatorInterface $paginator, EntityManagerInterface $em): Response
     {
         $service = new Service();
         $form = $this->createForm(ServiceType::class, $service);
@@ -22,12 +26,17 @@ class ServiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $doctrine->getManager();
             $em->persist($service);
             $em->flush();
         }
 
-        $services = $doctrine->getManager()->getRepository(Service::class)->findAll();
+        $services = $serviceRepository->findAll();
+
+        $services = $paginator->paginate(
+            $services,
+            $request->query->getInt('page', 1),
+            20
+        );
 
         return $this->render('service/service.html.twig', [
             'form' => $form->createView(),
@@ -36,9 +45,8 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/service/{id}/delete', name: 'delete_service')]
-    public function deleteTax(Request $request, PersistenceManagerRegistry $doctrine, Service $service): Response
+    public function deleteTax(Request $request, EntityManagerInterface $em, Service $service): Response
     {
-        $em = $doctrine->getManager();
         $em->remove($service);
         $em->flush();
     
@@ -46,15 +54,14 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/service/{id}/update', name: 'update_service')]
-    public function updateService(Request $request, PersistenceManagerRegistry $doctrine, Service $service): Response
+    public function updateService(Request $request, EntityManagerInterface $em, Service $service): Response
     {
         $form = $this->createForm(ServiceType::class, $service);
     
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $doctrine->getManager();
-            $entityManager->flush();
+            $em->flush();
     
             return $this->redirectToRoute('app_service');
         }
