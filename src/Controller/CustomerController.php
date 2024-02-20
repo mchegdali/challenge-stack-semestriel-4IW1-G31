@@ -13,9 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 
+#[Route('/customer', name: 'customer_')]
 class CustomerController extends AbstractController
 {
-    #[Route('/customer', name: 'app_customer')]
+    #[Route('', name: 'index')]
     public function createCompany(Request $request, EntityManagerInterface $em, CustomerRepository $customerRepository, PaginatorInterface $paginator): Response
     {
         $customer = new Customer();
@@ -42,7 +43,7 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/customer_details/{id}', name: 'app_customer_details')]
+    #[Route('/details/{id}', name: 'details')]
     public function companyDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
     {
         $customerRepository = $doctrine->getManager()->getRepository(Customer::class);
@@ -69,14 +70,14 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/customer/{id}/delete', name: 'delete_customer')]
+    #[Route('/{id}/delete', name: 'delete')]
     public function deleteCustomer(PersistenceManagerRegistry $doctrine, Customer $customer): Response
     {
         $em = $doctrine->getManager();
         $em->remove($customer);
         $em->flush();
     
-        return $this->redirectToRoute('app_customer');
+        return $this->redirectToRoute('customer_index');
     }
 
 }

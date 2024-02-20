@@ -16,6 +16,7 @@ use App\Repository\InvoiceRepository;
 use Symfony\Component\Mime\Attachment;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +26,7 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/invoices', name: 'invoice_')]
+#[IsGranted("ROLE_USER")]
 class InvoiceController extends AbstractController
 {
     private $mailer;

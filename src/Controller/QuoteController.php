@@ -10,15 +10,17 @@ use App\Form\QuoteCreateType;
 use App\Form\QuoteSearchType;
 use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/quotes', name: 'quote_')]
+#[IsGranted("ROLE_USER")]
 class QuoteController extends AbstractController
 {
 
