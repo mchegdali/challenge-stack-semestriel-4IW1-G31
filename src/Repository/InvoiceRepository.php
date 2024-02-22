@@ -27,7 +27,7 @@ class InvoiceRepository extends ServiceEntityRepository
      * @param array $searchResult
      * @return Invoice[] Returns an array of Invoice objects
      */
-    public function findBySearch(array $searchResult): array
+    public function findBySearch(array $searchResult, $companyId, $isAdmin): array
     {
         $searchResult = array_filter($searchResult, function ($value) {
             return !empty($value);
@@ -47,8 +47,14 @@ class InvoiceRepository extends ServiceEntityRepository
         FROM invoice i
         INNER JOIN total_prices tp ON i.id = tp.id
         WHERE 1 = 1';
-
+        
         $params = [];
+
+        if ($isAdmin == false && !empty($companyId)) {
+            $params['companyId'] = $companyId->getId();
+            $sql .= ' AND i.company_id = :companyId';
+        }
+        
         if (!empty($searchResult)) {
             if (array_key_exists("status", $searchResult)) {
                 $sql .= ' AND i.status_id IN (:status)';
