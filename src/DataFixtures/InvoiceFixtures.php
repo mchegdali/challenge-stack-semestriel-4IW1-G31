@@ -38,7 +38,7 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
             for ($i = $nbCustomerQuotes + 1; $i <= $nbCustomerQuotes + 10; $i++) {
 
                 $invoice = new Invoice();
-                $createdAt = $faker->dateTimeBetween('2020-01-01', '2024-01-01');
+                $createdAt = $faker->dateTimeBetween('2023-01-01', '2024-01-01');
 
                 $invoiceNumber = $createdAt->format('Y') . "-" . $uuidParts[array_key_last($uuidParts)] . "-" . str_pad($i, 3, "0", STR_PAD_LEFT);
                 $invoice->setCustomer($customer);

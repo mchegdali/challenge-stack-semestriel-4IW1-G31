@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -30,34 +31,36 @@ class QuoteController extends AbstractController
         Request            $request,
         PaginatorInterface $paginator
     ): Response {
+
         $form = $this->createForm(QuoteSearchType::class, null, ["method" => "POST"]);
         $form->handleRequest($request);
 
+        $company = null;
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $quotes = $quoteRepository->findAll();
+        }
+        else{
+            $company = $this->getUser()->getCompany();
+            if (!$company) {
+                throw $this->createNotFoundException('Entreprise non trouvée');
+            }
+            $quotes = $quoteRepository->findBy(['company' => $company]);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $searchResult = $request->request->all("quote_search");
-            $quotes = $quoteRepository->findBySearch($searchResult);
-            $quotes = $paginator->paginate(
-                $quotes,
-                $request->query->getInt('page', 1),
-                20
-            );
-        } else {
-            // $user = $this->getUser()->getRoles();
-            // if (!$user instanceof UserInterface) {
-            //     throw $this->createNotFoundException('Utilisateur non trouvé');
-            // }
-            // $company = $user->getCompany();
-            // if (!$company) {
-            //     throw $this->createNotFoundException('Entreprise non trouvée');
-            // }
-            // $quotes = $quoteRepository->findBy(['company' => $company]);
-            $quotes = $quoteRepository->findAll();
-            $quotes = $paginator->paginate(
-                $quotes,
-                $request->query->getInt('page', 1),
-                20
-            );
+
+            $isAdmin = $this->isGranted('ROLE_ADMIN') ? true : false;
+
+            $quotes = $quoteRepository->findBySearch($searchResult, $company, $isAdmin);
         }
+        
+        $quotes = $paginator->paginate(
+            $quotes,
+            $request->query->getInt('page', 1),
+            20
+        );
 
         return $this->render('quote/index.html.twig', [
             'quotes' => $quotes,

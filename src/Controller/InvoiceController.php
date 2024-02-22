@@ -43,34 +43,36 @@ class InvoiceController extends AbstractController
         PaginatorInterface $paginator
     ): Response
     {
+
         $form = $this->createForm(InvoiceSearchType::class, null, ["method" => "POST"]);
         $form->handleRequest($request);
 
-        if ($request->isMethod('GET')) {
+        $company = null;
+
+        if ($this->isGranted('ROLE_ADMIN')) {
             $invoices = $invoiceRepository->findAll();
-            $invoices = $paginator->paginate(
-                $invoices,
-                $request->query->getInt('page', 1),
-                20
-            );
-            return $this->render('invoice/index.html.twig', [
-                "searchForm" => $form->createView(),
-                'invoices' => $invoices
-            ]);
+        }
+        else{
+            $company = $this->getUser()->getCompany();
+            if (!$company) {
+                throw $this->createNotFoundException('Entreprise non trouvée');
+            }
+            $invoices = $invoiceRepository->findBy(['company' => $company]);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $searchResult = $request->request->all("invoice_search");
-            $invoices = $invoiceRepository->findBySearch($searchResult);
-        } else {
-            $invoices = $invoiceRepository->findAll();
-            $invoices = $paginator->paginate(
-                $invoices,
-                $request->query->getInt('page', 1),
-                20
-            );
+
+            $isAdmin = $this->isGranted('ROLE_ADMIN') ? true : false;
+            
+            $invoices = $invoiceRepository->findBySearch($searchResult, $company, $isAdmin);
         }
 
+        $invoices = $paginator->paginate(
+            $invoices,
+            $request->query->getInt('page', 1),
+            20
+        );
 
         return $this->render('invoice/index.html.twig', [
             'invoices' => $invoices,
