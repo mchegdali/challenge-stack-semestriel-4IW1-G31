@@ -2,7 +2,7 @@ let collection, boutonAjout, span;
 
 window.onload = () => {
     collection = document.querySelector("#quoteitem");
-    span = collection.querySelector("span");
+    span = collection.querySelector("#lignesItems");
 
     boutonAjout = document.createElement("button");
     boutonAjout.classList.add("ajout-quoteitem", "bg-blue-800", "text-white", "font-bold", "py-2", "px-4", "rounded", "w-auto", "items-center", "flex", "justify-center", "gap-2", "text-sm");
@@ -19,7 +19,6 @@ window.onload = () => {
 }
 
 function addButton(collection, nouveauButton) {
-    console.log("salut toi");
     let prototype = collection.dataset.prototype;
 
     let index = collection.dataset.index;

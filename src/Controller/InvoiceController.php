@@ -6,23 +6,26 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use DateTimeImmutable;
 use App\Entity\Invoice;
+use App\Entity\Customer;
+use App\Form\CustomerType;
 use App\Entity\InvoiceItem;
+
 use App\Entity\InvoiceStatus;
 use App\Form\InvoiceCreateType;
-
 use App\Form\InvoiceSearchType;
 use Symfony\Component\Mime\Email;
 use App\Repository\InvoiceRepository;
 use Symfony\Component\Mime\Attachment;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/invoices', name: 'invoice_')]
@@ -121,8 +124,28 @@ class InvoiceController extends AbstractController
             return $this->redirectToRoute('invoice_new'); //todo: mettre la route des devis
         }
 
+        //Création formulaire création client
+
+        $customer = new Customer();
+        $customerForm = $this->createForm(CustomerType::class, $customer);
+        $customerForm->handleRequest($request);
+        if ($customerForm->isSubmitted() && $customerForm->isValid()) {
+            $entityManager->persist($customer);
+            $entityManager->flush();
+
+            // Retourne l'ID du nouveau client sous forme de réponse JSON
+            return new JsonResponse([
+                'newClientId' => $customer->getId(),
+                'newCustomerName' => $customer->getName(), // Assurez-vous que votre entité Customer a une méthode getName()
+            ]);
+        }
+
+        $type = 'new';
+
         return $this->render('invoice/new.html.twig', [
-            'form' => $form
+            'form' => $form,
+            'customerForm' => $customerForm->createView(),
+            'type' => $type
         ]);
     }
 

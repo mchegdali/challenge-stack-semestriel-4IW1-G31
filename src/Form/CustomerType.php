@@ -19,54 +19,54 @@ class CustomerType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom',
-                'constraints' => [
-                    new Regex([
-                        'pattern' => '/^[a-zA-Z]+(?:\s[a-zA-Z]+)?$/',
-                        'message' => 'Veuillez renseigner un nom valide',
-                    ])
-                ],
+                // 'constraints' => [
+                //     new Regex([
+                //         'pattern' => '/^[a-zA-Z]+(?:\s[a-zA-Z]+)?$/',
+                //         'message' => 'Veuillez renseigner un nom valide',
+                //     ])
+                // ],
             ])
             ->add('address', TextType::class, [
                 'label' => "Adresse",
                 'attr' => [
                     'placeholder' => 'Ex: 12 rue des fontaines',
                 ],
-                'constraints' => [
-                    new Regex([
-                        'pattern' => '/^(\d+\s*,?\s*\w+(?:\s+\w+)*\d*\s+[A-Za-z\s]+)$/',
-                        'message' => 'Veuillez renseigner une adresse valide',
-                    ])
-                ],
+                // 'constraints' => [
+                //     new Regex([
+                //         'pattern' => '/^(\d+\s*,?\s*\w+(?:\s+\w+)*\d*\s+[A-Za-z\s]+)$/',
+                //         'message' => 'Veuillez renseigner une adresse valide',
+                //     ])
+                // ],
             ])
             ->add('postal_code', NumberType::class, [
                 'label' => "Code postal",
                 'invalid_message' => 'Veuillez saisir un nombre valide pour le code postal',
-                'constraints' => [
-                    new Regex([
-                        'pattern' => '/^[0-9]{5}$/',
-                        'message' => 'Veuillez renseigner un code postal valide',
-                    ]),
-                ],
+                // 'constraints' => [
+                //     new Regex([
+                //         'pattern' => '/^[0-9]{5}$/',
+                //         'message' => 'Veuillez renseigner un code postal valide',
+                //     ]),
+                // ],
             ])
             ->add('city', TextType::class, [
                 'label' => "Ville",
                 'attr' => [
                     'placeholder' => 'Entrer une ville',
                 ],
-                'constraints' => [
-                    new Regex([
-                        'pattern' => '/^[A-Za-z\s-]+$/',
-                        'message' => 'Veuillez renseigner une ville valide',
-                    ]),
-                ],
+                // 'constraints' => [
+                //     new Regex([
+                //         'pattern' => '/^[A-Za-z\s-]+$/',
+                //         'message' => 'Veuillez renseigner une ville valide',
+                //     ]),
+                // ],
             ])
             ->add('email', TextType::class, [
-                'constraints' => [
-                    new Regex([
-                        'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
-                        'message' => 'Veuillez renseigner un email valide',
-                    ])
-                ],
+                // 'constraints' => [
+                //     new Regex([
+                //         'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                //         'message' => 'Veuillez renseigner un email valide',
+                //     ])
+                // ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Ajouter',
