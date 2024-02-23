@@ -14,15 +14,13 @@
 
     <main class="mx-auto container px-4 pt-2 sm:px-0 space-y-2">
         <header class="px-1 sm:px-0">
-            <header class="px-1 sm:px-0">
-                <h1 class="text-3xl font-bold">
-                    {% if type == "new" %}
-                        Créer un nouveau devis
-                    {% elseif type == "edit" %}
-                        Modification de devis
-                    {% endif %}
-                </h1>
-            </header>
+            <h1 class="text-3xl font-bold">
+                {% if type == "new" %}
+                    Créer un nouveau devis
+                {% elseif type == "edit" %}
+                    Modification de devis
+                {% endif %}
+            </h1>
         </header>
         <twig:Card>
             {{ form_start(form) }}
@@ -33,6 +31,7 @@
             {{ form_widget(form.status) }}
             <div id="quoteitem" data-prototype="{{ form_row(form.quoteitems.vars.prototype)|e('html_attr') }}">
                 {{ form_row(form.quoteitems) }}
+                <span id="lignesItems"></span>
             </div>
             {{ form_end(form) }}
         </twig:Card>
@@ -89,7 +88,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            const customerForm = document.querySelector('#customerForm'); // Assurez-vous que cet ID correspond à votre formulaire
+            const customerForm = document.querySelector('#customerForm'); // ID du formulaire
 
             customerForm.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -105,7 +104,7 @@
                         console.log('Response data:', data); // Affiche les données de réponse dans la console
                         updateCustomerDropdown(data.newClientId, data.newCustomerName); // Assurez-vous d'envoyer le nom du nouveau client dans la réponse JSON
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(error => console.error('Errorrr:', error));
             });
         });
 
