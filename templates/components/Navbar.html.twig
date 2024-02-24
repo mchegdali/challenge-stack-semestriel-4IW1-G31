@@ -2,7 +2,7 @@
     <div>
         <a href="{{path('default_index')}}"><img src="{{ asset('img/logo.png') }}" alt="image logo"></a>
     </div>
-    <div class="space-x-4 text-blue-800 md:flex hidden">
+    <div class="space-x-4 text-primary md:flex hidden">
         <a href="{{ path('invoice_index') }}" class="hover:underline">FACTURES</a>
         <a href="{{ path('service_index') }}" class="hover:underline">SERVICES</a>
         <a href="{{ path('quote_index') }}" class="hover:underline">DEVIS</a>
@@ -12,7 +12,7 @@
     </div>
     <button id="menuButton" class="focus:outline-none md:hidden">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-             class="h-6 w-6 text-blue-800">
+             class="h-6 w-6 text-primary">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
     </button>
@@ -24,18 +24,18 @@
         </div>
         <button id="closeButton" class="focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                 class="h-6 w-6 text-blue-800">
+                 class="h-6 w-6 text-primary">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
     </div>
     <div class="space-y-2">
-        <a href="{{ path('invoice_index') }}" class="block hover:underline text-blue-800">FACTURES</a>
-        <a href="{{ path('service_index') }}" class="block hover:underline text-blue-800">SERVICES</a>
-        <a href="{{ path('quote_index') }}" class="block hover:underline text-blue-800">DEVIS</a>
-        <a href="/" class="block hover:underline text-blue-800">CLIENTS</a>
-        <a href="/" class="block hover:underline text-blue-800">MON COMPTE</a>
-        <a href="{{ path('app_logout') }}" class="block hover:underline text-blue-800">DECONNEXION</a>
+        <a href="{{ path('invoice_index') }}" class="block hover:underline text-primary">FACTURES</a>
+        <a href="{{ path('service_index') }}" class="block hover:underline text-primary">SERVICES</a>
+        <a href="{{ path('quote_index') }}" class="block hover:underline text-primary">DEVIS</a>
+        <a href="/" class="block hover:underline text-primary">CLIENTS</a>
+        <a href="/" class="block hover:underline text-primary">MON COMPTE</a>
+        <a href="{{ path('app_logout') }}" class="block hover:underline text-primary">DECONNEXION</a>
     </div>
 
 </div>

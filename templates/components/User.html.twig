@@ -10,7 +10,7 @@
 					</p>
 				</div>
 				<div>
-					<a onclick="openModalDelete('{{user.id}}')" class='text-red-500'>
+					<a onclick="openModalDelete('{{user.id}}')" class='text-error'>
 						<i class="material-icons">delete_outline</i>
 					</a>
 				</div>
@@ -41,16 +41,16 @@
 
 		<div class='mt-6 flex flex-row justify-center items-center flex-1 w-full gap-3'>
 			{# {% if is_granted('ROLE_ADMIN') %} #}
-				<a id="deleteLink" class='flex-1 text-red-500 font-bold p-2 rounded border border-red-500 text-center'>
+				<a id="deleteLink" class='flex-1 text-error font-bold p-2 rounded border border-error text-center'>
 					<p>Oui</p>
 				</a>
 			{# {% else %} #}
-				{# <a href="{{ path('delete_user', {'id': user.id}) }}" class='flex-1 text-red-500 font-bold p-2 rounded border border-red-500 text-center'>
+				{# <a href="{{ path('delete_user', {'id': user.id}) }}" class='flex-1 text-error font-bold p-2 rounded border border-error text-center'>
 					<p>Oui</p>
 				</a> #}
 			{# {% endif %} #}
 
-			<button onclick="closeDeleteModal()" class="bg-white flex-1 text-blue-800 font-bold p-2 rounded border border-blue-800">
+			<button onclick="closeDeleteModal()" class="bg-white flex-1 text-primary font-bold p-2 rounded border border-primary">
 				Non
 			</button>
 		</div>

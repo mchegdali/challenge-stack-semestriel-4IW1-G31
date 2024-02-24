@@ -3,10 +3,10 @@
 	<div class='flex justify-between'>
 		<h1 class='font-bold'>{{ service.name|upper }}</h1>
 		<div>
-			{# <a href="{{ path('update_service', {'id': service.id}) }}" class='text-blue-800'>
+			{# <a href="{{ path('update_service', {'id': service.id}) }}" class='text-primary'>
 				<i class="material-icons">edit</i>
 			</a> #}
-			<a href="{{ path('service_delete', {'id': service.id}) }}" class='text-red-500'>
+			<a href="{{ path('service_delete', {'id': service.id}) }}" class='text-error'>
 				<i class="material-icons">delete_outline</i>
 			</a>
 		</div>

@@ -1,5 +1,10 @@
 {% use 'tailwind_2_layout.html.twig' %}
 
+    {% block form_widget_simple %}
+        {% set widget_class = 'w-full rounded-sm border-1 border-darkblue justify-start items-center placeholder:text-gray focus:shadow-sm focus:shadow-primary focus:border-darkblue' %}        
+        {{- parent() -}}
+    {% endblock form_widget_simple %}
+
 {%- block form_start -%}
     {%- do form.setMethodRendered() -%}
     {% set method = method|upper %}
@@ -25,10 +30,9 @@
         {{- parent() -}}
     {%- endblock form_row -%}
 
-    {% block textarea_widget %}
-        {% set widget_class = widget_class|default('w-full rounded-sm border-1 border-blue-600 justify-start items-center placeholder:text-gray-500 focus:ring-1') %}
-        {{ parent() }}
-    {% endblock textarea_widget %}
+
+
+
 
     {%- block choice_widget_expanded -%}
         {%- set attr = attr|merge({ class: attr.class|default('flex gap-4 flex-wrap w-full') }) -%}
@@ -49,10 +53,10 @@
         {% set label_attr = label_attr|merge({'for': id}) %}
     {%- endif -%}
     {% if required -%}
-        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('text-blue-950') ~ ' required')|trim}) %}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('text-darkblue') ~ ' required')|trim}) %}
     {%- endif -%}
     <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}
-    class="text-blue-950">
+    class="text-darkblue">
     {{- block('form_label_content') -}}
 </{{ element|default('label') }}>
     {%- endif -%}
@@ -60,12 +64,12 @@
 
 
 {%- block form_errors -%}
-    {%- set error_item_class = error_item_class|default('text-sm text-red-500 font-medium ') -%}
+    {%- set error_item_class = error_item_class|default('text-sm text-error font-medium ') -%}
     {{- parent() -}}
 {%- endblock form_errors -%}
 
 {%- block form_help -%}
-    {%- set help_class = help_class|default('block text-gray-800') -%}
+    {%- set help_class = help_class|default('block text-darkgrey') -%}
     {{- parent() -}}
 {%- endblock form_help -%}
 
@@ -83,9 +87,9 @@
     {% set class = "font-bold py-2 px-4 rounded text-sm" %}
 
     {%- if type in ['submit', 'reset'] -%}
-        {% set class = class ~ ' bg-blue-800 hover:bg-blue-900 text-white' %}
+        {% set class = class ~ ' bg-primary hover:bg-darkblue text-white' %}
     {%- elseif type == 'button' -%}
-        {% set class = class ~ ' border-blue-800 bg-white text-blue-800 hover:bg-blue-800 hover:text-white' %}
+        {% set class = class ~ ' border-primary bg-white text-primary hover:bg-primary hover:text-white' %}
     {%- endif -%}
     {%- if attr.class is defined -%}
         {% set class = class ~ ' ' ~ attr.class %}

@@ -13,17 +13,17 @@ class InvoiceStatusFixtures extends Fixture
         $status = new InvoiceStatus();
         $status->setName("created");
         $status->setDisplayName("Créée");
-        $status->setBgColor("blue-600");
+        $status->setBgColor("primary");
         $status->setTextColor("white");
-        $status->setBorderColor("blue-600");
+        $status->setBorderColor("primary");
         $manager->persist($status);
 
         $status = new InvoiceStatus();
         $status->setName("paid");
         $status->setDisplayName("Payée");
-        $status->setBgColor("green-700");
+        $status->setBgColor("success");
         $status->setTextColor("white");
-        $status->setBorderColor("green-700");
+        $status->setBorderColor("success");
         $manager->persist($status);
 
         $status = new InvoiceStatus();
@@ -45,9 +45,9 @@ class InvoiceStatusFixtures extends Fixture
         $status = new InvoiceStatus();
         $status->setName("refund");
         $status->setDisplayName("Remboursée");
-        $status->setBgColor("gray-700");
+        $status->setBgColor("grey");
         $status->setTextColor("white");
-        $status->setBorderColor("gray-700");
+        $status->setBorderColor("grey");
         $manager->persist($status);
 
         $manager->flush();
