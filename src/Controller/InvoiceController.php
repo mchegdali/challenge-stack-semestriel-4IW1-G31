@@ -147,6 +147,7 @@ class InvoiceController extends AbstractController
             'customerForm' => $customerForm->createView(),
             'type' => $type,
             'typeDocument' => 'invoice'
+
         ]);
     }
 
