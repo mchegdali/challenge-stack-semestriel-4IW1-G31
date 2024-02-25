@@ -24,6 +24,8 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('quotes', './assets/js/quotes.js')
     .addEntry('invoices', './assets/js/invoices.js')
+    .addEntry('modal-customer', './assets/js/modal-customer.js')
+    .addEntry('dropdown-customer', './assets/js/dropdown-customer.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

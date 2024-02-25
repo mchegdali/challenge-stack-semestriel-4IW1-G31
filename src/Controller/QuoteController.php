@@ -128,7 +128,8 @@ class QuoteController extends AbstractController
         return $this->render('quote/new_edit.html.twig', [
             'form' => $form,
             'customerForm' => $customerForm->createView(),
-            'type' => $type
+            'type' => $type,
+            'typeDocument' => 'quote'
         ]);
     }
 
@@ -147,7 +148,8 @@ class QuoteController extends AbstractController
 
             return new JsonResponse([
                 'newClientId' => $customer->getId(),
-                'newCustomerName' => $customer->getName(), // Assurez-vous que votre entité Customer a une méthode getName()
+                'newCustomerName' => $customer->getName(),
+                'type_create_customer' => '#quote_create_customer'
             ]);
         }
 

@@ -1,0 +1,23 @@
+<!-- Modale -->
+<div id="myModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+    <button onclick="closeModal()">x</button>
+    <div class="bg-white p-8 rounded shadow-lg">
+        <h2 class="text-lg font-bold mb-4">Ajout d'un client</h2>
+
+        {{ form_start(customerForm, {'attr': {'id': 'customerForm', 'data-type': typeDocument}}) }}
+            {{ form_row(customerForm.name)}}
+            {{ form_row(customerForm.email)}}
+            {{ form_row(customerForm.address)}}
+            {{ form_row(customerForm.postal_code)}}			
+            {{ form_row(customerForm.city)}}
+
+        <span class='flex gap-4 justify-end w-full mt-4'>
+            {{ form_row(customerForm.submit, {'attr': {'class': 'rounded px-4 py-2 flex-1 bg-blue-800 font-bold text-white'}}) }}
+            {{ form_end(customerForm) }}
+            <button onclick="closeModal()" class="bg-white flex-1 text-blue-800 font-bold p-2 rounded border border-blue-800">
+                Fermer
+            </button>
+        </span>
+        {{ form_end(customerForm) }}
+    </div>
+</div>
