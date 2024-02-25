@@ -20,11 +20,11 @@ class CustomerController extends AbstractController
     public function createCompany(Request $request, EntityManagerInterface $em, CustomerRepository $customerRepository, PaginatorInterface $paginator): Response
     {
         $customer = new Customer();
-        $form = $this->createForm(CustomerType::class, $customer);
+        $customerForm = $this->createForm(CustomerType::class, $customer);
 
-        $form->handleRequest($request);
+        $customerForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($customerForm->isSubmitted() && $customerForm->isValid()) {
             $em->persist($customer);
             $em->flush();
         }
@@ -38,7 +38,7 @@ class CustomerController extends AbstractController
         );
 
         return $this->render('customer/Customer.html.twig', [
-            'form' => $form->createView(),
+            'customerForm' => $customerForm->createView(),
             'customers' => $customers,
         ]);
     }

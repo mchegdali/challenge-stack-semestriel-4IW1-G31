@@ -39,38 +39,7 @@
 			
 		</main>
 
-		<!-- Modale -->
-    <div id="myModal"
-         class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white p-8 rounded shadow-lg">
-            <h2 class="text-lg font-bold mb-4">Ajout d'un client</h2>
-            {{ form_start(customerForm, {'attr': {'class': 'flex flex-col items-center w-full gap-4', 'id': 'customerForm'}}) }}
-            <span>
-                    <label>Nom</label>
-                    {{ form_row(customerForm.name, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 border-2'}}) }}
-                </span>
-            <span>
-                    <label>Adresse</label>
-                    {{ form_row(customerForm.address, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
-                </span>
-            <span>
-                    <label>Code Postale</label>
-                    {{ form_row(customerForm.postal_code, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
-                </span>
-            <span>
-                    <label>Ville</label>
-                    {{ form_row(customerForm.city, {'attr': {'class': 'rounded-lg p-2 flex-1 w-56 h-10 bg-white border-2'}}) }}
-                </span>
-            <span class='flex gap-4 justify-end w-full'>
-					{{ form_row(customerForm.submit, {'attr': {'class': 'rounded px-4 py-2 flex-1 bg-blue-800 font-bold text-white'}}) }}
-                    <button onclick="closeModal()"
-                            class="bg-white flex-1 text-blue-800 font-bold p-2 rounded border border-blue-800">
-                        Fermer
-                    </button>
-                </span>
-            {{ form_end(customerForm) }}
-        </div>
-    </div>
+        {% include "components/ModalCustomer.html.twig" %}
 
 	</div>
 
@@ -79,45 +48,7 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('invoices') }}
-
-	<script>
-
-        function openModal(event) {
-            event.preventDefault();
-            document.getElementById('myModal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('myModal').classList.add('hidden');
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const customerForm = document.querySelector('#customerForm'); // Assurez-vous que cet ID correspond à votre formulaire
-
-            customerForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const formData = new FormData(customerForm);
-
-                fetch('{{ path('quote_customer_new') }}', { // Assurez-vous que cette route est correcte et pointe vers la fonction de création de client
-                    method: 'POST',
-                    body: formData,
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        closeModal();
-                        console.log('Response data:', data); // Affiche les données de réponse dans la console
-                        updateCustomerDropdown(data.newClientId, data.newCustomerName); // Assurez-vous d'envoyer le nom du nouveau client dans la réponse JSON
-                    })
-                    .catch(error => console.error('Error:', error));
-            });
-        });
-
-        function updateCustomerDropdown(newCustomerId, newCustomerName) {
-            const customerDropdown = document.querySelector('#invoice_create_customer'); // Assurez-vous que cet ID correspond à votre menu déroulant
-            const newOption = new Option(newCustomerName, newCustomerId, true, true);
-            customerDropdown.appendChild(newOption);
-            customerDropdown.value = newCustomerId; // Sélectionnez le nouveau client
-        }
-
-    </script>
+    {{ encore_entry_script_tags('modal-customer') }}
+    {{ encore_entry_script_tags('dropdown-customer') }}
+	
 {% endblock %}

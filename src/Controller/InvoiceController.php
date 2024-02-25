@@ -145,7 +145,8 @@ class InvoiceController extends AbstractController
         return $this->render('invoice/new.html.twig', [
             'form' => $form,
             'customerForm' => $customerForm->createView(),
-            'type' => $type
+            'type' => $type,
+            'typeDocument' => 'invoice'
         ]);
     }
 
