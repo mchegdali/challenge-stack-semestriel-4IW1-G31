@@ -2,16 +2,22 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'selector',
-  content: ['./assets/**/*.js', './templates/**/*.html.twig'],
-  // content: ['./assets/**/*.js', './templates/**/*.html.twig', './safelist.txt'],
+  // darkMode: 'selector',
+  // content: ['./assets/**/*.js', './templates/**/*.html.twig'],
+  content: ['./assets/**/*.js', './templates/**/*.html.twig', './safelist.txt'],
   theme: {
     colors: {
+      transparent: 'transparent',
       black: '#14110F',
       white: '#ffffff',
-      lightblue: '#A4CCFD',
-      blue: '#3754CB',
-      darkblue: '#1B254B',
+      light: '#F3F0F8',
+      dark: '#0C0D12',
+      blue: {
+        light: '#A4CCFD',
+        DEFAULT: '#3754CB',
+        dark: '#1B254B',
+        darker: '#191B23',
+      },
       lightgrey: '#E5E5E5',
       grey: '#888888',
       darkgrey: '#545454',
@@ -75,14 +81,14 @@ module.exports = {
       info: '#259DD0',
     },
     extend: {
-      // colors: ({ theme }) => ({
-      //   primary: theme('colors.blue'),
-      //   secondary: theme('colors.lightgrey'),
-      //   success: theme('colors.green.700'),
-      //   warning: '#FF9900',
-      //   error: theme('colors.red.600'),
-      //   info: '#259DD0',
-      // }),
+      backgroundColor: ({ theme }) => ({
+        hover: {
+          light: theme('colors.light'),
+          dark: `color-mix(in srgb, ${theme(
+            'colors.dark'
+          )} 92%, rgba(255, 255, 255))`,
+        },
+      }),
       fontFamily: {
         heading: ['"Orienta", sans-serif', ...defaultTheme.fontFamily.sans],
         sans: ['"Roboto Flex", sans-serif', ...defaultTheme.fontFamily.sans],

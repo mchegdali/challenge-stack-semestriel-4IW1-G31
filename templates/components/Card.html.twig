@@ -1,3 +1,3 @@
-<section class="p-3 bg-white shadow-md rounded-xl w-full">
+<section {{ attributes|default({ 'class': "p-3 bg-white dark:bg-blue-darker shadow-md rounded-xl w-full"}) }}>
     {% block content %}{% endblock %}
 </section>

@@ -29,9 +29,9 @@ class InvoiceStatusFixtures extends Fixture
         $status = new InvoiceStatus();
         $status->setName("late");
         $status->setDisplayName("Retard");
-        $status->setBgColor("red-500");
+        $status->setBgColor("error");
         $status->setTextColor("white");
-        $status->setBorderColor("red-500");
+        $status->setBorderColor("error");
         $manager->persist($status);
 
         $status = new InvoiceStatus();

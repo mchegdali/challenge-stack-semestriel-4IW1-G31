@@ -37,9 +37,9 @@ class QuoteStatusFixtures extends Fixture
         $status = new QuoteStatus();
         $status->setDisplayName("Refusé");
         $status->setName("refused");
-        $status->setBgColor("red-500");
+        $status->setBgColor("error");
         $status->setTextColor("white");
-        $status->setBorderColor("red-500");
+        $status->setBorderColor("error");
         $manager->persist($status);
 
         $manager->flush();
