@@ -1,10 +1,17 @@
-{% extends 'base.html.twig' %}
+{% extends '_blank-layout.html.twig' %}
 
 {% block title %}Register
 {% endblock %}
 
 {% block body %}
-	<div class="items-center h-screen flex justify-center sm:bg-lightgrey">
-		{% include 'components/RegisterForm.html.twig' %}
-	</div>
+
+    <main class="min-h-lvh flex flex-col justify-center items-center pt-20 gap-4 mx-auto container">
+        <header class="flex flex-col items-center gap-6">
+            <div class="max-w-sm">
+                <img src="{{ asset('img/logo2.png') }}" alt="Plumbill">
+            </div>
+            <h1 class="font-bold text-3xl md:text-4xl">Création de compte entreprise</h1>
+        </header>
+        {% include 'components/RegisterForm.html.twig' %}
+    </main>
 {% endblock %}

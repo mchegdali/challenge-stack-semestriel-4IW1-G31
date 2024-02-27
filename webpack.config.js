@@ -26,6 +26,7 @@ Encore
     .addEntry('invoices', './assets/js/invoices.js')
     .addEntry('modal-customer', './assets/js/modal-customer.js')
     .addEntry('dropdown-customer', './assets/js/dropdown-customer.js')
+    .addEntry('layout', './assets/js/layout.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -56,6 +57,7 @@ Encore
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
         config.corejs = '3.23';
+        config.targets = "last 2 versions, > 1%, not dead";
     })
 
     // enables Sass/SCSS support

@@ -1,3 +1,3 @@
-<section {{ attributes|default({ 'class': "p-3 bg-white dark:bg-blue-darker shadow-md rounded-xl w-full"}) }}>
+<section {{ attributes.defaults({ class: 'flex gap-4 flex-wrap w-full px-4 py-6 bg-white shadow-md rounded-xl'}) }}>
     {% block content %}{% endblock %}
 </section>

@@ -4,18 +4,17 @@
 {% endblock %}
 
 {% block body %}
-{% include 'components/Navbar.html.twig' %}
-	{% include 'components/CustomerHeader.html.twig' %}
 
-	<h1 class='px-6 font-bold'>Liste des clients</h1>
-	{% for customer in customers %}
-		{% include 'components/CustomerData.html.twig' %}
-	{% endfor %}
-	<div class="navigation flex justify-center mb-8">
-		{{ knp_pagination_render(customers, 'components/TailwindPagination.html.twig') }}
-	</div>
+    <h1 class='px-6 font-bold'>Liste des clients</h1>
+    {% for customer in customers %}
+        {% include 'components/CustomerData.html.twig' %}
+    {% endfor %}
+    <div class="navigation flex justify-center mb-8">
+        {{ knp_pagination_render(customers, 'components/TailwindPagination.html.twig') }}
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('modal-customer') }}
 {% endblock %}
+

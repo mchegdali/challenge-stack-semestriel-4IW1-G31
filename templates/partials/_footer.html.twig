@@ -1,0 +1,23 @@
+<nav id="appbar"
+     class="sm:hidden w-full h-full px-6 py-1 bg-white border-t border-gray-200 border-opacity-25 justify-between items-center flex fill-mode-forwards">
+    <a class="flex-col justify-start items-center gap-1 inline-flex" href="{{ path('quote_index') }}">
+        <span class="material-symbols-outlined text-blue-950">receipt</span>
+        <div class="w-14 h-3 text-center text-blue-950 text-sm font-normal leading-none">Factures</div>
+    </a>
+    <div class="flex-col justify-start items-center gap-1 inline-flex">
+        <span class="material-symbols-outlined text-gray-400">request_quote</span>
+        <div class="w-10 h-3 text-center text-gray-400 text-sm font-normal leading-none">Devis</div>
+    </div>
+    <div class="flex-col justify-start items-center gap-1 inline-flex">
+        <span class="material-symbols-outlined text-gray-400">group</span>
+        <div class="w-11 h-3 text-center text-gray-400 text-sm font-normal leading-none">Clients</div>
+    </div>
+    <div class="flex-col justify-start items-center gap-1 inline-flex">
+        <span class="material-symbols-outlined text-gray-400">more_horiz</span>
+        <div class="w-10 h-3 text-center text-gray-400 text-sm font-normal leading-none">Plus</div>
+    </div>
+</nav>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('layout') }}
+{% endblock %}
