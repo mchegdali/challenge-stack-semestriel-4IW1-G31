@@ -40,10 +40,14 @@ class Quote
     #[ORM\Column(length: 255)]
     private ?string $quoteNumber = null;
 
+    #[ORM\OneToMany(mappedBy: 'quote', targetEntity: Invoice::class)]
+    private Collection $invoices;
+
 
     public function __construct()
     {
         $this->quoteItems = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -176,5 +180,35 @@ class Quote
         }
 
         return $total;
+    }
+
+    /**
+     * @return Collection<int, Invoice>
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): static
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setQuote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): static
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getQuote() === $this) {
+                $invoice->setQuote(null);
+            }
+        }
+
+        return $this;
     }
 }

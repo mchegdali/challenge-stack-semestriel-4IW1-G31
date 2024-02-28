@@ -9,6 +9,7 @@ use App\Form\CustomerType;
 use App\Form\QuoteCreateType;
 use App\Form\QuoteSearchType;
 use App\Repository\QuoteRepository;
+use App\Service\QuoteToInvoiceConverter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -210,5 +211,23 @@ class QuoteController extends AbstractController
             'customerForm' => $customerForm->createView(),
             'type' => $type
         ]);
+    }
+
+    #[Route('/convert/{id}', name: 'convert')]
+    public function convert(Quote $quote, QuoteToInvoiceConverter $quoteToInvoiceConverter): Response
+    {
+
+        if (!$quote) {
+            $this->addFlash('error', 'Le devis demandé n\'existe pas.');
+            return $this->redirectToRoute('default_index');
+        }
+
+        $invoice = $quoteToInvoiceConverter->convert($quote);
+
+        $this->addFlash('success', 'La facture a été créée avec succès à partir du devis.');
+
+        return $this->redirectToRoute(
+            'invoice_show', ['id' => $invoice->getId()]
+        );
     }
 }

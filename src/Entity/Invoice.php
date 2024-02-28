@@ -45,6 +45,9 @@ class Invoice
     #[ORM\Column]
     private ?\DateTimeImmutable $dueAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    private ?Quote $quote = null;
+
 
     public function __construct()
     {
@@ -221,6 +224,18 @@ class Invoice
     public function setDueAt(\DateTimeImmutable $dueAt): static
     {
         $this->dueAt = $dueAt;
+
+        return $this;
+    }
+
+    public function getQuote(): ?Quote
+    {
+        return $this->quote;
+    }
+
+    public function setQuote(?Quote $quote): static
+    {
+        $this->quote = $quote;
 
         return $this;
     }
