@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\AdminCreateAccountType;
 use App\Form\CompanyCreateAccountType;
+use Symfony\Component\Mailer\MailerInterface;
 
-
-
+use Symfony\Component\Mime\Email;
 use App\Form\RegistrationFormType;
 use App\Form\CompanyUserRegistrationFormType;
 use App\Form\CreateAccountType;
@@ -32,9 +32,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class UserController extends AbstractController
 {
+
     #[Route('/user-admin', name: 'app_list_user_admin')]
 
-    public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
+    public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $user = new User();
         $form = $this->createForm(AdminCreateAccountType::class, $user);
@@ -48,18 +49,21 @@ class UserController extends AbstractController
                 )
             );
 
+            $email = (new TemplatedEmail())
+                ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
+                ->to($user->getEmail())
+                ->subject('Compte Creer admin')
+                ->htmlTemplate('emails/confirm-request-company-account.html.twig')
+                ->context([
+                    'lastName' => 'Lucas',
+                    'firstName' => "dededed",
+                    'company' => 'dededed'
+                ]);
+
+            $mailer->send($email);
+
             $entityManager->persist($user);
             $entityManager->flush();
-
-            // $this->emailVerifier->sendEmailConfirmation(
-            //     'app_verify_email',
-            //     $user,
-            //     (new TemplatedEmail())
-            //         ->from(new Address('register@plumbill.fr', 'Plumbill'))
-            //         ->to($user->getEmail())
-            //         ->subject('Please Confirm your Email')
-            //         ->htmlTemplate('registration/confirmation_email.html.twig')
-            // );
         }
 
         $loggedInUser = $this->getUser();
@@ -71,6 +75,8 @@ class UserController extends AbstractController
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getResult();
+
+
 
         return $this->render('user/index.html.twig', [
             'form' => $form->createView(),
@@ -210,24 +216,51 @@ class UserController extends AbstractController
     }
 
     #[Route('/request-company-account/{id}/delete', name: 'delete_request_company_account')]
-    public function deleteRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user): Response
+    public function deleteRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user, MailerInterface $mailer): Response
     {
         $em = $doctrine->getManager();
         $em->remove($user);
         $em->flush();
 
+        $email = (new TemplatedEmail())
+            ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
+            ->to($user->getEmail())
+            ->subject('Information concernant votre demande de compte entreprise')
+            ->htmlTemplate('emails/refuse-request-company-account.html.twig')
+            ->context([
+                'lastName' => $user->getLastName(),
+                'firstName' => $user->getFirstName(),
+                'company' => $user->getCompany()->getName(),
+            ]);
+
+        $mailer->send($email);
+
         return $this->redirectToRoute('app_list_request_company_account');
     }
 
     #[Route('/request-company-account/{id}/accept', name: 'accept_request_company_account')]
-    public function acceptRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user): Response
+    public function acceptRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user, MailerInterface $mailer): Response
     {
-
         $user->setIsVerified(true);
 
         $em = $doctrine->getManager();
 
         $em->flush();
+
+
+
+
+        $email = (new TemplatedEmail())
+            ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
+            ->to($user->getEmail())
+            ->subject('Compte confirmer')
+            ->htmlTemplate('emails/confirm-request-company-account.html.twig')
+            ->context([
+                'lastName' => $user->getLastName(),
+                'firstName' => $user->getFirstName(),
+            ]);
+
+        $mailer->send($email);
 
         return $this->redirectToRoute('app_list_request_company_account');
     }
