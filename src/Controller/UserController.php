@@ -54,23 +54,21 @@ class UserController extends AbstractController
                 ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
                 ->to($user->getEmail())
                 ->subject('Vos identifiants PlumBill')
-                ->htmlTemplate('emails/admin-create-account.html.twig')
+                ->htmlTemplate('emails/create-account.html.twig')
                 ->context([
                     'lastName' => $user->getLastName(),
                     'firstName' => $user->getFirstName(),
                     'emailAdresse' => $user->getEmail(),
-                    'company' => $user->getCompany()->getName(),
                     'password' => $form->get('plainPassword')->getData(),
                 ]);
 
             $mailer->send($email);
-            
+
             $entityManager->persist($user);
             $entityManager->flush();
         }
 
         $loggedInUser = $this->getUser();
-        // dd($loggedInUser);
         $userId = $loggedInUser->getId();
 
         $users = $doctrine->getManager()->getRepository(User::class)->createQueryBuilder('u')
@@ -78,8 +76,6 @@ class UserController extends AbstractController
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getResult();
-
-
 
         return $this->render('user/index.html.twig', [
             'form' => $form->createView(),
@@ -100,7 +96,7 @@ class UserController extends AbstractController
 
     #[Route('/user', name: 'app_list_user')]
     // #[Security("is_granted('ROLE_ADMIN')")]
-    public function companyCreateUser(UserRepository $userRepository, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
+    public function companyCreateUser(UserRepository $userRepository, Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $loggedInUser = $this->getUser();
 
@@ -117,8 +113,6 @@ class UserController extends AbstractController
             // ->getSingleScalarResult();
             ->getResult();
 
-
-
         $user = new User();
         $form = $this->createForm(CompanyCreateAccountType::class, $user);
         $form->handleRequest($request);
@@ -130,6 +124,20 @@ class UserController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
+                ->to($user->getEmail())
+                ->subject('Vos identifiants PlumBill')
+                ->htmlTemplate('emails/create-account.html.twig')
+                ->context([
+                    'lastName' => $user->getLastName(),
+                    'firstName' => $user->getFirstName(),
+                    'emailAdresse' => $user->getEmail(),
+                    'password' => $form->get('plainPassword')->getData(),
+                ]);
+
+            $mailer->send($email);
 
             $user->setCompany($loggedInUser->getCompany());
 

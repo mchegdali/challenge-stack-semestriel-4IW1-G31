@@ -58,18 +58,18 @@ class UserFixtures extends Fixture
         $userCompany->setRoles(['ROLE_COMPANY']);
         $userCompany->setIsVerified(true);
 
-        for ($i = 0; $i < 10; $i++) {
-            $userCompany = new User();
-            $userCompany->setCompany($faker->randomElement($companies));
-            $userCompany->setEmail($faker->email);
-            $userCompany->setFirstName($faker->firstName());
-            $userCompany->setLastName($faker->lastName());
-            $userCompany->setPassword($this->passwordHasher->hashPassword($userCompany, '12345678'));
-            $userCompany->setRoles(['ROLE_COMPANY']);
-            $userCompany->setIsVerified(false);
+        // for ($i = 0; $i < 10; $i++) {
+        //     $userCompany = new User();
+        //     $userCompany->setCompany($faker->randomElement($companies));
+        //     $userCompany->setEmail($faker->email);
+        //     $userCompany->setFirstName($faker->firstName());
+        //     $userCompany->setLastName($faker->lastName());
+        //     $userCompany->setPassword($this->passwordHasher->hashPassword($userCompany, '12345678'));
+        //     $userCompany->setRoles(['ROLE_COMPANY']);
+        //     $userCompany->setIsVerified(false);
 
-            $manager->persist($userCompany);
-        }
+        //     $manager->persist($userCompany);
+        // }
 
         $manager->persist($user);
         $manager->persist($userComptable);
