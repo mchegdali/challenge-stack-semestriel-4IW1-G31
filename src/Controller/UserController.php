@@ -42,6 +42,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -52,16 +53,18 @@ class UserController extends AbstractController
             $email = (new TemplatedEmail())
                 ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
                 ->to($user->getEmail())
-                ->subject('Compte Creer admin')
-                ->htmlTemplate('emails/confirm-request-company-account.html.twig')
+                ->subject('Vos identifiants PlumBill')
+                ->htmlTemplate('emails/admin-create-account.html.twig')
                 ->context([
-                    'lastName' => 'Lucas',
-                    'firstName' => "dededed",
-                    'company' => 'dededed'
+                    'lastName' => $user->getLastName(),
+                    'firstName' => $user->getFirstName(),
+                    'emailAdresse' => $user->getEmail(),
+                    'company' => $user->getCompany()->getName(),
+                    'password' => $form->get('plainPassword')->getData(),
                 ]);
 
             $mailer->send($email);
-
+            
             $entityManager->persist($user);
             $entityManager->flush();
         }
