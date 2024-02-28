@@ -7,7 +7,6 @@ use App\Form\AdminCreateAccountType;
 use App\Form\CompanyCreateAccountType;
 
 
-
 use App\Form\RegistrationFormType;
 use App\Form\CompanyUserRegistrationFormType;
 use App\Form\CreateAccountType;
@@ -33,7 +32,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class UserController extends AbstractController
 {
     #[Route('/user-admin', name: 'app_list_user_admin')]
-
     public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $user = new User();
@@ -73,7 +71,7 @@ class UserController extends AbstractController
             ->getResult();
 
         return $this->render('user/index.html.twig', [
-            'form' => $form->createView(),
+            '_form' => $form->createView(),
             'users' => $users,
         ]);
     }
@@ -107,7 +105,6 @@ class UserController extends AbstractController
             ->getQuery()
             // ->getSingleScalarResult();
             ->getResult();
-
 
 
         $user = new User();
@@ -155,7 +152,7 @@ class UserController extends AbstractController
             ->getResult();
 
         return $this->render('user/index.html.twig', [
-            'form' => $form->createView(),
+            '_form' => $form->createView(),
             'users' => $users,
             'existingComptable' => $existingComptable,
         ]);
@@ -184,7 +181,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/UserDetails.html.twig', [
-            'form' => $form->createView(),
+            '_form' => $form->createView(),
             'user' => $user,
         ]);
     }

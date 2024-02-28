@@ -12,6 +12,8 @@ module.exports = {
             light: '#F3F0F8',
             dark: '#0C0D12',
             blue: {
+                lightest: "#E0E8F9",
+                lighter: "#CDDFFB",
                 light: '#A4CCFD',
                 DEFAULT: '#3754CB',
                 dark: '#1B254B',
@@ -110,6 +112,9 @@ module.exports = {
             },
 
         },
-        plugins: [require('@tailwindcss/forms'), require('tailwindcss-animate')],
-    }
+    },
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('tailwindcss-animate')
+    ],
 }

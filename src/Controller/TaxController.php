@@ -33,7 +33,7 @@ class TaxController extends AbstractController
         $taxs = $doctrine->getManager()->getRepository(Tax::class)->findAll();
 
         return $this->render('tax/tax.html.twig', [
-            'form' => $form->createView(),
+            '_form' => $form->createView(),
             'taxs' => $taxs,
         ]);
     }
@@ -43,7 +43,7 @@ class TaxController extends AbstractController
     {
         $em->remove($tax);
         $em->flush();
-    
+
         return $this->redirectToRoute('tax_index');
     }
 
@@ -51,19 +51,19 @@ class TaxController extends AbstractController
     public function updateTax(Request $request, PersistenceManagerRegistry $doctrine, Tax $tax): Response
     {
         $form = $this->createForm(TaxType::class, $tax);
-    
+
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $doctrine->getManager();
             $entityManager->flush();
-    
+
             return $this->redirectToRoute('tax_index');
         }
-    
+
         return $this->render('default/UpdateTax.html.twig', [
-            'form' => $form->createView(),
+            '_form' => $form->createView(),
         ]);
     }
-    
+
 }

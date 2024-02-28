@@ -48,7 +48,7 @@ class CustomerController extends AbstractController
     public function companyDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
     {
         $customerRepository = $doctrine->getManager()->getRepository(Customer::class);
-        
+
         $customer = $customerRepository->find($id);
 
         if (!$customer) {
@@ -66,7 +66,7 @@ class CustomerController extends AbstractController
         }
 
         return $this->render('customer/CustomerDetails.html.twig', [
-            'form' => $form->createView(),
+            '_form' => $form->createView(),
             'customer' => $customer,
         ]);
     }
@@ -77,7 +77,7 @@ class CustomerController extends AbstractController
         $em = $doctrine->getManager();
         $em->remove($customer);
         $em->flush();
-    
+
         return $this->redirectToRoute('customer_index');
     }
 

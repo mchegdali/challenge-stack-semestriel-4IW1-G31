@@ -1,20 +1,20 @@
 <nav id="appbar"
-     class="sm:hidden w-full h-full px-6 py-1 bg-white border-t border-gray-200 border-opacity-25 justify-between items-center flex fill-mode-forwards">
-    <a class="flex-col justify-start items-center gap-1 inline-flex" href="{{ path('quote_index') }}">
-        <span class="material-symbols-outlined text-blue-950">receipt</span>
-        <div class="w-14 h-3 text-center text-blue-950 text-sm font-normal leading-none">Factures</div>
+     class="sticky bottom-0 sm:hidden w-full px-6 py-2 bg-white dark:bg-blue-darker border-t border-lightgrey/5 justify-around items-center flex fill-mode-forwards">
+    <a class="flex-col justify-start items-center gap-1 inline-flex group" href="{{ path('invoice_index') }}">
+        <span class="material-symbols-outlined text-grey group-hover:text-primary">receipt</span>
+        <div class="text-center text-grey text-sm font-normal leading-none group-hover:text-primary">Factures</div>
     </a>
-    <div class="flex-col justify-start items-center gap-1 inline-flex">
-        <span class="material-symbols-outlined text-gray-400">request_quote</span>
-        <div class="w-10 h-3 text-center text-gray-400 text-sm font-normal leading-none">Devis</div>
-    </div>
-    <div class="flex-col justify-start items-center gap-1 inline-flex">
-        <span class="material-symbols-outlined text-gray-400">group</span>
-        <div class="w-11 h-3 text-center text-gray-400 text-sm font-normal leading-none">Clients</div>
-    </div>
-    <div class="flex-col justify-start items-center gap-1 inline-flex">
-        <span class="material-symbols-outlined text-gray-400">more_horiz</span>
-        <div class="w-10 h-3 text-center text-gray-400 text-sm font-normal leading-none">Plus</div>
+    <a class="flex-col justify-start items-center gap-1 inline-flex group" href="{{ path('quote_index') }}">
+        <span class="material-symbols-outlined text-grey group-hover:text-primary">request_quote</span>
+        <div class="text-center text-grey text-sm font-normal leading-none group-hover:text-primary">Devis</div>
+    </a>
+    <a class="flex-col justify-start items-center gap-1 inline-flex group" href="{{ path('customer_index') }}">
+        <span class="material-symbols-outlined text-grey group-hover:text-primary">group</span>
+        <div class="text-center text-grey text-sm font-normal leading-none group-hover:text-primary">Clients</div>
+    </a>
+    <div class="flex-col justify-start items-center gap-1 inline-flex group cursor-pointer">
+        <span class="material-symbols-outlined text-grey group-hover:text-primary">more_horiz</span>
+        <div class="text-center text-grey text-sm font-normal leading-none group-hover:text-primary">Plus</div>
     </div>
 </nav>
 

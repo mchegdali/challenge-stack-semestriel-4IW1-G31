@@ -1,35 +1,28 @@
 {% use 'tailwind_2_layout.html.twig' %}
 
     {% block form_widget_simple %}
-        {% set widget_class = 'w-full rounded-sm border-1 border-darkblue justify-start items-center placeholder:text-gray focus:shadow-sm focus:shadow-primary focus:border-darkblue' %}        
+        {% set widget_class = 'bg-transparent dark:focus:ring-blue dark:focus:border-blue' %}
         {{- parent() -}}
     {% endblock form_widget_simple %}
 
 {%- block form_start -%}
-    {%- do form.setMethodRendered() -%}
-    {% set method = method|upper %}
-    {%- if method in ["GET", "POST"] -%}
-        {% set form_method = method %}
-    {%- else -%}
-        {% set form_method = "POST" %}
-    {%- endif -%}
-<form{% if name != '' %} name="{{ name }}"{% endif %}
-        method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}
-        class="flex flex-col gap-2">
-    {%- if form_method != method -%}
-        <input type="hidden" name="_method" value="{{ method }}"/>
-    {%- endif -%}
-    {%- endblock form_start -%}
+    {%- set attr = attr|merge({ class: attr.class|default('space-y-2') }) -%}
+    {{- parent() -}}
+{%- endblock form_start -%}
 
     {%- block money_widget -%}
         {{ money_pattern|form_encode_currency(block('form_widget_simple')) }}
     {%- endblock money_widget -%}
 
     {%- block form_row -%}
-        {%- set row_attr = row_attr|merge({ class: row_attr.class|default(row_class|default('mb-2')) }) -%}
+        {%- set row_attr = row_attr|merge({ class: row_attr.class|default(row_class|default('flex flex-col gap-1')) }) -%}
         {{- parent() -}}
     {%- endblock form_row -%}
 
+    {% block checkbox_widget %}
+        {%- set attr = attr|merge({ class: attr.class|default('text-primary dark:bg-transparent') }) -%}
+        {{- parent() -}}
+    {%- endblock checkbox_widget %}
 
 
 
@@ -38,7 +31,7 @@
         {%- set attr = attr|merge({ class: attr.class|default('flex gap-4 flex-wrap w-full') }) -%}
         <div {{ block('widget_container_attributes') }} >
             {%- for child in form %}
-                <div class="flex items-center">
+                <div class="flex gap-1 items-center">
                     {{- form_widget(child) -}}
                     {{- form_label(child, null, { translation_domain: choice_translation_domain }) -}}
                 </div>
@@ -48,19 +41,19 @@
 
 
     {%- block form_label -%}
-    {% if label is not same as(false) -%}
-    {% if not compound -%}
-        {% set label_attr = label_attr|merge({'for': id}) %}
-    {%- endif -%}
-    {% if required -%}
-        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('text-darkblue') ~ ' required')|trim}) %}
-    {%- endif -%}
-    <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}
-    class="text-darkblue">
-    {{- block('form_label_content') -}}
-</{{ element|default('label') }}>
-    {%- endif -%}
-{%- endblock form_label -%}
+        {% if label is not same as(false) -%}
+            {% if not compound -%}
+                {% set label_attr = label_attr|merge({'for': id}) %}
+            {%- endif -%}
+            {% if required -%}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('text-blue-darker dark:text-white') ~ ' required')|trim}) %}
+            {%- endif -%}
+            <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}
+            class="text-blue-darker dark:text-white">
+            {{- block('form_label_content') -}}
+            </{{ element|default('label') }}>
+        {%- endif -%}
+    {%- endblock form_label -%}
 
 
 {%- block form_errors -%}
@@ -87,7 +80,7 @@
     {% set class = "font-bold py-2 px-4 rounded text-sm" %}
 
     {%- if type in ['submit', 'reset'] -%}
-        {% set class = class ~ ' bg-primary hover:bg-darkblue text-white' %}
+        {% set class = class ~ ' bg-primary hover:bg-blue-darker text-white' %}
     {%- elseif type == 'button' -%}
         {% set class = class ~ ' border-primary bg-white text-primary hover:bg-primary hover:text-white' %}
     {%- endif -%}
