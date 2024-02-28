@@ -247,9 +247,6 @@ class UserController extends AbstractController
 
         $em->flush();
 
-
-
-
         $email = (new TemplatedEmail())
             ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
             ->to($user->getEmail())
@@ -258,6 +255,7 @@ class UserController extends AbstractController
             ->context([
                 'lastName' => $user->getLastName(),
                 'firstName' => $user->getFirstName(),
+                'company' => $user->getCompany()->getName(),
             ]);
 
         $mailer->send($email);
