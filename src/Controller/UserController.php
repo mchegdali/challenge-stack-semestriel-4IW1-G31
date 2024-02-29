@@ -14,6 +14,7 @@ use App\Form\CreateAccountType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Security\LoginFormAuthenticator;
+use App\Utility\PasswordGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,7 +33,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class UserController extends AbstractController
 {
-
     #[Route('/user-admin', name: 'app_list_user_admin')]
 
     public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
@@ -42,13 +42,16 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $randomPassword = PasswordGenerator::generatePassword();
 
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $randomPassword
                 )
             );
+
+            $user->setIsVerified(true);
 
             $email = (new TemplatedEmail())
                 ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
@@ -59,7 +62,7 @@ class UserController extends AbstractController
                     'lastName' => $user->getLastName(),
                     'firstName' => $user->getFirstName(),
                     'emailAdresse' => $user->getEmail(),
-                    'password' => $form->get('plainPassword')->getData(),
+                    'password' => $randomPassword,
                 ]);
 
             $mailer->send($email);
@@ -84,11 +87,12 @@ class UserController extends AbstractController
     }
 
 
+
+
     #[Route('/request-company-account', name: 'app_list_request_company_account')]
     public function requestCompanyAccount(EntityManagerInterface $entityManager): Response
     {
         $users = $entityManager->getRepository(User::class)->findBy(['isVerified' => false]);
-
         return $this->render('requestCompanyAccount/index.html.twig', [
             'users' => $users,
         ]);
@@ -99,8 +103,6 @@ class UserController extends AbstractController
     public function companyCreateUser(UserRepository $userRepository, Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $loggedInUser = $this->getUser();
-
-        // $comptableRole = "ROLE_COMPTABLE";
 
         $existingComptable = $userRepository
             ->createQueryBuilder('u')
@@ -117,13 +119,17 @@ class UserController extends AbstractController
         $form = $this->createForm(CompanyCreateAccountType::class, $user);
         $form->handleRequest($request);
 
+        $randomPassword = PasswordGenerator::generatePassword();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $randomPassword
                 )
             );
+
+            $user->setIsVerified(true);
 
             $email = (new TemplatedEmail())
                 ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
@@ -134,7 +140,7 @@ class UserController extends AbstractController
                     'lastName' => $user->getLastName(),
                     'firstName' => $user->getFirstName(),
                     'emailAdresse' => $user->getEmail(),
-                    'password' => $form->get('plainPassword')->getData(),
+                    'password' => $randomPassword,
                 ]);
 
             $mailer->send($email);
