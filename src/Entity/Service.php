@@ -26,6 +26,9 @@ class Service
     #[ORM\JoinColumn(nullable: false)]
     private ?Tax $tax = null;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Company $company = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -70,6 +73,18 @@ class Service
     public function setTax(?Tax $tax): static
     {
         $this->tax = $tax;
+
+        return $this;
+    }
+    
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }

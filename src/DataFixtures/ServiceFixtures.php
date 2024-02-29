@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Company;
 use App\Entity\Service;
 use App\Entity\Tax;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -14,7 +15,8 @@ class ServiceFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('fr_FR');
-
+        
+        $companies = $manager->getRepository(Company::class)->findAll();
         $taxes = $manager->getRepository(Tax::class)->findAll();
 
         if (!$taxes) {
@@ -25,7 +27,8 @@ class ServiceFixtures extends Fixture implements DependentFixtureInterface
             $service = new Service();
             $service->setName($faker->words(3, true));
             $service->setPrice($faker->randomFloat(2, 200, 500));
-            $service->setTax($faker->randomElement($taxes));
+            $service->setTax($faker->randomElement($taxes)); 
+            $service->setCompany($faker->randomElement($companies));
 
             $manager->persist($service);
         }
@@ -37,6 +40,7 @@ class ServiceFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             TaxFixtures::class,
+            CompanyFixtures::class,
         ];
     }
 }

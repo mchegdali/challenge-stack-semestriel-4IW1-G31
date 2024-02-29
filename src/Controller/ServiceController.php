@@ -20,19 +20,28 @@ use Knp\Component\Pager\PaginatorInterface;
 class ServiceController extends AbstractController
 {
     #[Route('', name: 'index')]
-    public function createService(Request $request, ServiceRepository $serviceRepository, PaginatorInterface $paginator, EntityManagerInterface $em): Response
+    public function createService(Request $request, PersistenceManagerRegistry $doctrine, PaginatorInterface $paginator, EntityManagerInterface $em): Response
     {
+        $loggedInUser = $this->getUser();
+
         $service = new Service();
         $form = $this->createForm(ServiceType::class, $service);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $service->setCompany($loggedInUser->getCompany());
             $em->persist($service);
             $em->flush();
         }
 
-        $services = $serviceRepository->findAll();
+        $company = $loggedInUser->getCompany();
+
+        $services = $doctrine->getManager()->getRepository(Service::class)->createQueryBuilder('u')
+            ->Where('u.company = :companyName')
+            ->setParameter('companyName', $company)
+            ->getQuery()
+            ->getResult();
 
         $services = $paginator->paginate(
             $services,
