@@ -1,0 +1,24 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Devis Reçue</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+    </style>
+</head>
+<body>
+    <p>Bonjour {{ quotes.customer.name }},</p>
+
+    <p>Voici votre devis à cet email.</p>
+
+    <p>Si vous avez des questions concernant ce devis ou avez besoin d'assistance supplémentaire, n'hésitez pas à nous contacter.</p>
+
+    <p>Merci de faire affaire avec nous !</p>
+
+    <p>Cordialement,<br>
+    {{ quotes.company.name }}</p>
+</body>
+</html>

@@ -4,8 +4,12 @@
 {% endblock %}
 
 {% block body %}
-    <header>
+    <header class="flex justify-between flex-row">
         <h1 class="font-bold text-3xl">Liste des factures</h1>
+        <a href="{{ path('invoice_new') }}"
+           class="font-semibold py-2 px-4 rounded bg-primary text-white hover:bg-blue-dark">
+            Créer une facture
+        </a>
     </header>
     <section class="bg-white dark:bg-blue-darker flex gap-4 flex-wrap w-full p-4 shadow-md rounded-xl">
         <details>

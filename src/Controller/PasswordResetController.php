@@ -32,28 +32,40 @@ class PasswordResetController extends AbstractController
             $tokenString = $tokenGenerator->generateToken();
             $email = $form->get('email')->getData();
 
-            $token = new PasswordResetToken();
-            $token->setEmail($email);
-            $token->setToken($tokenString);
-            $token->setExpiresAt(new \DateTime('+1 hour'));
+            $tokenRepository = $entityManager->getRepository(PasswordResetToken::class);
 
-            $entityManager->persist($token);
-            $entityManager->flush();
+            $existingToken = $tokenRepository->findActiveTokenByEmail($email);
 
-            // Utilisation de TemplatedEmail pour l'envoi de l'email de réinitialisation
-            $email = (new TemplatedEmail())
-                ->from('challengesemestre@hotmail.com')
-                ->to($token->getEmail())
-                ->subject('Réinitialisation de votre mot de passe')
-                ->htmlTemplate('emails/password_reset.html.twig')
-                ->context([
-                    'token' => $token->getToken(),
-                ]);
+            if (!$existingToken) {
 
-            $mailer->send($email);
+                $token = new PasswordResetToken();
+                $token->setEmail($email);
+                $token->setToken($tokenString);
+                $token->setExpiresAt(new \DateTime('+1 hour'));
+    
+                $entityManager->persist($token);
+                $entityManager->flush();
+    
+                $email = (new TemplatedEmail())
+                    ->from('challengesemestre@hotmail.com')
+                    ->to($token->getEmail())
+                    ->subject('Réinitialisation de votre mot de passe')
+                    ->htmlTemplate('emails/password_reset.html.twig')
+                    ->context([
+                        'token' => $token->getToken(),
+                    ]);
+    
+                $mailer->send($email);
+    
+                $this->addFlash('Succès','Un e-mail de réinitialisation de mot de passe a été envoyé.');
+                return $this->redirectToRoute('app_login');
+            }
+            else{
+                $this->addFlash('Info','Un e-mail de réinitialisation de mot de passe a déjà été envoyé.');
+                return $this->redirectToRoute('app_login');
+            }
 
-            $this->addFlash('success', 'Un e-mail de réinitialisation de mot de passe a été envoyé.');
-            return $this->redirectToRoute('app_login');
+
         }
 
         return $this->render('password_reset/request.html.twig', [
@@ -70,7 +82,7 @@ public function reset($token, Request $request, PasswordResetTokenRepository $to
     $tokenEntity = $tokenRepository->findOneBy(['token' => $token]);
 
     if (!$tokenEntity || $tokenEntity->getExpiresAt() < new \DateTime()) {
-        $this->addFlash('danger', 'Le token de réinitialisation du mot de passe est invalide ou expiré.');
+        $this->addFlash('Info', 'Le token de réinitialisation du mot de passe est invalide ou expiré.');
         return $this->redirectToRoute('app_password_reset_request');
     }
 
@@ -81,7 +93,7 @@ public function reset($token, Request $request, PasswordResetTokenRepository $to
         $user = $userRepository->findOneByEmail($tokenEntity->getEmail());
     
         if (!$user) {
-            $this->addFlash('danger', 'Aucun utilisateur trouvé pour cet e-mail.');
+            $this->addFlash('Info', 'Aucun utilisateur trouvé pour cet e-mail.');
             return $this->redirectToRoute('app_password_reset_request');
         }
     
@@ -97,7 +109,7 @@ public function reset($token, Request $request, PasswordResetTokenRepository $to
         $entityManager->remove($tokenEntity);
         $entityManager->flush();
     
-        $this->addFlash('success', 'Votre mot de passe a été réinitialisé avec succès.');
+        $this->addFlash('Succès', 'Votre mot de passe a été réinitialisé avec succès.');
         return $this->redirectToRoute('app_login');
     }
 

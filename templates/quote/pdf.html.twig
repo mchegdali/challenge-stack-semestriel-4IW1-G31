@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Facture {{ invoices.id }}</title>
+    <title>Devis {{ quotes.id }}</title>
      <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,26 +52,26 @@
 </head>
 <body>
 <main>
-    <h1 class="title">Facture n°{{ invoices.id }}</h1>
+    <h1 class="title">Devis n°{{ quotes.id }}</h1>
     <table>
         <tr>
             <td>
                 <h3>Professionnel</h3>
-                <p>{{ invoices.company.name }}</p>
-                <p>{{ invoices.company.address }}</p>
-                <p>{{ invoices.company.getPostalCode() }}, {{ invoices.company.city }}</p>
+                <p>{{ quotes.company.name }}</p>
+                <p>{{ quotes.company.address }}</p>
+                <p>{{ quotes.company.getPostalCode() }}, {{ quotes.company.city }}</p>
             </td>
             <td>
-                <h3>Facturé à</h3>
-                <p>{{ invoices.customer.name }}</p>
-                <p>{{ invoices.customer.address }}</p>
-                <p>{{ invoices.customer.getPostalCode() }}, {{ invoices.customer.city }}</p>
+                <h3>Devis pour</h3>
+                <p>{{ quotes.customer.name }}</p>
+                <p>{{ quotes.customer.address }}</p>
+                <p>{{ quotes.customer.getPostalCode() }}, {{ quotes.customer.city }}</p>
             </td>
         </tr>
     </table>
     <div class="section">
-        <h3>Date de la facture</h3>
-        <p>{{ invoices.createdAt | date('Y-m-d') }}</p>
+        <h3>Date du devis</h3>
+        <p>{{ quotes.createdAt | date('Y-m-d') }}</p>
     </div>
     <hr class="hr">
     <table class="items">
@@ -83,7 +83,7 @@
             <td>Prix H.T</td>
             <td>Prix T.T.C</td>
         </tr>
-        {% for item in invoices.invoiceItems %}
+        {% for item in quotes.quoteItems %}
         <tr class="item-row">
             <td>{{ item.service.name }}</td>
             <td>{{ item.quantity }}</td>
@@ -97,11 +97,11 @@
     <table class="totals-table" align="right">
         <tr class="totals-row">
             <td>Total H.T</td>
-            <td>{{ invoices.getTotalExcludingTax }}</td>
+            <td>{{ quotes.getTotalExcludingTax }}</td>
         </tr>
         <tr class="totals-row">
             <td>Total T.T.C</td>
-            <td>{{ invoices.getTotalIncludingTax }}</td>
+            <td>{{ quotes.getTotalIncludingTax }}</td>
         </tr>
     </table>
 </main>
