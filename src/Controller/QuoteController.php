@@ -8,6 +8,7 @@ use App\Entity\Customer;
 use App\Form\CustomerType;
 use App\Form\QuoteCreateType;
 use App\Form\QuoteSearchType;
+use App\Repository\InvoiceRepository;
 use App\Repository\QuoteRepository;
 use App\Service\QuoteToInvoiceConverter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -161,8 +162,12 @@ class QuoteController extends AbstractController
     #[Route('/{id}', name: 'show')]
     public function show(Quote $quote): Response
     {
+
+        $invoices = $quote->getInvoices();
+
         return $this->render('quote/show.html.twig', [
             'quote' => $quote,
+            'invoices' => $invoices
         ]);
     }
 
@@ -224,10 +229,10 @@ class QuoteController extends AbstractController
 
         $invoice = $quoteToInvoiceConverter->convert($quote);
 
-        $this->addFlash('success', 'La facture a été créée avec succès à partir du devis.');
+        $this->addFlash('success', 'La facture créée à partir du devis.');
 
         return $this->redirectToRoute(
-            'invoice_show', ['id' => $invoice->getId()]
+            'invoice_show', ['id' => $invoice->getId()],
         );
     }
 }

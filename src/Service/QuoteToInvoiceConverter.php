@@ -5,15 +5,18 @@ namespace App\Service;
 use App\Entity\Invoice;
 use App\Entity\InvoiceItem;
 use App\Entity\Quote;
+use App\Repository\InvoiceStatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class QuoteToInvoiceConverter
 {
     private EntityManagerInterface $entityManager;
+    private InvoiceStatusRepository $invoiceStatusRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, InvoiceStatusRepository $invoiceStatusRepository)
     {
         $this->entityManager = $entityManager;
+        $this->invoiceStatusRepository = $invoiceStatusRepository;
     }
 
     public function convert(Quote $quote): Invoice
@@ -23,7 +26,9 @@ class QuoteToInvoiceConverter
         $invoice->setCustomer($quote->getCustomer());
         $invoice->setCompany($quote->getCompany());
 
-        $invoice->setStatus(null);
+        $invoice->setStatus($this->invoiceStatusRepository->findOneBy(
+            ['name' => 'created']
+        ));
         $invoice->setInvoiceNumber('todo'); //TODO 
         $invoice->setDueAt((new \DateTimeImmutable())->modify('+30 days'));
 
