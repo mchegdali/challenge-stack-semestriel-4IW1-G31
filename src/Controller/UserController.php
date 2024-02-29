@@ -6,14 +6,7 @@ use App\Entity\User;
 use App\Form\AdminCreateAccountType;
 use App\Form\CompanyCreateAccountType;
 use Symfony\Component\Mailer\MailerInterface;
-
-use Symfony\Component\Mime\Email;
-use App\Form\RegistrationFormType;
-use App\Form\CompanyUserRegistrationFormType;
-use App\Form\CreateAccountType;
 use App\Repository\UserRepository;
-use App\Security\EmailVerifier;
-use App\Security\LoginFormAuthenticator;
 use App\Utility\PasswordGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -23,10 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
-
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,7 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class UserController extends AbstractController
 {
     #[Route('/user-admin', name: 'app_list_user_admin')]
-
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $user = new User();
@@ -86,10 +75,8 @@ class UserController extends AbstractController
         ]);
     }
 
-
-
-
     #[Route('/request-company-account', name: 'app_list_request_company_account')]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function requestCompanyAccount(EntityManagerInterface $entityManager): Response
     {
         $users = $entityManager->getRepository(User::class)->findBy(['isVerified' => false]);
@@ -99,7 +86,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user', name: 'app_list_user')]
-    // #[Security("is_granted('ROLE_ADMIN')")]
+    #[Security("is_granted('ROLE_COMPANY')")]
     public function companyCreateUser(UserRepository $userRepository, Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $loggedInUser = $this->getUser();
@@ -108,11 +95,8 @@ class UserController extends AbstractController
             ->createQueryBuilder('u')
             ->select('COUNT(u.id)')
             ->where('u.company = :companyName')
-            // ->andWhere('u.roles LIKE :role')
             ->setParameter('companyName', $loggedInUser->getCompany())
-            // ->setParameter('role', '%' . $comptableRole . '%')
             ->getQuery()
-            // ->getSingleScalarResult();
             ->getResult();
 
         $user = new User();
@@ -152,22 +136,11 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // $this->emailVerifier->sendEmailConfirmation(
-            //     'app_verify_email',
-            //     $user,
-            //     (new TemplatedEmail())
-            //         ->from(new Address('register@plumbill.fr', 'Plumbill'))
-            //         ->to($user->getEmail())
-            //         ->subject('Please Confirm your Email')
-            //         ->htmlTemplate('registration/confirmation_email.html.twig')
-            // );
-
             return new RedirectResponse($this->generateUrl('app_list_user'));
         }
 
         $userId = $loggedInUser->getId();
         $companyName = $loggedInUser->getCompany();
-
 
         $users = $doctrine->getManager()->getRepository(User::class)->createQueryBuilder('u')
             ->where('u.id != :userId')
@@ -184,8 +157,8 @@ class UserController extends AbstractController
         ]);
     }
 
-
     #[Route('/user-details/{id}', name: 'app_user_details')]
+    #[Security("is_granted('ROLE_COMPANY')")]
     public function companyDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
     {
         $userRepository = $doctrine->getManager()->getRepository(User::class);
@@ -213,6 +186,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user-admin/{id}/delete', name: 'delete_user_admin')]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function deleteUser(PersistenceManagerRegistry $doctrine, User $user): Response
     {
         $em = $doctrine->getManager();
@@ -233,6 +207,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/request-company-account/{id}/delete', name: 'delete_request_company_account')]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function deleteRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user, MailerInterface $mailer): Response
     {
         $em = $doctrine->getManager();
@@ -256,6 +231,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/request-company-account/{id}/accept', name: 'accept_request_company_account')]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function acceptRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user, MailerInterface $mailer): Response
     {
         $user->setIsVerified(true);
