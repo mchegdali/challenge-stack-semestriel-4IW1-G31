@@ -30,6 +30,9 @@ class Tax
     #[ORM\OneToMany(mappedBy: 'tax', targetEntity: Payment::class)]
     private Collection $payments;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Company $company = null;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -61,6 +64,17 @@ class Tax
         return $this;
     }
 
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
+
+        return $this;
+    }
     /**
      * @return Collection<int, Service>
      */

@@ -83,7 +83,6 @@ class UserFixtures extends Fixture
     {
         return [
             CompanyFixtures::class,
-            RoleFixtures::class,
         ];
     }
 }
