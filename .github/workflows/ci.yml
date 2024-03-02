@@ -27,5 +27,5 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           SOURCE: "."
-          TARGET: "~/"
-          EXCLUDE: "/,node_modules"
+          TARGET: "~/app"
+          EXCLUDE: "/node_modules/,/.git/,Dockerfile,docker-compose.yml,docker-compose.override.yml,docker-compose.prod.yml,.github"
