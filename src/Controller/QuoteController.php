@@ -135,9 +135,8 @@ class QuoteController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/customer/new", name="customer_new", methods={"POST"})
-     */
+
+    #[Route('/customer/new', name: 'customer_new', methods: ['POST'])]
     public function createCustomer(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $customer = new Customer();
