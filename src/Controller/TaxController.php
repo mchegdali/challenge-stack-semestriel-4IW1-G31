@@ -13,7 +13,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 #[Route('/tax', name: 'tax_')]
-#[IsGranted("ROLE_USER")]
 class TaxController extends AbstractController
 {
     #[Route('', name: 'index')]
@@ -32,14 +31,8 @@ class TaxController extends AbstractController
             $em->persist($tax);
             $em->flush();
         }
-        
-        $company = $loggedInUser->getCompany();
 
-        $taxs = $doctrine->getManager()->getRepository(Tax::class)->createQueryBuilder('u')
-            ->Where('u.company = :companyName')
-            ->setParameter('companyName', $company)
-            ->getQuery()
-            ->getResult();
+        $taxs = $doctrine->getManager()->getRepository(Tax::class)->findAll();
 
         return $this->render('tax/tax.html.twig', [
             'form' => $form->createView(),

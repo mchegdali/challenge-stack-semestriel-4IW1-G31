@@ -2,14 +2,20 @@
 	<div class='flex gap-2 justify-between'>
 		<div class='flex gap-2 flex-col '>
 
-
 			<span class='flex gap-2'>
-				<p class='font-bold'>id</p>
+				<p class='font-bold'>Prénom</p>
 				<p class=''>
-					{{ user.id }}
+					{{ user.firstName}}
 				</p>
 			</span>
 
+
+			<span class='flex gap-2'>
+				<p class='font-bold'>Nom</p>
+				<p class=''>
+					{{ user.lastName}}
+				</p>
+			</span>
 			<span class='flex gap-2'>
 				<p class='font-bold'>email</p>
 				<p class=''>
@@ -24,14 +30,6 @@
 				</p>
 			</span>
 
-			<span class='flex gap-2'>
-				<p class='font-bold'>Role</p>
-				<p class=''>
-					{{ user.roles|join(', ') }}
-
-				</p>
-			</span>
-
 		</div>
 		<div>
 			<a href="#" onclick="openModal(event)" class='text-blue-800 '>
@@ -39,27 +37,29 @@
 			</a>
 		</div>
 
-		<!-- Modale -->
-		<div id="myModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-6">
-			<div class="bg-white p-8 rounded shadow-lg">
-				<h2 class="text-lg font-bold mb-4">Modifier les informations</h2>
-				{{ form_start(form)}}
-				{{ form_row(form.last_name) }}
-				{{ form_row(form.first_name) }}
-				{{ form_row(form.email) }}
-				{{ form_row(form.plainPassword) }}
-				{{ form_row(form.company) }}
-				{{ form_row(form.roles) }}
-				<div class="flex justify-between mt-3">
-					{{ form_row(form.submit)}}
-					<button onclick="closeModal()" class="bg-white text-blue-800 font-bold p-2 rounded border border-blue-800">
-						Fermer
-					</button>
+		{% if is_granted('ROLE_ADMIN') %}
+			<!-- Modale -->
+			<div id="myModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-6">
+				<div class="bg-white p-8 rounded shadow-lg">
+					<h2 class="text-lg font-bold mb-4">Modifier les informations</h2>
+					{% include 'components/AdminCreateUserForm.html.twig' %}
 				</div>
-				{{ form_end(form) }}
+
 			</div>
 
-		</div>
+		{% else %}
+
+
+			<!-- Modale -->
+			<div id="myModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-6">
+				<div class="bg-white p-8 rounded shadow-lg">
+					<h2 class="text-lg font-bold mb-4">Modifier les informations</h2>
+					{% include 'components/CompanyCreateUserForm.html.twig' %}
+				</div>
+
+			</div>
+		{% endif %}
+
 
 		<script>
 

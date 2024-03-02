@@ -13,6 +13,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,6 +34,7 @@ class RegistrationController extends AbstractController
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
+        MailerInterface $mailer,
         EntityManagerInterface $entityManager
     ): Response {
         $user = new User();
@@ -62,16 +64,17 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email',
-                $user,
-                (new TemplatedEmail())
-                    ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
-                    ->to($user->getEmail())
-                    ->subject('Confirmation de réception de votre demande de compte entreprise')
-                    ->htmlTemplate('emails/request-company-account.html.twig')
-            );
-            
+            $email = (new TemplatedEmail())
+                ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
+                ->to($user->getEmail())
+                ->subject('Confirmation de réception de votre demande de compte entreprise')
+                ->htmlTemplate('emails/request-company-account.html.twig')
+                ->context([
+                    'lastName' => $user->getLastName(),
+                    'firstName' => $user->getFirstName(),
+                ]);
+
+            $mailer->send($email);
         }
 
         return $this->render('registration/register.html.twig', [

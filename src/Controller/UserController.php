@@ -157,9 +157,9 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user-details/{id}', name: 'app_user_details')]
-    #[Security("is_granted('ROLE_COMPANY')")]
-    public function companyDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
+    #[Route('/user-details-admin/{id}', name: 'app_user_details-admin')]
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function adminUserDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
     {
         $userRepository = $doctrine->getManager()->getRepository(User::class);
 
@@ -184,6 +184,35 @@ class UserController extends AbstractController
             'user' => $user,
         ]);
     }
+
+    #[Route('/user-details/{id}', name: 'app_user_details')]
+    #[Security("is_granted('ROLE_COMPANY')")]
+    public function companyUserDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
+    {
+        $userRepository = $doctrine->getManager()->getRepository(User::class);
+
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Company not found');
+        }
+
+        $form = $this->createForm(CompanyCreateAccountType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $doctrine->getManager();
+            $em->persist($user);
+            $em->flush();
+        }
+
+        return $this->render('user/UserDetails.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
+    }
+
 
     #[Route('/user-admin/{id}/delete', name: 'delete_user_admin')]
     #[Security("is_granted('ROLE_ADMIN')")]
