@@ -33,7 +33,7 @@ class TaxController extends AbstractController
         $taxs = $doctrine->getManager()->getRepository(Tax::class)->findAll();
 
         return $this->render('tax/tax.html.twig', [
-            '_form' => $form->createView(),
+            'form' => $form->createView(),
             'taxs' => $taxs,
         ]);
     }
@@ -62,7 +62,7 @@ class TaxController extends AbstractController
         }
 
         return $this->render('default/UpdateTax.html.twig', [
-            '_form' => $form->createView(),
+            'form' => $form->createView(),
         ]);
     }
 

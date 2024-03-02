@@ -142,7 +142,7 @@ class InvoiceController extends AbstractController
         $type = 'new';
 
         return $this->render('invoice/new.html.twig', [
-            '_form' => $form,
+            'form' => $form,
             'customerForm' => $customerForm->createView(),
             'type' => $type,
             'typeDocument' => 'invoice'
@@ -172,7 +172,7 @@ class InvoiceController extends AbstractController
         }
 
         return $this->render('invoice/edit.html.twig', [
-            '_form' => $form->createView(),
+            'form' => $form->createView(),
             'invoice' => $invoice,
         ]);
     }

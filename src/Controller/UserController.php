@@ -71,7 +71,7 @@ class UserController extends AbstractController
             ->getResult();
 
         return $this->render('user/index.html.twig', [
-            '_form' => $form->createView(),
+            'form' => $form->createView(),
             'users' => $users,
         ]);
     }
@@ -152,7 +152,7 @@ class UserController extends AbstractController
             ->getResult();
 
         return $this->render('user/index.html.twig', [
-            '_form' => $form->createView(),
+            'form' => $form->createView(),
             'users' => $users,
             'existingComptable' => $existingComptable,
         ]);
@@ -181,7 +181,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/UserDetails.html.twig', [
-            '_form' => $form->createView(),
+            'form' => $form->createView(),
             'user' => $user,
         ]);
     }

@@ -32,7 +32,7 @@ class CompanyController extends AbstractController
         $companys = $doctrine->getManager()->getRepository(Company::class)->findAll();
 
         return $this->render('company/Company.html.twig', [
-            '_form' => $form->createView(),
+            'form' => $form->createView(),
             'companys' => $companys,
         ]);
     }
@@ -59,7 +59,7 @@ class CompanyController extends AbstractController
         }
 
         return $this->render('company/CompanyDetails.html.twig', [
-            '_form' => $form->createView(),
+            'form' => $form->createView(),
             'company' => $company,
         ]);
     }
