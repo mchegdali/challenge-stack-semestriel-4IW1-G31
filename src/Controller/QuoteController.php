@@ -32,7 +32,8 @@ class QuoteController extends AbstractController
         QuoteRepository    $quoteRepository,
         Request            $request,
         PaginatorInterface $paginator
-    ): Response {
+    ): Response
+    {
 
         $form = $this->createForm(QuoteSearchType::class, null, ["method" => "POST"]);
         $form->handleRequest($request);
@@ -41,8 +42,7 @@ class QuoteController extends AbstractController
 
         if ($this->isGranted('ROLE_ADMIN')) {
             $quotes = $quoteRepository->findAll();
-        }
-        else{
+        } else {
             $company = $this->getUser()->getCompany();
             if (!$company) {
                 throw $this->createNotFoundException('Entreprise non trouvée');
@@ -57,7 +57,7 @@ class QuoteController extends AbstractController
 
             $quotes = $quoteRepository->findBySearch($searchResult, $company, $isAdmin);
         }
-        
+
         $quotes = $paginator->paginate(
             $quotes,
             $request->query->getInt('page', 1),
@@ -128,7 +128,7 @@ class QuoteController extends AbstractController
         $type = 'new';
 
         return $this->render('quote/new_edit.html.twig', [
-            'form' => $form,
+            '_form' => $form,
             'customerForm' => $customerForm->createView(),
             'type' => $type,
             'typeDocument' => 'quote'
@@ -156,7 +156,7 @@ class QuoteController extends AbstractController
         }
 
         // Gérer l'échec de la soumission du formulaire si nécessaire
-        return new JsonResponse(['error' => 'Invalid form'], 400);
+        return new JsonResponse(['error' => 'Invalid _form'], 400);
     }
 
     #[Route('/{id}', name: 'show')]
@@ -188,7 +188,7 @@ class QuoteController extends AbstractController
 
                 $item->setPriceIncludingTax($item->getPriceExcludingTax() + $tax);
             }
-            
+
             $em->flush();
 
             return $this->redirectToRoute('quote_show', ['id' => $quote->getId()]);
@@ -211,7 +211,7 @@ class QuoteController extends AbstractController
         $type = 'edit';
 
         return $this->render('quote/new_edit.html.twig', [
-            'form' => $form->createView(),
+            '_form' => $form->createView(),
             'quote' => $quote,
             'customerForm' => $customerForm->createView(),
             'type' => $type

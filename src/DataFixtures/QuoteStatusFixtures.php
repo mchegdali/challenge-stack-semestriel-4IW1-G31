@@ -13,33 +13,33 @@ class QuoteStatusFixtures extends Fixture
         $status = new QuoteStatus();
         $status->setDisplayName("Brouillon");
         $status->setName("draft");
-        $status->setBgColor("gray-700");
+        $status->setBgColor("grey");
         $status->setTextColor("white");
-        $status->setBorderColor("gray-700");
+        $status->setBorderColor("grey");
         $manager->persist($status);
 
         $status = new QuoteStatus();
         $status->setDisplayName("Envoyé");
         $status->setName("sent");
-        $status->setBgColor("blue-600");
+        $status->setBgColor("primary");
         $status->setTextColor("white");
-        $status->setBorderColor("blue-600");
+        $status->setBorderColor("primary");
         $manager->persist($status);
 
         $status = new QuoteStatus();
         $status->setDisplayName("Validé");
         $status->setName("accepted");
-        $status->setBgColor("green-700");
+        $status->setBgColor("success");
         $status->setTextColor("white");
-        $status->setBorderColor("green-700");
+        $status->setBorderColor("success");
         $manager->persist($status);
 
         $status = new QuoteStatus();
         $status->setDisplayName("Refusé");
         $status->setName("refused");
-        $status->setBgColor("red-500");
+        $status->setBgColor("error");
         $status->setTextColor("white");
-        $status->setBorderColor("red-500");
+        $status->setBorderColor("error");
         $manager->persist($status);
 
         $manager->flush();

@@ -5,17 +5,30 @@
         <h1 class="text-2xl font-bold">Récapitulatif de paiement</h1>
     </header>
     <section class="w-full justify-between items-center flex">
-        <span class="grow shrink basis-0 text-black font-semibold leading-tight tracking-tight">Date d'émission</span>
-        <span class="text-black font-normal leading-tight">{{ invoice.createdAt|date('d/m/Y') }}</span>
+        <span class="grow shrink basis-0 dark:text-grey-light font-semibold leading-tight tracking-tight">Date d'émission</span>
+        <span class="dark:text-grey-light font-normal leading-tight">{{ invoice.createdAt|date('d/m/Y') }}</span>
     </section>
     <section class="w-full justify-between items-center flex">
-        <span class="grow shrink basis-0 text-black font-semibold leading-tight tracking-tight">Date limite de paiement</span>
-        <span class="text-black font-normal leading-tight">{{ invoice.dueAt|date('d/m/Y') }}</span>
+        <span class="grow shrink basis-0 dark:text-grey-light font-semibold leading-tight tracking-tight">Date limite de paiement</span>
+        <span class="dark:text-grey-light font-normal leading-tight">{{ invoice.dueAt|date('d/m/Y') }}</span>
     </section>
-    <section class="w-full justify-between items-center flex">
-        <span class="text-center text-black font-semibold leading-tight tracking-tight">Méthode de paiement</span>
-        {% for item in invoice.payments %}
-            <span class="text-black font-normal leading-tight">{{ item.paymentMethod.displayName }}</span>
-        {% endfor %}
+    <section>
+        <span class="text-center dark:text-grey-light font-semibold leading-tight tracking-tight">Paiements</span>
+
+        <div class="w-full grid grid-cols-6 mb-2 gap-0.5">
+            <div class="grid grid-cols-subgrid col-span-6">
+                <span class="font-semibold">Date</span>
+                <span class="font-semibold">Moyen de paiement</span>
+                <span class="font-semibold">Montant</span>
+            </div>
+            {% for item in invoice.payments %}
+                <div class="grid grid-cols-subgrid col-span-6 gap-1.5">
+                    <span>{{ item.paidAt|date('d/m/Y') }}</span>
+                    <span>{{ item.paymentMethod.displayName }}</span>
+                    <span>{{ item.amount|format_currency('EUR', locale='fr_FR') }}</span>
+                </div>
+            {% endfor %}
+        </div>
+
     </section>
 </twig:Card>

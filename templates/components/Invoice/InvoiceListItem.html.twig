@@ -1,34 +1,37 @@
 {% props invoice %}
 
-<a href="{{ path('invoice_show', {id: invoice.id }) }}"
-   class="px-4 py-6 bg-white shadow-md rounded-xl gap-1.5 w-full grid grid-cols-6 hover:bg-gray-50 hover:bg-opacity-75 hover:shadow-lg group">
-    <section class="col-span-6 grid grid-cols-subgrid">
-        <div class="col-span-5 flex flex-col">
-            <span class="text-gray-800 text-xs uppercase font-medium  leading-tight tracking-wide">N° facture</span>
-            <span class="text-black font-bold leading-tight">{{ invoice.invoiceNumber }}</span>
-        </div>
-        <div class="col-span-1 flex justify-end">
-            <twig:StatusBadge :status="invoice.status"/>
-        </div>
-    </section>
-    <section class="col-span-6 grid grid-cols-subgrid">
-        <div class="col-span-3 flex flex-col">
-            <span class="text-gray-800 text-xs uppercase font-medium  leading-tight tracking-wide">Date d'émission</span>
-            <span class="text-black font-bold leading-tight">{{ invoice.createdAt|date('d/m/Y') }}</span>
-        </div>
-        <div class="col-span-3 flex flex-col">
-            <span class="text-gray-800 text-xs uppercase font-medium  leading-tight tracking-wide">Client</span>
-            <span class="text-black font-bold leading-tight">{{ invoice.customer.name }}</span>
-        </div>
-    </section>
-    <section class="col-span-6 grid grid-cols-subgrid">
-        <div class="col-span-3 flex flex-col">
-            <span class="text-gray-800 text-xs uppercase font-medium  leading-tight tracking-wide">Montant HT</span>
-            <span class="text-black font-bold leading-tight">{{ invoice.totalExcludingTax|format_currency('EUR', locale='fr_FR') }}</span>
-        </div>
-        <div class="col-span-3 flex flex-col">
-            <span class="text-gray-800 text-xs uppercase font-medium  leading-tight tracking-wide">Montant TTC</span>
-            <span class="text-black font-bold leading-tight">{{ invoice.totalIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
-        </div>
-    </section>
+<a href="{{ path('invoice_show', {id: invoice.id }) }}">
+    <twig:Card
+            class="bg-white dark:bg-blue-darker px-4 py-6 shadow-md rounded-xl gap-1.5 w-full grid grid-cols-12 hover:bg-hover-light hover:bg-opacity-75 hover:shadow-lg dark:hover:bg-hover-dark group">
+        <section class="col-span-12 grid grid-cols-subgrid">
+            <div class="col-span-10 flex flex-col">
+                <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">N° facture</span>
+                <span class="dark:text-grey-light font-bold leading-tight">{{ invoice.invoiceNumber }}</span>
+            </div>
+            <div class="col-span-2 flex justify-end items-center">
+                <twig:StatusBadge :status="invoice.status"/>
+            </div>
+        </section>
+        <section class="col-span-12 grid grid-cols-subgrid">
+            <div class="col-span-4 flex flex-col">
+                <span class="text-nowrap text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Date de création</span>
+                <span class="dark:text-grey-light font-bold leading-tight">{{ invoice.createdAt|date('d/m/Y') }}</span>
+            </div>
+            <div class="col-span-4 flex flex-col items-center">
+                <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Montant HT</span>
+                <span class="dark:text-grey-light font-bold leading-tight">{{ invoice.totalExcludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+            </div>
+            <div class="col-span-4 flex flex-col items-end">
+                <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Montant TTC</span>
+                <span class="dark:text-grey-light font-bold leading-tight">{{ invoice.totalIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+            </div>
+        </section>
+        <section class="col-span-12 grid grid-cols-subgrid">
+            <div class="col-span-12 flex flex-col">
+                <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Client</span>
+                <span class="dark:text-grey-light font-bold leading-tight">{{ invoice.customer.name }}</span>
+            </div>
+        </section>
+    </twig:Card>
+
 </a>

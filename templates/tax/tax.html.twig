@@ -4,10 +4,10 @@
 {% endblock %}
 
 {% block body %}
-{% include 'components/Navbar.html.twig' %}
-	{% include 'components/TaxHeader.html.twig' %}
-	<h1 class='px-6 font-bold'>Liste des taxes</h1>
-	{% for tax in taxs %}
-		{% include 'components/TaxData.html.twig' %}
-	{% endfor %}
+
+    {% include 'components/TaxHeader.html.twig' %}
+    <h1 class='px-6 font-bold'>Liste des taxes</h1>
+    {% for tax in taxs %}
+        {% include 'components/TaxData.html.twig' %}
+    {% endfor %}
 {% endblock %}

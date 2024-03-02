@@ -4,26 +4,26 @@
 {% endblock %}
 
 {% block body %}
-	{% include 'components/Navbar.html.twig' %}
 
-	<h1 class='px-6 font-bold'>Modifier une facture</h1>
 
-	<div class="bg-white p-4 mx-6 my-2 rounded-lg flex flex-col">
+    <h1 class='px-6 font-bold'>Modifier une facture</h1>
 
-		<main class="mx-auto">
-			
-			{{form_start(form)}}
-				{{ form_label(form.customer) }}
-				{{form_widget(form.customer) }}
-				{{form_label(form.status)}}
-				{{form_widget(form.status) }}
-				<div id="invoiceitem" data-prototype="{{ form_row(form.invoiceitems.vars.prototype)|e('html_attr')}}">
-					{{form_row(form.invoiceitems)}}
-					<span></span>
-				</div>
-			{{form_end(form)}}
-		</main>
-	</div>
+    <div class="bg-white p-4 mx-6 my-2 rounded-lg flex flex-col">
+
+        <main class="mx-auto">
+
+            {{ form_start(form) }}
+            {{ form_label(form.customer) }}
+            {{ form_widget(form.customer) }}
+            {{ form_label(form.status) }}
+            {{ form_widget(form.status) }}
+            <div id="invoiceitem" data-prototype="{{ form_row(form.invoiceitems.vars.prototype)|e('html_attr') }}">
+                {{ form_row(form.invoiceitems) }}
+                <span></span>
+            </div>
+            {{ form_end(form) }}
+        </main>
+    </div>
 
 {% endblock %}
 

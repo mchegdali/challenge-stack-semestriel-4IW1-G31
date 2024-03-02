@@ -41,8 +41,8 @@ class InvoiceController extends AbstractController
 
     #[Route('', name: 'index', methods: ['GET', 'POST'])]
     public function index(
-        InvoiceRepository $invoiceRepository,
-        Request           $request,
+        InvoiceRepository  $invoiceRepository,
+        Request            $request,
         PaginatorInterface $paginator
     ): Response
     {
@@ -54,8 +54,7 @@ class InvoiceController extends AbstractController
 
         if ($this->isGranted('ROLE_ADMIN')) {
             $invoices = $invoiceRepository->findAll();
-        }
-        else{
+        } else {
             $company = $this->getUser()->getCompany();
             if (!$company) {
                 throw $this->createNotFoundException('Entreprise non trouvée');
@@ -67,7 +66,7 @@ class InvoiceController extends AbstractController
             $searchResult = $request->request->all("invoice_search");
 
             $isAdmin = $this->isGranted('ROLE_ADMIN') ? true : false;
-            
+
             $invoices = $invoiceRepository->findBySearch($searchResult, $company, $isAdmin);
         }
 
@@ -143,7 +142,7 @@ class InvoiceController extends AbstractController
         $type = 'new';
 
         return $this->render('invoice/new.html.twig', [
-            'form' => $form,
+            '_form' => $form,
             'customerForm' => $customerForm->createView(),
             'type' => $type,
             'typeDocument' => 'invoice'
@@ -173,7 +172,7 @@ class InvoiceController extends AbstractController
         }
 
         return $this->render('invoice/edit.html.twig', [
-            'form' => $form->createView(),
+            '_form' => $form->createView(),
             'invoice' => $invoice,
         ]);
     }
