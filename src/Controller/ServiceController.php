@@ -40,7 +40,7 @@ class ServiceController extends AbstractController
             20
         );
 
-        return $this->render('service/service.html.twig', [
+        return $this->render('service/index.html.twig', [
             'form' => $form->createView(),
             'services' => $services,
         ]);

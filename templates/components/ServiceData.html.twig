@@ -13,14 +13,13 @@
             </div>
         </section>
         <section class="col-span-6 grid grid-cols-subgrid">
-
             <div class="col-span-2 flex flex-col">
                 <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Prix HT</span>
                 <span class="dark:text-grey-light font-bold leading-tight">{{ service.price }}€</span>
             </div>
             <div class="col-span-2 flex flex-col">
                 <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Prix TTC</span>
-                <span class="dark:text-grey-light font-bold leading-tight">{{ service.price * (1 + (service.tax.value / 100)) }}€</span>
+                <span class="dark:text-grey-light font-bold leading-tight">{{ (service.price *  service.tax.value) / 100 }}€</span>
             </div>
         </section>
     </div>
