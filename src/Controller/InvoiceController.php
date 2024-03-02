@@ -177,8 +177,50 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/pdf', name: 'invoice_pdf')]
+    #[Route('/{id}/pdf', name: 'pdf')]
     public function pdf(InvoiceRepository $invoiceRepository, MailerInterface $mailer, string $id, Invoice $invoices): Response
+    {
+        $invoice = $invoiceRepository->find($id);
+
+
+        if (!$invoice) {
+            throw $this->createNotFoundException('La facture demandée n\'a pas été trouvée.');
+        }
+
+        // Configurez Dompdf selon vos besoins
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+
+
+        // Générez le HTML à partir de votre template Twig pour la facture
+        $html = $this->renderView('invoice/pdf.html.twig', [
+            'invoices' => $invoices
+        ]);
+        $templateMail = $this->renderView('invoice/mail.html.twig', [
+            'invoices' => $invoices
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $dompdf->stream("facture-{$id}.pdf", [
+            "Attachment" => false // Changez à true pour forcer le téléchargement
+        ]);
+
+        $pdfPath = sys_get_temp_dir() . '/facture-' . $id . '.pdf'; // Génère un nom de fichier unique
+        file_put_contents($pdfPath, $dompdf->output()); // Sauvegarde le contenu du PDF dans le fichier
+
+        unlink($pdfPath);
+        // Envoyez le PDF au navigateur
+
+        return new Response('', 200, [
+            'Content-Type' => 'application/pdf',
+        ]);
+    }
+
+    #[Route('/{id}/sendpdf', name: 'sendpdf')]
+    public function sendPdf(InvoiceRepository $invoiceRepository, MailerInterface $mailer, string $id, Invoice $invoices): Response
     {
         $invoice = $invoiceRepository->find($id);
 

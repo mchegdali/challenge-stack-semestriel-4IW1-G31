@@ -13,10 +13,23 @@
             <h1 class="text-3xl md:text-4xl font-bold">Devis</h1>
         </div>
         <div class="flex gap-2 h-fit">
+            {% if quote.status.name != 'refused' %}
+                <a href="{{ path('quote_pdf', {'id': quote.id}) }}"
+                   class="text-center text-white bg-primary hover:bg-blue-dark rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
+                    Visualiser le devis
+                    <i class="material-symbols-outlined">preview</i>
+                </a>
+                <a href="{{ path('quote_sendpdf', {'id': quote.id}) }}"
+                   class="text-center text-white bg-primary hover:bg-blue-dark rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
+                    Envoyer le devis
+                    <i class="material-symbols-outlined">send</i>
+                </a>
+            {% endif %}
             {% if quote.status.name == 'accepted' %}
                 <a href="{{ path('quote_convert', {'id': quote.id}) }}"
-                   class="text-center text-white bg-primary hover:bg-blue-dark rounded px-2 py-1 font-semibold text-sm">
+                   class="text-center text-white bg-primary hover:bg-blue-dark rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
                     Convertir ce devis en facture
+                    <i class="material-symbols-outlined">change_circle</i>
                 </a>
             {% elseif quote.status.name == 'draft' %}
                 <button class="text-center text-white bg-primary hover:bg-blue-dark rounded px-2 py-1 font-semibold text-sm">
@@ -27,7 +40,6 @@
                class="text-center text-white bg-primary hover:bg-blue-dark rounded px-2 py-1 font-semibold text-sm">
                 Modifier
             </a>
-
         </div>
     </header>
     <twig:Card>
@@ -95,10 +107,12 @@
             </div>
         </div>
     </twig:Card>
-    <h2 class="text-xl font-bold mb-2">Factures liées au devis</h2>
-    <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-2 md:gap-2 xl:grid-cols-4 xl:gap-3 2xl:grid-cols-4 2xl:gap-4">
-        {% for invoice in invoices %}
-            <twig:Invoice:InvoiceListItem :invoice="invoice"/>
-        {% endfor %}
-    </div>
+    <twig:Card>
+        <h2 class="text-xl font-bold mb-2">Factures liées au devis</h2>
+        <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-2 md:gap-2 xl:grid-cols-4 xl:gap-3 2xl:grid-cols-4 2xl:gap-4">
+            {% for invoice in invoices %}
+                <twig:Invoice:InvoiceListItem :invoice="invoice"/>
+            {% endfor %}
+        </div>
+    </twig:Card>
 {% endblock %}

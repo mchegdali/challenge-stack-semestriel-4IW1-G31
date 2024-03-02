@@ -2,30 +2,44 @@
 
 namespace App\Controller;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use DateTimeImmutable;
 use App\Entity\Quote;
-
 use App\Entity\Customer;
 use App\Form\CustomerType;
+use App\Entity\QuoteItem;
+use App\Entity\QuoteStatus;
 use App\Form\QuoteCreateType;
 use App\Form\QuoteSearchType;
+
 use App\Repository\InvoiceRepository;
 use App\Repository\QuoteRepository;
 use App\Service\QuoteToInvoiceConverter;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Attachment;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/quotes', name: 'quote_')]
 #[IsGranted("ROLE_USER")]
 class QuoteController extends AbstractController
 {
+    private $mailer;
+
+    public function __construct(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
+    }
 
     #[Route('', name: 'index', methods: ['GET', 'POST'])]
     public function index(
@@ -219,6 +233,7 @@ class QuoteController extends AbstractController
         ]);
     }
 
+
     #[Route('/convert/{id}', name: 'convert')]
     public function convert(Quote $quote, QuoteToInvoiceConverter $quoteToInvoiceConverter): Response
     {
@@ -235,5 +250,105 @@ class QuoteController extends AbstractController
         return $this->redirectToRoute(
             'invoice_show', ['id' => $invoice->getId()],
         );
+    }
+
+    #[Route('/{id}/pdf', name: 'pdf')]
+    public function pdf(QuoteRepository $quoteRepository, MailerInterface $mailer, string $id, Quote $quotes): Response
+    {
+        $quote = $quoteRepository->find($id);
+
+
+        if (!$quote) {
+            throw $this->createNotFoundException('La devis demandée n\'a pas été trouvée.');
+        }
+
+        // Configurez Dompdf selon vos besoins
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+
+
+        // Générez le HTML à partir de votre template Twig pour la devis
+        $html = $this->renderView('quote/pdf.html.twig', [
+            'quotes' => $quotes
+        ]);
+        $templateMail = $this->renderView('quote/mail.html.twig', [
+            'quotes' => $quotes
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $dompdf->stream("devis-{$id}.pdf", [
+            "Attachment" => false // Changez à true pour forcer le téléchargement
+        ]);
+
+        $pdfPath = sys_get_temp_dir() . '/devis-' . $id . '.pdf'; // Génère un nom de fichier unique
+        file_put_contents($pdfPath, $dompdf->output()); // Sauvegarde le contenu du PDF dans le fichier
+
+        unlink($pdfPath);
+        // Envoyez le PDF au navigateur
+
+        return new Response('', 200, [
+            'Content-Type' => 'application/pdf',
+        ]);
+    }
+
+    #[Route('/{id}/sendpdf', name: 'sendpdf')]
+    public function sendPdf(QuoteRepository $quoteRepository, MailerInterface $mailer, string $id, Quote $quotes): Response
+    {
+        $quote = $quoteRepository->find($id);
+
+
+        if (!$quote) {
+            throw $this->createNotFoundException('La devis demandée n\'a pas été trouvée.');
+        }
+
+        // Configurez Dompdf selon vos besoins
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+
+
+        // Générez le HTML à partir de votre template Twig pour la devis
+        $html = $this->renderView('quote/pdf.html.twig', [
+            'quotes' => $quotes
+        ]);
+        $templateMail = $this->renderView('quote/mail.html.twig', [
+            'quotes' => $quotes
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $dompdf->stream("devis-{$id}.pdf", [
+            "Attachment" => false // Changez à true pour forcer le téléchargement
+        ]);
+
+        $pdfPath = sys_get_temp_dir() . '/devis-' . $id . '.pdf'; // Génère un nom de fichier unique
+        file_put_contents($pdfPath, $dompdf->output()); // Sauvegarde le contenu du PDF dans le fichier
+
+        $mailCustomer = $quotes->getCustomer()->getEmail();
+
+        $email = (new Email())
+            ->from('challengesemestre@hotmail.com')
+            ->to($mailCustomer)
+            ->subject('Votre facture')
+            ->text('Veuillez trouver ci-joint votre facture.')
+            ->html($templateMail);
+
+
+        $email->attachFromPath($pdfPath, 'facture.pdf', 'application/pdf');
+
+
+        $this->mailer->send($email);
+
+
+        unlink($pdfPath);
+        // Envoyez le PDF au navigateur
+
+        return new Response('', 200, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 }

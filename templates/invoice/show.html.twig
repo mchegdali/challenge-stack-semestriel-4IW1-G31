@@ -74,4 +74,14 @@
         </twig:Card>
         <twig:Invoice:InvoicePaymentCard :invoice="invoice"/>
     </article>
+    <section class="flex justify-center gap-2 text-center p-3">
+        <a href="{{ path('invoice_pdf', {'id': invoice.id}) }}"
+           class="w-full font-semibold py-2 px-4 rounded border border-blue-800 bg-blue-800 hover:bg-blue-900 text-white">
+            Visualiser la facture
+        </a>
+        <a href="{{ path('invoice_sendpdf', {'id': invoice.id}) }}"
+           class="w-full font-semibold py-2 px-4 rounded border border-blue-800 bg-blue-800 hover:bg-blue-900 text-white">
+            Envoyer la facture
+        </a>
+    </section>
 {% endblock %}
