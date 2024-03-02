@@ -58,7 +58,6 @@ class InvoiceStatus
         return $this;
     }
 
-
     /**
      * @return Collection<int, Invoice>
      */

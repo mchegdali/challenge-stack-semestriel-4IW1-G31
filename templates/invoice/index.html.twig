@@ -4,8 +4,6 @@
 {% endblock %}
 
 {% block body %}
-
-
     <header>
         <h1 class="font-bold text-3xl">Liste des factures</h1>
     </header>
@@ -16,7 +14,7 @@
             {{ form_row(searchForm.status) }}
             {{ form_rest(searchForm) }}
             <button type="submit" id="invoice_search_submit"
-                    class="rounded px-2 py-1 bg-primary font-bold text-white disabled:bg-blue-200 animate-in fade-in duration-300">
+                    class="rounded px-2 py-1 bg-primary font-bold text-white disabled:bg-blue-lightest animate-in fade-in duration-300">
                 Filtrer
             </button>
             {{ form_end(searchForm) }}

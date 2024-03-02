@@ -9,8 +9,6 @@ module.exports = {
             transparent: 'transparent',
             black: '#14110F',
             white: '#ffffff',
-            light: '#F3F0F8',
-            dark: '#0C0D12',
             blue: {
                 lightest: "#E0E8F9",
                 lighter: "#CDDFFB",
@@ -18,10 +16,16 @@ module.exports = {
                 DEFAULT: '#3754CB',
                 dark: '#1B254B',
                 darker: '#191B23',
+                darkest: '#0C0D12',
             },
-            lightgrey: '#E5E5E5',
-            grey: '#888888',
-            darkgrey: '#545454',
+            grey: {
+                lightest: '#F3F0F8',
+                lighter: '#E5E5E5',
+                light: '#D9D9D9',
+                DEFAULT: '#888888',
+                dark: '#545454',
+                darker: '#333333',
+            },
             red: {
                 50: '#fff1f3',
                 100: '#ffe0e4',
@@ -83,6 +87,8 @@ module.exports = {
         },
         extend: {
             backgroundColor: ({theme}) => ({
+                light: theme('colors.grey.lightest'),
+                dark: theme('colors.blue.darkest'),
                 hover: {
                     light: theme('colors.light'),
                     dark: `color-mix(in srgb, ${theme(

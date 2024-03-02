@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         {% block title %}Plumbill | Réparez les fuites dans vos factures
         {% endblock %}
@@ -29,7 +30,9 @@
 
 <body class="relative bg-light dark:bg-dark dark:text-white h-svh md:h-auto">
 {% include 'partials/_navbar.html.twig' %}
-<main class="overflow-scroll container mx-auto space-y-2 px-4 pt-4 md:px-0" id="app">
+
+<main class="overflow-scroll md:overflow-auto min-h-svh md:min-h-[unset] container mx-auto space-y-2 px-4 pt-4 md:px-0"
+      id="app">
     {% block body %}{% endblock %}
 </main>
 

@@ -1,38 +1,27 @@
-<div class="bg-white p-2 mx-6 my-2 rounded-lg">
+<twig:Card class="flex-col">
+    <h1 class="text-xl font-bold">{{ service.name|title }}</h1>
+    <div class="gap-1.5 grid grid-cols-6">
+        <section class="col-span-6 grid grid-cols-subgrid">
+            <div class="col-span-2 flex flex-col">
+                <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">TVA</span>
+                <span class="dark:text-grey-light font-bold leading-tight">{{ service.tax.value }}%</span>
+            </div>
+            <div class="col-span-2 flex flex-col">
+                <a href="{{ path('service_delete', {'id': service.id}) }}" class='text-error'>
+                    <i class="material-icons">delete_outline</i>
+                </a>
+            </div>
+        </section>
+        <section class="col-span-6 grid grid-cols-subgrid">
 
-	<div class='flex justify-between'>
-		<h1 class='font-bold'>{{ service.name|upper }}</h1>
-		<div>
-			{# <a href="{{ path('update_service', {'id': service.id}) }}" class='text-primary'>
-				<i class="material-icons">edit</i>
-			</a> #}
-			<a href="{{ path('service_delete', {'id': service.id}) }}" class='text-error'>
-				<i class="material-icons">delete_outline</i>
-			</a>
-		</div>
-	</div>
-
-
-	<div class='flex gap-2 justify-between items-center text-sm'>
-
-		<span class='flex gap-2'>
-			<p class='font-bold'>TVA</p>
-			<p class=''>
-				{{ service.tax.value }}</p>
-		</span>
-
-		<span class='flex gap-2'>
-			<p class='font-bold'>Prix HT</p>
-			<p class=''>
-				{{ service.price }}€</p>
-		</span>
-
-		<span class='flex gap-2'>
-			<p class='font-bold'>Prix TTC</p>
-			<p class=''>
-				{{ service.price * (1 + (service.tax.value / 100)) }}€</p>
-		</span>
-
-
-	</div>
-</div>
+            <div class="col-span-2 flex flex-col">
+                <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Prix HT</span>
+                <span class="dark:text-grey-light font-bold leading-tight">{{ service.price }}€</span>
+            </div>
+            <div class="col-span-2 flex flex-col">
+                <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Prix TTC</span>
+                <span class="dark:text-grey-light font-bold leading-tight">{{ service.price * (1 + (service.tax.value / 100)) }}€</span>
+            </div>
+        </section>
+    </div>
+</twig:Card>

@@ -4,104 +4,103 @@
 
 {% block body %}
 
-    <main class="mx-auto container px-4 pt-2 sm:px-0 space-y-2">
-        <header class="px-1 sm:px-0">
-            <h1 class="text-3xl font-bold">Devis</h1>
-        </header>
-        <twig:Card>
-            <h2 class="text-xl font-bold mb-2">Récapitulatif</h2>
-            <div class="gap-1.5 w-full grid grid-cols-6">
-                <section class="col-span-6 grid grid-cols-subgrid">
-                    <div class="col-span-5 flex flex-col">
-                        <span class="text-darkgrey text-xs uppercase font-medium  leading-tight tracking-wide">Numéro de devis</span>
-                        <span class="text-black font-bold leading-tight">{{ quote.quoteNumber }}</span>
-                    </div>
-                    <div class="col-span-1 flex flex-col">
-                        <span class="text-darkgrey text-xs uppercase font-medium leading-tight tracking-wide">Statut</span>
-                        <twig:StatusBadge :status="quote.status"/>
-                    </div>
-                </section>
-                <section class="col-span-6 grid grid-cols-subgrid">
-                    <div class="col-span-3 flex flex-col">
-                        <span class="text-darkgrey text-xs uppercase font-medium  leading-tight tracking-wide">Nom du client</span>
-                        <span class="text-black font-bold leading-tight">{{ quote.customer.name }}</span>
-                    </div>
-                    <div class="col-span-3 flex flex-col">
-                        <span class="text-darkgrey text-xs uppercase font-medium  leading-tight tracking-wide">Numéro de client</span>
-                        <span class="text-black font-bold leading-tight">{{ quote.customer.customerNumber }}</span>
-                    </div>
-                </section>
-                <section class="col-span-6 grid grid-cols-subgrid">
-                    <div class="col-span-3 flex flex-col">
-                        <span class="text-darkgrey text-xs uppercase font-medium  leading-tight tracking-wide">Date de création</span>
-                        <span class="text-black font-bold leading-tight">{{ quote.createdAt|date('d/m/Y') }}</span>
-                    </div>
-                </section>
+    <header class="px-1 sm:px-0">
+        <h1 class="text-3xl md:text-4xl font-bold">Devis</h1>
+    </header>
+    <twig:Card>
+        <h2 class="text-xl font-bold">Récapitulatif</h2>
+        <div class="gap-1.5 w-full grid grid-cols-6">
+            <section class="col-span-6 grid grid-cols-subgrid">
+                <div class="col-span-5 flex flex-col">
+                    <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Numéro de devis</span>
+                    <span class="dark:text-grey-light font-bold leading-tight">{{ quote.quoteNumber }}</span>
+                </div>
+                <div class="col-span-1 flex flex-col">
+                    <span class="text-grey-dark text-xs uppercase font-medium leading-tight tracking-wide">Statut</span>
+                    <twig:StatusBadge :status="quote.status"/>
+                </div>
+            </section>
+            <section class="col-span-6 grid grid-cols-subgrid">
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Nom du client</span>
+                    <span class="dark:text-grey-light font-bold leading-tight">{{ quote.customer.name }}</span>
+                </div>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Numéro de client</span>
+                    <span class="dark:text-grey-light font-bold leading-tight">{{ quote.customer.customerNumber }}</span>
+                </div>
+            </section>
+            <section class="col-span-6 grid grid-cols-subgrid">
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-grey-dark dark:text-grey text-xs uppercase font-medium leading-tight tracking-wide">Date de création</span>
+                    <span class="dark:text-grey-light font-bold leading-tight">{{ quote.createdAt|date('d/m/Y') }}</span>
+                </div>
+            </section>
+        </div>
+    </twig:Card>
+    <twig:Card class="flex-col">
+        <div class="grid grid-cols-quote-items mb-2">
+            <div class="grid grid-cols-subgrid col-span-4">
+                <span class="font-semibold">Éléments</span>
+                <span class="font-semibold justify-self-center">Qt</span>
+                <span class="font-semibold justify-self-center">TVA</span>
+                <span class="font-semibold justify-self-end">Total</span>
             </div>
-        </twig:Card>
-        <twig:Card>
-            <div class="grid grid-cols-quote-items mb-2">
+            {% for item in quote.quoteItems %}
                 <div class="grid grid-cols-subgrid col-span-4">
-                    <span class="font-semibold">Éléments</span>
-                    <span class="font-semibold justify-self-center">Qt</span>
-                    <span class="font-semibold justify-self-center">TVA</span>
-                    <span class="font-semibold justify-self-end">Total</span>
+                    <span>{{ item.service.name }}</span>
+                    <span class="justify-self-center">{{ item.quantity }}</span>
+                    <span class="justify-self-end">{{ item.tax.value }}%</span>
+                    <span class="justify-self-end">{{ item.priceIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
                 </div>
-                {% for item in quote.quoteItems %}
-
-                    <div class="grid grid-cols-subgrid col-span-4">
-                        <span>{{ item.service.name }}</span>
-                        <span class="justify-self-center">{{ item.quantity }}</span>
-                        <span class="justify-self-end">{{ item.tax.value }}%</span>
-                        <span class="justify-self-end">{{ item.priceIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="flex justify-end mb-2">
-                <div class="border border-black rounded-sm px-2 py-1 w-1/2">
-                    <div class="w-full flex justify-between">
-                        <span class="font-semibold">Sous-total</span>
-                        <span>{{ quote.totalExcludingTax|format_currency('EUR', locale='fr_FR') }}</span>
-                    </div>
-                    <div class="w-full flex justify-between">
-                        <span class="font-semibold">TVA</span>
-                        <span>{{ quote.taxAmount|format_currency('EUR', locale='fr_FR') }}</span>
-                    </div>
-                    <div class="w-full flex justify-between">
-                        <span class="font-semibold">TOTAL</span>
-                        <span>{{ quote.totalIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="flex justify-between gap-2.5">
-                {% if quote.status.name == 'draft' %}
-                    <button class="grow flex place-content-center text-white bg-primary rounded px-2 py-1 font-semibold text-sm">
-                        Envoyer
-                    </button>
-                {% elseif quote.status.name == 'sent' %}
-                    <button class="grow flex place-content-center text-primary border border-primary bg-white font-semibold text-sm rounded px-2 py-1">
-                        Envoyé
-                    </button>
-                {% elseif quote.status.name == 'accepted' %}
-                    <button class="grow flex place-content-center text-success border border-success bg-white font-semibold text-sm rounded px-2 py-1">
-                        Envoyé
-                    </button>
-                {% elseif quote.status.name == 'refused' %}
-                    <span class="cursor-default grow flex place-content-center text-error border border-error bg-white font-semibold text-sm rounded px-2 py-1">
-                        Devis refusé
-                    </span>
-                {% endif %}
-                <a href="{{ path('quote_convert', {'id': quote.id}) }}" class="grow flex place-content-center text-white bg-blue-600 rounded px-2 py-1 font-semibold text-sm">
-                    Convertir ce devis en facture
-                </a>
-
-            </div>
-        </twig:Card>
-        <h2 class="text-xl font-bold mb-2">Factures liées au devis</h2>
-        <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-2 md:gap-2 xl:grid-cols-4 xl:gap-3 2xl:grid-cols-4 2xl:gap-4">
-            {% for invoice in invoices %}
-                <twig:Invoice:InvoiceListItem :invoice="invoice"/>
             {% endfor %}
         </div>
-    </main>
+        <div class="flex justify-end">
+            <div class="border border-grey-light/5 rounded-sm px-2 py-1 w-1/2 flex flex-col">
+                <div class="w-full md:w-fit gap-2 flex justify-between">
+                    <span class="font-semibold">Sous-total</span>
+                    <span>{{ quote.totalExcludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+                </div>
+                <div class="w-full md:w-fit gap-2 flex justify-between">
+                    <span class="font-semibold">TVA</span>
+                    <span>{{ quote.taxAmount|format_currency('EUR', locale='fr_FR') }}</span>
+                </div>
+                <div class="w-full md:w-fit gap-2 flex justify-between">
+                    <span class="font-semibold">TOTAL</span>
+                    <span>{{ quote.totalIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-between gap-2.5">
+            {% if quote.status.name == 'draft' %}
+                <button class="grow md:grow-0 flex place-content-center text-white bg-primary rounded px-2 py-1 font-semibold text-sm">
+                    Envoyer
+                </button>
+            {% elseif quote.status.name == 'sent' %}
+                <button class="grow md:grow-0 flex place-content-center text-primary border border-primary bg-transparent font-semibold text-sm rounded px-2 py-1">
+                    Envoyé
+                </button>
+            {% elseif quote.status.name == 'accepted' %}
+                <button class="grow md:grow-0 flex place-content-center text-success border border-success bg-transparent font-semibold text-sm rounded px-2 py-1">
+                    Devis accepté
+                </button>
+            {% elseif quote.status.name == 'refused' %}
+                <span class="cursor-default grow md:grow-0 flex place-content-center text-error border border-error bg-transparent font-semibold text-sm rounded px-2 py-1">
+                        Devis refusé
+
+                    </span>
+            {% endif %}
+            <a href="{{ path('quote_convert', {'id': quote.id}) }}"
+               class="grow flex place-content-center text-white bg-blue-600 rounded px-2 py-1 font-semibold text-sm">
+                Convertir ce devis en facture
+            </a>
+
+        </div>
+    </twig:Card>
+    <h2 class="text-xl font-bold mb-2">Factures liées au devis</h2>
+    <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-2 md:gap-2 xl:grid-cols-4 xl:gap-3 2xl:grid-cols-4 2xl:gap-4">
+        {% for invoice in invoices %}
+            <twig:Invoice:InvoiceListItem :invoice="invoice"/>
+        {% endfor %}
+    </div>
 {% endblock %}

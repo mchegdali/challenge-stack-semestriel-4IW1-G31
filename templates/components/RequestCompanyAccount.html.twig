@@ -1,165 +1,167 @@
+<section class="bg-white rounded-lg p-4 shadow-xl cursor-pointer">
+    <details>
+        <summary class="list-none flex justify-between items-center">
+            <div class="flex gap-4 items-center">
+                <p class="w-10 h-10 bg-slate-300 rounded-full flex items-center justify-center font-bold">{{ user.company.name|slice(0, 1)|capitalize }}</p>
+                <div>
+                    <span class="text-grey-dark text-xs uppercase font-medium leading-tight tracking-wide">ENTREPRISE</span>
+                    <p class="font-bold">{{ user.company.name }}</p>
+                </div>
+            </div>
+            <div class="flex gap-2 font-bold">
+                {% if user.isVerified == false %}
+                    <a onclick="openModalAccept('{{ user.id }}')" class='text-success cursor-pointer'>
+                        <i class="material-icons text-success">check</i>
+                    </a>
+                    <a onclick="openModalDelete('{{ user.id }}')" class='text-error cursor-pointer'>
+                        <i class="material-icons">close</i>
+                    </a>
+                {% endif %}
+            </div>
+        </summary>
+        <section
+                class="grid grid-cols-2 gap-4 mb-4 mt-4">
+            <!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
+            <div class="flex flex-col">
+                <span class="text-grey-dark text-xs uppercase font-medium leading-tight tracking-wide">DEMANDEUR</span>
+                <span class="text-black font-bold leading-tight">{{ user.firstName }}
 
-	<section class="bg-white rounded-lg p-4 shadow-xl cursor-pointer">
-		<details>
-			<summary class="list-none flex justify-between items-center">
-				<div class="flex gap-4 items-center">
-					<p class="w-10 h-10 bg-slate-300 rounded-full flex items-center justify-center font-bold">{{ user.company.name|slice(0, 1)|capitalize }}</p>
-					<div>
-						<span class="text-darkgrey text-xs uppercase font-medium leading-tight tracking-wide">ENTREPRISE</span>
-						<p class="font-bold">{{ user.company.name }}</p>
-					</div>
-				</div>
-				<div class="flex gap-2 font-bold">
-					{% if user.isVerified == false %}
-						<a onclick="openModalAccept('{{ user.id }}')" class='text-success cursor-pointer'>
-							<i class="material-icons text-success">check</i>
-						</a>
-						<a onclick="openModalDelete('{{ user.id }}')" class='text-error cursor-pointer'>
-							<i class="material-icons">close</i>
-						</a>
-					{% endif %}
-				</div>
-			</summary>
-			<section
-				class="grid grid-cols-2 gap-4 mb-4 mt-4">
-				<!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
-				<div class="flex flex-col">
-					<span class="text-darkgrey text-xs uppercase font-medium leading-tight tracking-wide">DEMANDEUR</span>
-					<span class="text-black font-bold leading-tight">{{ user.firstName }}
+                    {{ user.lastName }}</span>
+            </div>
+        </section>
 
-						{{ user.lastName }}</span>
-				</div>
-			</section>
+        <section
+                class="grid grid-cols-2 gap-4 mb-4 mt-4">
+            <!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
+            <div class="flex flex-col">
+                <span class="text-grey-dark text-xs uppercase font-medium leading-tight tracking-wide">EMAIL</span>
+                <span class="text-black font-bold leading-tight">{{ user.email }}</span>
+            </div>
+        </section>
 
-			<section
-				class="grid grid-cols-2 gap-4 mb-4 mt-4">
-				<!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
-				<div class="flex flex-col">
-					<span class="text-darkgrey text-xs uppercase font-medium leading-tight tracking-wide">EMAIL</span>
-					<span class="text-black font-bold leading-tight">{{ user.email }}</span>
-				</div>
-			</section>
+        <section
+                class="grid grid-cols-2 gap-4 mb-4">
+            <!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
+            <div class="flex flex-col">
+                <span class="text-grey-dark text-xs uppercase font-medium leading-tight tracking-wide">VILLE</span>
+                <span class="text-black font-bold leading-tight">{{ user.company.city }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-grey-dark text-xs uppercase font-medium leading-tight tracking-wide">CODE POSTAL</span>
+                <span class="text-black font-bold leading-tight">{{ user.company.postalCode }}</span>
+            </div>
+        </section>
 
-			<section
-				class="grid grid-cols-2 gap-4 mb-4">
-				<!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
-				<div class="flex flex-col">
-					<span class="text-darkgrey text-xs uppercase font-medium leading-tight tracking-wide">VILLE</span>
-					<span class="text-black font-bold leading-tight">{{ user.company.city }}</span>
-				</div>
-				<div class="flex flex-col">
-					<span class="text-darkgrey text-xs uppercase font-medium leading-tight tracking-wide">CODE POSTAL</span>
-					<span class="text-black font-bold leading-tight">{{ user.company.postalCode }}</span>
-				</div>
-			</section>
+        <section
+                class="grid grid-cols-2 gap-4 mb-4">
+            <!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
+            <div class="flex flex-col">
+                <span class="text-grey-dark text-xs uppercase font-medium leading-tight tracking-wide">ADRESSE</span>
+                <span class="text-black font-bold leading-tight">{{ user.company.address }}</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-grey-dark text-xs uppercase font-medium leading-tight tracking-wide">SIRET</span>
+                <span class="text-black font-bold leading-tight">{{ user.company.CompanyNumber }}</span>
+            </div>
+        </section>
 
-			<section
-				class="grid grid-cols-2 gap-4 mb-4">
-				<!-- Utilisez 'grid-cols-2' pour diviser en deux colonnes -->
-				<div class="flex flex-col">
-					<span class="text-darkgrey text-xs uppercase font-medium leading-tight tracking-wide">ADRESSE</span>
-					<span class="text-black font-bold leading-tight">{{ user.company.address }}</span>
-				</div>
-				<div class="flex flex-col">
-					<span class="text-darkgrey text-xs uppercase font-medium leading-tight tracking-wide">SIRET</span>
-					<span class="text-black font-bold leading-tight">{{ user.company.CompanyNumber }}</span>
-				</div>
-			</section>
-
-		</details>
-	</section>
-
+    </details>
+</section>
 
 
 <!-- Modale -->
-<div id="modalAccept" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+<div id="modalAccept"
+     class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
 
-	<div class="bg-white p-8 rounded shadow-lg m-6">
-		<h2 class="text-lg font-bold mb-4">Accepter la demande</h2>
+    <div class="bg-white p-8 rounded shadow-lg m-6">
+        <h2 class="text-lg font-bold mb-4">Accepter la demande</h2>
 
-		<p>Voulez-vous vraiment accepter cette demande de compte ?</p>
+        <p>Voulez-vous vraiment accepter cette demande de compte ?</p>
 
-		<div class='mt-6 flex flex-row justify-center items-center flex-1 w-full gap-3'>
-			<a id="acceptLink" class='flex-1 bg-success font-bold p-2 rounded text-white text-center'>
-				<p>Accepter</p>
-			</a>
-			<button onclick="closeAcceptModal()" class="bg-white flex-1 text-primary font-bold p-2 rounded border border-primary">
-				Annuler
-			</button>
-		</div>
-	</div>
+        <div class='mt-6 flex flex-row justify-center items-center flex-1 w-full gap-3'>
+            <a id="acceptLink" class='flex-1 bg-success font-bold p-2 rounded text-white text-center'>
+                <p>Accepter</p>
+            </a>
+            <button onclick="closeAcceptModal()"
+                    class="bg-white flex-1 text-primary font-bold p-2 rounded border border-primary">
+                Annuler
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- Modale -->
-<div id="modalDelete" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+<div id="modalDelete"
+     class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
 
-	<div class="bg-white p-8 rounded shadow-lg m-6">
-		<h2 class="text-lg font-bold mb-4">Rejeter la demande</h2>
+    <div class="bg-white p-8 rounded shadow-lg m-6">
+        <h2 class="text-lg font-bold mb-4">Rejeter la demande</h2>
 
-		<p>Voulez-vous vraiment rejeter cette demande de compte ?</p>
+        <p>Voulez-vous vraiment rejeter cette demande de compte ?</p>
 
-		<div class='mt-6 flex flex-row justify-center items-center flex-1 w-full gap-3'>
-			<a id="deleteLink" class='flex-1 bg-error font-bold p-2 rounded text-white text-center'>
-				<p>Rejeter</p>
-			</a>
-			<button onclick="closeDeleteModal()" class="bg-white flex-1 text-primary font-bold p-2 rounded border border-primary">
-				Annuler
-			</button>
-		</div>
-	</div>
+        <div class='mt-6 flex flex-row justify-center items-center flex-1 w-full gap-3'>
+            <a id="deleteLink" class='flex-1 bg-error font-bold p-2 rounded text-white text-center'>
+                <p>Rejeter</p>
+            </a>
+            <button onclick="closeDeleteModal()"
+                    class="bg-white flex-1 text-primary font-bold p-2 rounded border border-primary">
+                Annuler
+            </button>
+        </div>
+    </div>
 </div>
 
 
 <script>
-	const modale = document.getElementById("modalAccept");
+    const modale = document.getElementById("modalAccept");
 
-function openModalAccept(userId) {
-modale.classList.remove("hidden");
+    function openModalAccept(userId) {
+        modale.classList.remove("hidden");
 
-var acceptLink = "{{ path('accept_request_company_account', {'id': '__userId__'}) }}".replace('__userId__', userId);
+        var acceptLink = "{{ path('accept_request_company_account', {'id': '__userId__'}) }}".replace('__userId__', userId);
 
-document.getElementById('acceptLink').href = acceptLink;
-
-
-}
-
-function closeAcceptModal() {
-modale.classList.add("hidden");
-}
-
-window.onclick = function (event) {
-if (event.target === modale) {
-closeAcceptModal();
-}
-};
-
-closeButton.onclick = function () {
-closeAcceptModal();
-};
+        document.getElementById('acceptLink').href = acceptLink;
 
 
-const modaleDelete = document.getElementById("modalDelete");
+    }
 
-function openModalDelete(userId) {
-modaleDelete.classList.remove("hidden");
+    function closeAcceptModal() {
+        modale.classList.add("hidden");
+    }
 
-var deleteLink = "{{ path('delete_request_company_account', {'id': '__userId__'}) }}".replace('__userId__', userId);
+    window.onclick = function (event) {
+        if (event.target === modale) {
+            closeAcceptModal();
+        }
+    };
 
-document.getElementById('deleteLink').href = deleteLink;
+    closeButton.onclick = function () {
+        closeAcceptModal();
+    };
 
-}
 
-function closeDeleteModal() {
-modaleDelete.classList.add("hidden");
-}
+    const modaleDelete = document.getElementById("modalDelete");
 
-window.onclick = function (event) {
-if (event.target === modaleDelete) {
-closeDeleteModal();
-}
-};
+    function openModalDelete(userId) {
+        modaleDelete.classList.remove("hidden");
 
-closeButton.onclick = function () {
-closeDeleteModal();
-};
+        var deleteLink = "{{ path('delete_request_company_account', {'id': '__userId__'}) }}".replace('__userId__', userId);
+
+        document.getElementById('deleteLink').href = deleteLink;
+
+    }
+
+    function closeDeleteModal() {
+        modaleDelete.classList.add("hidden");
+    }
+
+    window.onclick = function (event) {
+        if (event.target === modaleDelete) {
+            closeDeleteModal();
+        }
+    };
+
+    closeButton.onclick = function () {
+        closeDeleteModal();
+    };
 </script>
