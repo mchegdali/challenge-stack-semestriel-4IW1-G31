@@ -27,3 +27,5 @@ jobs:
           SOURCE: "."
           TARGET: "~/app"
           EXCLUDE: "/node_modules/"
+        with:
+          args: --update
