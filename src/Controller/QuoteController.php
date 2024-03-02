@@ -106,7 +106,9 @@ class QuoteController extends AbstractController
             $entityManager->flush();
 
 
-            return $this->redirectToRoute('quote_new'); //todo: mettre la route des devis
+            return $this->redirectToRoute('quote_show', [
+                'id' => $quote->getId()
+            ]);
         }
 
         //Création formulaire création client
