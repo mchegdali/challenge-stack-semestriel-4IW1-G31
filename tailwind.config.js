@@ -3,7 +3,7 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     // darkMode: 'selector',
-    content: ['./assets/**/*.js', './templates/**/*.html.twig', './safelist.txt'],
+    content: ['./assets/**/*.js', './templates/**/*.html.twig'],
     theme: {
         colors: {
             transparent: 'transparent',
