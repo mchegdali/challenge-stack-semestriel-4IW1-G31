@@ -10,6 +10,7 @@ use App\Form\CompanyCreateAccountType;
 use App\Form\RegistrationFormType;
 use App\Form\CompanyUserRegistrationFormType;
 use App\Form\CreateAccountType;
+use App\Form\MyAccountType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Security\LoginFormAuthenticator;
@@ -26,8 +27,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Security;
+
+// Dans le contrôleur
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 
 class UserController extends AbstractController
 {
@@ -228,4 +235,32 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('app_list_request_company_account');
     }
+
+    #[Route('/my-account', name: 'afficher_profil')]
+    public function afficherProfil(TokenStorageInterface $tokenStorage)
+    {
+        $utilisateurConnecte = $tokenStorage->getToken()->getUser();
+        
+        return $this->render('my-account/index.html.twig', ['utilisateur' => $utilisateurConnecte]);
+    }
+
+    #[Route('/gerer', name: 'gerer_profil')]
+    public function gererProfil(Request $request, TokenStorageInterface $tokenStorage, PersistenceManagerRegistry $doctrine)
+{
+    $utilisateurConnecte = $tokenStorage->getToken()->getUser();
+
+    $form = $this->createForm(MyAccountType::class, $utilisateurConnecte);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+      
+        $em = $doctrine->getManager();
+
+        $em->flush();
+
+        return $this->redirectToRoute('afficher_profil');
+    }
+
+    return $this->render('my-account/gerer.html.twig', ['form' => $form->createView()]);
+}
 }
