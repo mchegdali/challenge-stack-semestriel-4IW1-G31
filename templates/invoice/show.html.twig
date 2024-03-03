@@ -76,11 +76,11 @@
     </article>
     <section class="flex justify-center gap-2 text-center p-3">
         <a href="{{ path('invoice_pdf', {'id': invoice.id}) }}"
-           class="w-full font-semibold py-2 px-4 rounded border border-blue-800 bg-blue-800 hover:bg-blue-900 text-white">
+           class="w-full font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15">
             Visualiser la facture
         </a>
         <a href="{{ path('invoice_sendpdf', {'id': invoice.id}) }}"
-           class="w-full font-semibold py-2 px-4 rounded border border-blue-800 bg-blue-800 hover:bg-blue-900 text-white">
+           class="w-full font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15">
             Envoyer la facture
         </a>
     </section>
