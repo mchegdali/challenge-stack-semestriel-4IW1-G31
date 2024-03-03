@@ -26,6 +26,9 @@ class Service
     #[ORM\JoinColumn(nullable: false)]
     private ?Tax $tax = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isArchived = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -70,6 +73,18 @@ class Service
     public function setTax(?Tax $tax): static
     {
         $this->tax = $tax;
+
+        return $this;
+    }
+
+    public function isIsArchived(): ?bool
+    {
+        return $this->isArchived;
+    }
+
+    public function setIsArchived(?bool $isArchived): static
+    {
+        $this->isArchived = $isArchived;
 
         return $this;
     }

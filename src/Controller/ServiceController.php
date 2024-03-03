@@ -32,7 +32,7 @@ class ServiceController extends AbstractController
             $em->flush();
         }
 
-        $services = $serviceRepository->findAll();
+        $services = $serviceRepository->findAllNotArchived();
 
         $services = $paginator->paginate(
             $services,
@@ -71,6 +71,15 @@ class ServiceController extends AbstractController
         return $this->render('default/UpdateService.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/{id}/archive', name: 'archive')]
+    public function archiveService(EntityManagerInterface $em, Service $service): Response
+    {
+        $service->setIsArchived(true);
+        $em->flush();
+
+        return $this->redirectToRoute('service_index');
     }
 
 }
