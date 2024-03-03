@@ -13,6 +13,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 #[Route('/tax', name: 'tax_')]
+#[IsGranted("ROLE_COMPANY")]
 class TaxController extends AbstractController
 {
     #[Route('', name: 'index')]

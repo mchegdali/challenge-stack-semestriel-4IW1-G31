@@ -31,7 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/quotes', name: 'quote_')]
-#[IsGranted("ROLE_USER")]
+#[IsGranted("ROLE_COMPANY")]
 class QuoteController extends AbstractController
 {
     private $mailer;

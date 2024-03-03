@@ -29,7 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/invoices', name: 'invoice_')]
-#[IsGranted("ROLE_USER")]
+#[IsGranted("ROLE_COMPANY")]
 class InvoiceController extends AbstractController
 {
     private $mailer;
@@ -120,7 +120,7 @@ class InvoiceController extends AbstractController
             $entityManager->flush();
 
 
-            return $this->redirectToRoute('invoice_new'); //todo: mettre la route des devis
+            return $this->redirectToRoute('invoice_show', ['id' => $invoice->getId()]);
         }
 
         //Création formulaire création client
