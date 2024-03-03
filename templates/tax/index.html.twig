@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Taxe
+{% endblock %}
+
+{% block body %}
+
+    <header class='p-6 w-full flex flex-row justify-between rounded-lg'>
+        <h1 class='text-2xl font-bold'>Taxe</h1>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <button onclick="openModal()"
+                    class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25 rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
+                <span>Ajouter une taxe</span>
+            </button>
+        {% endif %}
+    </header>
+    <h2 class='px-6 font-bold'>Liste des taxes</h2>
+    {% for tax in taxes %}
+        {% include 'components/TaxData.html.twig' %}
+    {% endfor %}
+
+    <twig:Modal id="taxModal" title="Ajout d'une taxe">
+        {% block form %}
+            {{ form_start(form) }}
+
+            {{ form_row(form.value) }}
+            <div class='flex gap-4 justify-end w-full'>
+                {{ form_row(form.save) }}
+            </div>
+            {{ form_end(form) }}
+        {% endblock %}
+    </twig:Modal>
+{% endblock %}

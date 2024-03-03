@@ -1,4 +1,4 @@
-<twig:Card class="max-w-screen-sm flex-col">
+<twig:Card class="w-full max-w-screen-md space-y-2">
     <form method="post" class="flex flex-col w-full gap-3">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -8,22 +8,22 @@
             <label for="username" class="text-base">Adresse email</label>
             <input type="text" id="username" value="{{ last_username }}" name="email"
                    placeholder="bill@plumbill.fr" required autofocus
-                   class="bg-transparent dark:focus:ring-blue dark:focus:border-blue">
+                   class="bg-transparent dark:bg-transparent dark:focus:ring-primary/25 dark:focus:border-primary/25">
         </div>
 
         <div class="flex flex-col gap-1">
             <label for="password" class="text-base">Mot de passe</label>
             <input type="password" id="password" name="password"
                    placeholder="Mot de passe" required
-                   class="bg-transparent dark:focus:ring-blue dark:focus:border-blue">
+                   class="bg-transparent dark:focus:ring-primary/25 dark:focus:border-primary/25">
         </div>
 
         <div class="flex w-full gap-4 justify-between">
             <a href="{{ path('app_register') }}"
-               class="font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15 w-full">
+               class="text-center text-nowrap font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25 w-full">
                 Créer un compte
             </a>
-            <button class="w-full font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15"
+            <button class="w-full font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25"
                     type="submit">
                 Se connecter
             </button>

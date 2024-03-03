@@ -12,33 +12,58 @@
             </a>
             <h1 class="text-3xl md:text-4xl font-bold">Devis</h1>
         </div>
-        <div class="flex gap-2 h-fit">
+        <twig:Dropdown class="md:hidden" label="Gestion">
+            {% block dropdownItems %}
+                <a href="{{ path('quote_pdf', {'id': quote.id}) }}" target="_blank"
+                   class="text-grey-dark block px-4 py-2 text-sm dark:text-white dark:hover:bg-grey-dark"
+                   role="menuitem" tabindex="-1" id="menu-item-0">
+                    Prévisualiser
+                </a>
+                {% if quote.status.name == 'accepted' %}
+                    <a href="{{ path('quote_convert', {'id': quote.id}) }}"
+                       class="text-grey-dark block px-4 py-2 text-sm dark:text-white dark:hover:bg-grey-dark"
+                       role="menuitem" tabindex="-1" id="menu-item-1">
+                        Convertir ce devis en facture
+                    </a>
+                {% elseif quote.status.name == 'draft' %}
+                    <a href="{{ path('quote_sendpdf', {'id': quote.id}) }}"
+                       class="text-grey-dark block px-4 py-2 text-sm dark:text-white dark:hover:bg-grey-dark"
+                       role="menuitem" tabindex="-1" id="menu-item-1">
+                        Envoyer le devis
+                    </a>
+                {% endif %}
+                <a href="{{ path('quote_edit', {'id': quote.id}) }}"
+                   class="text-grey-dark block px-4 py-2 text-sm dark:text-white dark:hover:bg-grey-dark"
+                   role="menuitem" tabindex="-1" id="menu-item-2">
+                    Modifier
+                </a>
+            {% endblock %}
+        </twig:Dropdown>
+        <div class="hidden md:flex gap-2 items-center h-fit">
             {% if quote.status.name != 'refused' %}
                 <a href="{{ path('quote_pdf', {'id': quote.id}) }}" target="_blank"
-                   class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15 rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
-                    Visualiser le devis
+                   class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25 rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
+                    Prévisualiser
                     <i class="material-symbols-outlined">preview</i>
-                </a>
-                <a href="{{ path('quote_sendpdf', {'id': quote.id}) }}"
-                   class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15 rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
-                    Envoyer le devis
-                    <i class="material-symbols-outlined">send</i>
                 </a>
             {% endif %}
             {% if quote.status.name == 'accepted' %}
                 <a href="{{ path('quote_convert', {'id': quote.id}) }}"
-                   class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15 rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
+                   class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25 rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
                     Convertir ce devis en facture
                     <i class="material-symbols-outlined">change_circle</i>
                 </a>
             {% elseif quote.status.name == 'draft' %}
-                <button class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15 rounded px-2 py-1 font-semibold text-sm">
-                    Envoyer
-                </button>
+                <a href="{{ path('quote_sendpdf', {'id': quote.id}) }}"
+                   class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25 rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
+                    Envoyer le devis
+                    <i class="material-symbols-outlined">send</i>
+                </a>
             {% endif %}
             <a href="{{ path('quote_edit', {'id': quote.id}) }}"
-               class="flex items-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15 rounded px-2 py-1 font-semibold text-sm">
+               class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25 rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
                 Modifier
+                <i class="material-symbols-outlined">update</i>
             </a>
         </div>
     </header>

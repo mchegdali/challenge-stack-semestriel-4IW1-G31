@@ -1,0 +1,49 @@
+{% props label = "Options", id = "dropdown" %}
+<div {{ attributes.defaults({ class: "relative inline-block text-left" }) }} id="{{ id }}">
+    <div>
+        <button type="button"
+                class="w-fit border border-primary bg-primary text-white flex justify-center gap-1
+                dark:hover:bg-blue-dark dark:hover:border-blue-dark
+                dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25  dark:bg-blue-darker
+                items-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm"
+                id="{{ id ~ "-button" }}">
+            {{ label }}
+            <i class="material-symbols-outlined transition-transform">expand_more</i>
+        </button>
+    </div>
+    <div class="hidden max-h-0 transition-all absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none
+                dark:bg-blue-darker dark:border dark:border-grey-light/5 dark:text-grey
+                "
+         role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button" tabindex="-1"
+         id="{{ id ~ "-menu" }}">
+        {% block dropdownItems %}
+
+            {#            <a href="#" #}
+            {#               class="text-grey-dark block px-4 py-2 text-sm dark:text-white dark:hover:bg-grey-dark" #}
+            {#               role="menuitem" tabindex="-1" id="menu-item-0"> #}
+            {#                Item #}
+            {#            </a> #}
+        {% endblock %}
+    </div>
+</div>
+
+<script>
+    const dropdownButton = document.getElementById("{{ id ~ "-button" }}")
+    const dropdownButtonIcon = dropdownButton.querySelector('i')
+    const dropdownMenu = document.getElementById("{{ id ~ "-menu" }}")
+
+    dropdownButton.addEventListener('click', function () {
+        dropdownMenu.classList.toggle('hidden')
+        dropdownMenu.classList.toggle('max-h-96')
+        dropdownButtonIcon.classList.toggle('rotate-180')
+    });
+
+    for (const item of dropdownMenu.children) {
+        item.addEventListener('click', function () {
+            dropdownMenu.classList.toggle('hidden')
+            dropdownMenu.classList.toggle('max-h-96')
+            dropdownButtonIcon.classList.toggle('rotate-180')
+        });
+
+    }
+</script>

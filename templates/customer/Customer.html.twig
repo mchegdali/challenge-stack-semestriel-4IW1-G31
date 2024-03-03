@@ -5,20 +5,36 @@
 
 {% block body %}
 
-    <h1 class='px-6 font-bold'>Liste des clients</h1>
+    <header class="flex justify-between flex-row">
+        <h1 class="font-bold text-3xl">Liste des clients</h1>
+        <button onclick="openModal()"
+                class="font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25">
+            Créer un client
+        </button>
+    </header>
     {% for customer in customers %}
         {% include 'components/CustomerData.html.twig' %}
     {% endfor %}
     <div class="navigation flex justify-center mb-8">
         {{ knp_pagination_render(customers, 'components/TailwindPagination.html.twig') }}
     </div>
-    {% include "components/ModalCustomer.html.twig" %}
+    <twig:Modal title="Ajout d'un client" id="clientModal">
+        {% block form %}
+            {{ form_start(customerForm, {'attr': {'id': 'customerForm', 'data-type': typeDocument}}) }}
+            {{ form_row(customerForm.name) }}
+            {{ form_row(customerForm.email) }}
+            {{ form_row(customerForm.address) }}
+            {{ form_row(customerForm.postal_code) }}
+            {{ form_row(customerForm.city) }}
 
+            <span class='flex gap-4 justify-end w-full mt-4'>
+            {{ form_row(customerForm.submit) }}
+            <button onclick="closeModal()"
+                    class="font-bold py-2 px-4 rounded text-sm bg-error hover:bg-red-900 dark:hover:bg-red-dark text-white">
+                Fermer
+            </button>
+        </span>
+            {{ form_end(customerForm) }}
+        {% endblock %}
+    </twig:Modal>
 {% endblock %}
-
-
-{% block javascripts %}
-    {{ encore_entry_script_tags('modal-customer') }}
-{% endblock %}
-
-{# <a href="#" onclick="openModal(event)" class="text-primary hover:underline">Nouveau client</a> #}

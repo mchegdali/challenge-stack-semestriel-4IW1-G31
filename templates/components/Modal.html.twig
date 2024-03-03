@@ -1,13 +1,16 @@
-{% props title %}
+{% props title, id %}
 
 <!-- Modale -->
-<div id="myModal"
-     class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="bg-white dark:bg-blue-darker p-8 rounded shadow-lg w-full max-w-screen-md">
+<div id="{{ id }}"
+     class="absolute top-0 left-0 w-screen h-svh overflow-clip inset-0 z-50 hidden bg-black bg-opacity-50 items-center justify-center px-2 md:px-0">
+    <div id="{{ id ~ '-content' }}"
+         class="z-100 bg-white dark:bg-blue-darker p-8 rounded shadow-lg w-full md:max-w-screen-md mx-2 space-y-2">
+        <!-- Ajout d'un identifiant à l'élément contenant le formulaire -->
         <header class="w-full flex items-center justify-between">
             <h1 class="text-3xl font-bold">{{ title }}</h1>
-            <span onclick="closeModal()"
+            <span id="{{ id ~ '-close-button' }}"
                   class="rounded-full hover:bg-grey-light/50 size-8 relative transition-all duration-200 cursor-pointer">
+                <!-- Ajout d'un identifiant à l'élément de fermeture -->
                 <i class="material-symbols-outlined -translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2">close</i>
             </span>
         </header>
@@ -15,19 +18,27 @@
     </div>
 </div>
 
-{% block javascripts %}
-    <script>
-        const modal = document.getElementById('myModal')
+<script>
+    function openModal() {
+        document.getElementById('{{ id }}').classList.remove('hidden');
+        document.getElementById('{{ id }}').classList.add('flex');
+    }
 
-        function openModal(event) {
-            event.preventDefault();
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
+    function closeModal(e) {
+        e.stopPropagation();
+        document.getElementById('{{ id }}').classList.add('hidden');
+        document.getElementById('{{ id }}').classList.remove('flex');
+    }
 
-        function closeModal() {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-    </script>
-{% endblock %}
+    document.getElementById('{{ id }}').addEventListener('click', function () {
+        closeModal(event);
+    });
+
+    document.getElementById('{{ id ~ '-content' }}').addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+
+    document.getElementById('{{ id ~ '-close-button' }}').addEventListener('click', function (evt) {
+        closeModal(evt);
+    });
+</script>

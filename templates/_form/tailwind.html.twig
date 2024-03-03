@@ -1,9 +1,9 @@
 {% use 'tailwind_2_layout.html.twig' %}
 
-    {% block form_widget_simple %}
-        {% set widget_class = 'bg-transparent dark:focus:ring-blue dark:focus:border-blue' %}
-        {{- parent() -}}
-    {% endblock form_widget_simple %}
+{% block form_widget_simple %}
+    {%- set widget_class = 'bg-transparent dark:bg-transparent dark:focus:ring-primary/25 dark:focus:border-primary/25' -%}
+    {{- parent() -}}
+{% endblock form_widget_simple %}
 
 {%- block form_start -%}
     {%- set attr = attr|merge({ class: attr.class|default('space-y-2') }) -%}
@@ -25,8 +25,6 @@
     {%- endblock checkbox_widget %}
 
 
-
-
     {%- block choice_widget_expanded -%}
         {%- set attr = attr|merge({ class: attr.class|default('flex gap-4 flex-wrap w-full') }) -%}
         <div {{ block('widget_container_attributes') }} >
@@ -39,6 +37,10 @@
         </div>
     {%- endblock choice_widget_expanded -%}
 
+ {%- block choice_widget_collapsed -%}
+     {%- set widget_class = 'bg-transparent dark:bg-blue-darker dark:focus:ring-primary/25 dark:focus:border-primary/25' -%}
+     {{- parent() -}}
+ {%- endblock choice_widget_collapsed -%}
 
     {%- block form_label -%}
         {% if label is not same as(false) -%}

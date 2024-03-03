@@ -5,22 +5,22 @@ namespace App\Controller;
 use App\Entity\Service;
 use App\Form\ServiceType;
 use App\Repository\ServiceRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
-use Knp\Component\Pager\PaginatorInterface;
 
-#[Route('/service', name: 'service_')]
+
+#[Route('/services', name: 'service_')]
 #[IsGranted('ROLE_USER')]
 class ServiceController extends AbstractController
 {
     #[Route('', name: 'index')]
-    public function createService(Request $request, PersistenceManagerRegistry $doctrine, PaginatorInterface $paginator, EntityManagerInterface $em): Response
+    public function createService(Request $request, ServiceRepository $serviceRepository, PersistenceManagerRegistry $doctrine, PaginatorInterface $paginator, EntityManagerInterface $em): Response
     {
         $loggedInUser = $this->getUser();
 
@@ -35,13 +35,16 @@ class ServiceController extends AbstractController
             $em->flush();
         }
 
-        $company = $loggedInUser->getCompany();
-
-        $services = $doctrine->getManager()->getRepository(Service::class)->createQueryBuilder('u')
-            ->Where('u.company = :companyName')
-            ->setParameter('companyName', $company)
-            ->getQuery()
-            ->getResult();
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $services = $serviceRepository->findAll();
+        } else {
+            $company = $loggedInUser->getCompany();
+            $services = $serviceRepository->createQueryBuilder('u')
+                ->Where('u.company = :companyName')
+                ->setParameter('companyName', $company)
+                ->getQuery()
+                ->getResult();
+        }
 
         $services = $paginator->paginate(
             $services,
@@ -49,7 +52,7 @@ class ServiceController extends AbstractController
             20
         );
 
-        return $this->render('service/service.html.twig', [
+        return $this->render('service/index.html.twig', [
             'form' => $form->createView(),
             'services' => $services,
         ]);
@@ -90,5 +93,4 @@ class ServiceController extends AbstractController
 
         return $this->redirectToRoute('service_index');
     }
-
 }
