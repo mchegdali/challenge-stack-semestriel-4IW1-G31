@@ -3,17 +3,18 @@
 namespace App\Form;
 
 use App\Entity\Tax;
-use App\Entity\Invoice;
 use DateTimeImmutable;
+use App\Entity\Invoice;
 use App\Entity\Service;
 use App\Entity\InvoiceItem;
+use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
 class InvoiceItemType extends AbstractType
 {
@@ -29,6 +30,10 @@ class InvoiceItemType extends AbstractType
                 },
                 'choice_attr' => function (Service $service) {
                     return ['data-price' => $service->getPrice()];
+                },
+                'query_builder' => function (ServiceRepository $serviceRepository) {
+                    return $serviceRepository->createQueryBuilder('s')
+                        ->where('s.isArchived != true'); // On ne retient pas les services archivés
                 },
             ])
             ->add('priceExcludingTax', MoneyType::class, [
