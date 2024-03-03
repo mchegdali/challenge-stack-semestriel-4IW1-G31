@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plumbill - La solution de devis et facturation pour plombiers{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4">
+
+    <section class="text-center my-12">
+        <h1 class="text-4xl font-semibold mb-6">Simplifiez vos devis et facturations</h2>
+        <p class="max-w-md mx-auto mb-8">Avec Plumbill, gérez efficacement vos devis et factures en quelques clics. Notre solution est conçue spécifiquement pour les besoins des plombiers professionnels.</p>
+        <a href="" class="font-semibold py-2 px-4 rounded border border-primary text-primary hover:bg-blue-lightest dark:hover:bg-grey-light/5 w-full">Commencez gratuitement</a>
+    </section>
+
+    <section class="my-12">
+        <h3 class="text-center text-3xl font-semibold mb-8">Nos services</h3>
+        <div class="flex flex-wrap justify-center gap-8">
+            <div class="w-full sm:w-1/2 lg:w-1/3 px-4 py-6 bg-white rounded-lg shadow">
+                <h4 class="text-xl font-semibold mb-4">Création de devis</h4>
+                <p>Réalisez des devis clairs et professionnels en quelques minutes et envoyez-les directement à vos clients.</p>
+            </div>
+            <div class="w-full sm:w-1/2 lg:w-1/3 px-4 py-6  bg-white rounded-lg shadow">
+                <h4 class="text-xl font-semibold mb-4">Gestion des factures</h4>
+                <p>Suivez facilement le statut de vos factures et recevez des paiements plus rapidement grâce à notre système automatisé.</p>
+            </div>
+            <div class="w-full sm:w-1/2 lg:w-1/3 px-4 py-6 bg-white rounded-lg shadow">
+                <h4 class="text-xl font-semibold mb-4">Suivi client</h4>
+                <p>Gardez une trace de vos interactions avec les clients et accédez à l'historique des transactions en un seul endroit.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-indigo-600 text-white py-12">
+        <div class="text-center mb-8">
+            <h3 class="text-3xl font-semibold">Ils nous font confiance</h3>
+            <p>Rejoignez les nombreux professionnels qui utilisent déjà Plumbill.</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4">
+            <!-- Ici, vous pouvez insérer des logos ou des témoignages de clients -->
+            <div class="w-1/2 sm:w-1/4 lg:w-1/6">
+                <img src="" alt="Logo client" class="mx-auto">
+            </div>
+            <!-- Répétez pour d'autres logos -->
+        </div>
+    </section>
+
+    <footer class="py-6 mt-12 bg-gray-200 text-center">
+        <p>© Plumbill 2024 - Tous droits réservés</p>
+    </footer>
+{% endblock %}

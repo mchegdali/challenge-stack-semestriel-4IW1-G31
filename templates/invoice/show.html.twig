@@ -67,7 +67,7 @@
                         <span>{{ item.service.name }}</span>
                         <span class="justify-self-center">{{ item.quantity }}</span>
                         <span class="justify-self-center">{{ item.tax.value }}%</span>
-                        <span class="justify-self-end">{{ item.priceIncludingTax|format_currency('EUR', locale='fr_FR') }}</span>
+                        <span class="justify-self-end">{{ (item.priceIncludingTax * item.quantity)|format_currency('EUR', locale='fr_FR') }}</span>
                     </div>
                 {% endfor %}
             </div>

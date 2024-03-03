@@ -120,7 +120,7 @@ class InvoiceController extends AbstractController
             $entityManager->flush();
 
 
-            return $this->redirectToRoute('invoice_new'); //todo: mettre la route des devis
+            return $this->redirectToRoute('invoice_show', ['id' => $invoice->getId()]);
         }
 
         //Création formulaire création client

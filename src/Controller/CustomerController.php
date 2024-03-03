@@ -24,12 +24,25 @@ class CustomerController extends AbstractController
 
         $customerForm->handleRequest($request);
 
+
+        $company = null;
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $customers = $invoiceRepository->findAll();
+        } else {
+            $company = $this->getUser()->getCompany();
+            if (!$company) {
+                throw $this->createNotFoundException('Entreprise non trouvée');
+            }
+            $customers = $customerRepository->findBy(['company' => $company]);
+        }
         if ($customerForm->isSubmitted() && $customerForm->isValid()) {
+            $customer->setCompany($this->getUser()->getCompany());
             $em->persist($customer);
             $em->flush();
         }
 
-        $customers = $customerRepository->findAll();
+       
 
         $customers = $paginator->paginate(
             $customers,

@@ -71,7 +71,7 @@
     </table>
     <div class="section">
         <h3>Date du devis</h3>
-        <p>{{ quotes.createdAt | date('Y-m-d') }}</p>
+        <p>{{ quotes.createdAt | date('d/m/Y') }}</p>
     </div>
     <hr class="hr">
     <table class="items">
@@ -87,21 +87,21 @@
         <tr class="item-row">
             <td>{{ item.service.name }}</td>
             <td>{{ item.quantity }}</td>
-            <td>{{ item.service.price }}</td>
+            <td>{{ item.priceExcludingTax|number_format(2, '.', ' ') }}€</td>
             <td>{{ item.tax.value }}%</td>
-            <td>{{ item.priceExcludingTax * item.quantity }}</td>
-            <td>{{ item.priceIncludingTax * item.quantity }}</td>
+            <td>{{ (item.priceExcludingTax * item.quantity)|number_format(2, '.', ' ') }}€</td>
+            <td>{{ (item.priceIncludingTax * item.quantity)|number_format(2, '.', ' ') }}€</td>
         </tr>
         {% endfor %}
     </table>
     <table class="totals-table" align="right">
         <tr class="totals-row">
             <td>Total H.T</td>
-            <td>{{ quotes.getTotalExcludingTax }}</td>
+            <td>{{ quotes.getTotalExcludingTax|number_format(2, '.', ' ') }}€</td>
         </tr>
         <tr class="totals-row">
             <td>Total T.T.C</td>
-            <td>{{ quotes.getTotalIncludingTax }}</td>
+            <td>{{ quotes.getTotalIncludingTax|number_format(2, '.', ' ') }}€</td>
         </tr>
     </table>
 </main>

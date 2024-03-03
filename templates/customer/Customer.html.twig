@@ -5,13 +5,7 @@
 
 {% block body %}
 
-    <header class="flex justify-between flex-row">
-        <h1 class="font-bold text-3xl">Liste des clients</h1>
-        <button onclick="openModal()"
-                class="font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15">
-            Créer un client
-        </button>
-    </header>
+    <h1 class='px-6 font-bold'>Liste des clients</h1>
     {% for customer in customers %}
         {% include 'components/CustomerData.html.twig' %}
     {% endfor %}

@@ -45,6 +45,9 @@ class Customer
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Payment::class)]
     private Collection $payments;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Company $company = null;
+
     public function __construct()
     {
         $this->quotes = new ArrayCollection();
@@ -132,6 +135,19 @@ class Customer
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }

@@ -16,6 +16,7 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/service', name: 'service_')]
+#[IsGranted('ROLE_USER')]
 class ServiceController extends AbstractController
 {
     #[Route('', name: 'index')]
