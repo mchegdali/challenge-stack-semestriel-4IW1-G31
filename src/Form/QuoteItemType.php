@@ -13,11 +13,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityRepository;
 
 class QuoteItemType extends AbstractType
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        $user = $this->security->getUser();
+        $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
+
         $builder
             ->add('service', EntityType::class, [
                 'label' => 'Service',
@@ -29,13 +41,16 @@ class QuoteItemType extends AbstractType
                 'choice_attr' => function (Service $service) {
                     return ['data-price' => $service->getPrice()];
                 },
-                'query_builder' => function (ServiceRepository $serviceRepository) {
-                    return $serviceRepository->createQueryBuilder('s')
-                        ->where('s.isArchived is null')
-                        ->orWhere('s.isArchived = false')
-                        ; // On ne retient pas les services archivés
-                },
-            ])
+                'query_builder' => function (EntityRepository $er) use ($isAdmin, $user) {
+                    $qb = $er->createQueryBuilder('c');
+                        if (!$isAdmin) {
+                            $company = $user->getCompany();
+                            $qb->where('c.company = :company')
+                               ->setParameter('company', $company);
+                        }
+                        return $qb;
+                    },
+                ])
             ->add('priceExcludingTax', MoneyType::class, [
                 'label' => 'Prix HT',
             ])
@@ -43,12 +58,19 @@ class QuoteItemType extends AbstractType
                 'label' => 'Quantité',
             ])
             ->add('tax', EntityType::class, [
-                'label' => 'Taxe',
-                'placeholder' => '-- Choisir une taxe --',
-                'class' => Tax::class,
-                'choice_label' => function (Tax $tax) {
-                    return $tax->getValue();
-                }
+                'label' => "Taxe",
+                'class' => 'App\Entity\Tax',
+                'choice_label' => 'value',
+                'placeholder' => 'Sélectionner une taxe',
+                'query_builder' => function (EntityRepository $er) use ($isAdmin, $user) {
+                    $qb = $er->createQueryBuilder('c');
+                    if (!$isAdmin) {
+                        $company = $user->getCompany();
+                        $qb->where('c.company = :company')
+                           ->setParameter('company', $company);
+                    }
+                    return $qb;
+                },
             ]);
     }
 

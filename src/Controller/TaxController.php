@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tax;
 use App\Form\TaxType;
+use App\Repository\TaxRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,7 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 class TaxController extends AbstractController
 {
     #[Route('', name: 'index')]
-    public function createTax(Request $request, PersistenceManagerRegistry $doctrine): Response
+    public function createTax(Request $request,TaxRepository $taxRepository ,PersistenceManagerRegistry $doctrine): Response
     {
         $loggedInUser = $this->getUser();
 
@@ -26,18 +27,30 @@ class TaxController extends AbstractController
 
         $form->handleRequest($request);
 
+        $company = null;
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $taxs = $taxRepository->findAll();
+        } else {
+            $company = $this->getUser()->getCompany();
+            if (!$company) {
+                throw $this->createNotFoundException('Entreprise non trouvée');
+            }
+            $taxs = $taxRepository->findBy(['company' => $company]);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $tax->setCompany($loggedInUser->getCompany());
             $em = $doctrine->getManager();
             $em->persist($tax);
             $em->flush();
+            return $this->redirectToRoute('tax_index');
         }
 
-        $taxes = $doctrine->getManager()->getRepository(Tax::class)->findAll();
 
         return $this->render('tax/index.html.twig', [
             'form' => $form->createView(),
-            'taxes' => $taxes,
+            'taxs' => $taxs,
         ]);
     }
 
@@ -64,8 +77,9 @@ class TaxController extends AbstractController
             return $this->redirectToRoute('tax_index');
         }
 
-        return $this->render('default/UpdateTax.html.twig', [
+        return $this->render('tax/show.html.twig', [
             'form' => $form->createView(),
+            'tax' => $tax,
         ]);
     }
 

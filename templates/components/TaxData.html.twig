@@ -1,20 +1,20 @@
-<div class="bg-white dark:bg-blue-darker p-4 mx-6 my-2 rounded-lg flex flex-col">
-    <div class='flex gap-2 justify-between items-center'>
-        <div>
-            <p class=''>{{ tax.value }}%</p>
-        </div>
-        <div>
-
-            {# Seuls les admins peuvent supprimer une taxe #}
-            {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('tax_delete', {'id': tax.id}) }}" class='text-error'>
-                    <i class="material-icons">delete_outline</i>
-                </a>
-            {% endif %}
+<a href="{{ path('tax_update', {'id': tax.id}) }}">
+    <div class="bg-white dark:bg-blue-darker p-4 mx-6 my-2 rounded-lg flex flex-col">
+        <div class='flex gap-2 justify-between items-center'>
+            <div>
+                <p class=''>{{ tax.value }}%</p>
+            </div>
+            <div>
 
 
+                    <a href="{{ path('tax_delete', {'id': tax.id}) }}" class='text-error'>
+                        <i class="material-icons">delete_outline</i>
+                    </a>
+
+
+
+            </div>
         </div>
     </div>
-</div>
-
+</a>
 		

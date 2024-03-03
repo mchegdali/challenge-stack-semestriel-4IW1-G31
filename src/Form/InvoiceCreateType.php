@@ -13,11 +13,24 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityRepository;
 
 class InvoiceCreateType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+
+    private $security;
+
+    public function __construct(Security $security)
     {
+        $this->security = $security;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {        
+        $user = $this->security->getUser();
+        $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
+
         $builder
             ->add('invoiceitems', CollectionType::class, [
                 'entry_type' => InvoiceItemType::class,
@@ -33,7 +46,16 @@ class InvoiceCreateType extends AbstractType
                 'class' => Customer::class,
                 'choice_label' => function (Customer $customer) {
                     return $customer->getName();
-                }
+                },
+                'query_builder' => function (EntityRepository $er) use ($isAdmin, $user) {
+                    $qb = $er->createQueryBuilder('c');
+                    if (!$isAdmin) {
+                        $company = $user->getCompany();
+                        $qb->where('c.company = :company')
+                           ->setParameter('company', $company);
+                    }
+                    return $qb;
+                },
             ])
             ->add('status', EntityType::class, [
                 'label' => 'Statut',
