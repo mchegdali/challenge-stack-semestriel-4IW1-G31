@@ -65,7 +65,7 @@ class CustomerController extends AbstractController
             $em->flush();
         }
 
-        return $this->render('customer/CustomerDetails.html.twig', [
+        return $this->render('customer/show.html.twig', [
             'form' => $form->createView(),
             'customer' => $customer,
         ]);

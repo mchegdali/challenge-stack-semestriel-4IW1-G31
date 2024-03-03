@@ -5,16 +5,26 @@
 
 {% block body %}
 
-    <h1 class='px-6 font-bold'>Liste des clients</h1>
+    <header class="flex justify-between flex-row">
+        <h1 class="font-bold text-3xl">Liste des clients</h1>
+        <button onclick="openModal()"
+                class="font-semibold py-2 px-4 rounded bg-primary text-white hover:bg-blue-dark">
+            Créer un client
+        </button>
+    </header>
     {% for customer in customers %}
         {% include 'components/CustomerData.html.twig' %}
     {% endfor %}
     <div class="navigation flex justify-center mb-8">
         {{ knp_pagination_render(customers, 'components/TailwindPagination.html.twig') }}
     </div>
+    {% include "components/ModalCustomer.html.twig" %}
+    
 {% endblock %}
+
 
 {% block javascripts %}
     {{ encore_entry_script_tags('modal-customer') }}
 {% endblock %}
 
+{# <a href="#" onclick="openModal(event)" class="text-primary hover:underline">Nouveau client</a> #}
