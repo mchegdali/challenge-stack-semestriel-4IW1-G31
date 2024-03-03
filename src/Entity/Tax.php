@@ -21,6 +21,9 @@ class Tax
     #[ORM\Column]
     private ?float $value = null;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Company $company = null;
+
     #[ORM\OneToMany(mappedBy: 'tax', targetEntity: Service::class)]
     private Collection $services;
 
@@ -45,6 +48,18 @@ class Tax
     public function setId(int $id): static
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }
@@ -150,4 +165,6 @@ class Tax
 
         return $this;
     }
+
+    
 }

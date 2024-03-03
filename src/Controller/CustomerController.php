@@ -28,7 +28,7 @@ class CustomerController extends AbstractController
         $company = null;
 
         if ($this->isGranted('ROLE_ADMIN')) {
-            $customers = $invoiceRepository->findAll();
+            $customers = $customerRepository->findAll();
         } else {
             $company = $this->getUser()->getCompany();
             if (!$company) {
@@ -40,6 +40,7 @@ class CustomerController extends AbstractController
             $customer->setCompany($this->getUser()->getCompany());
             $em->persist($customer);
             $em->flush();
+            return $this->redirectToRoute('customer_index');
         }
 
        

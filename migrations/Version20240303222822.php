@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240303190822 extends AbstractMigration
+final class Version20240303222822 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -80,8 +80,10 @@ final class Version20240303190822 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN service.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN service.tax_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN service.company_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE tax (id UUID NOT NULL, value DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE tax (id UUID NOT NULL, company_id UUID DEFAULT NULL, value DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_8E81BA76979B1AD6 ON tax (company_id)');
         $this->addSql('COMMENT ON COLUMN tax.id IS \'(DC2Type:uuid)\'');
+        $this->addSql('COMMENT ON COLUMN tax.company_id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, company_id UUID DEFAULT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, is_verified BOOLEAN NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('CREATE INDEX IDX_8D93D649979B1AD6 ON "user" (company_id)');
@@ -120,6 +122,7 @@ final class Version20240303190822 extends AbstractMigration
         $this->addSql('ALTER TABLE quote_item ADD CONSTRAINT FK_8DFC7A94B2A824D8 FOREIGN KEY (tax_id) REFERENCES tax (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE service ADD CONSTRAINT FK_E19D9AD2B2A824D8 FOREIGN KEY (tax_id) REFERENCES tax (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE service ADD CONSTRAINT FK_E19D9AD2979B1AD6 FOREIGN KEY (company_id) REFERENCES company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE tax ADD CONSTRAINT FK_8E81BA76979B1AD6 FOREIGN KEY (company_id) REFERENCES company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE "user" ADD CONSTRAINT FK_8D93D649979B1AD6 FOREIGN KEY (company_id) REFERENCES company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
@@ -149,6 +152,7 @@ final class Version20240303190822 extends AbstractMigration
         $this->addSql('ALTER TABLE quote_item DROP CONSTRAINT FK_8DFC7A94B2A824D8');
         $this->addSql('ALTER TABLE service DROP CONSTRAINT FK_E19D9AD2B2A824D8');
         $this->addSql('ALTER TABLE service DROP CONSTRAINT FK_E19D9AD2979B1AD6');
+        $this->addSql('ALTER TABLE tax DROP CONSTRAINT FK_8E81BA76979B1AD6');
         $this->addSql('ALTER TABLE "user" DROP CONSTRAINT FK_8D93D649979B1AD6');
         $this->addSql('DROP TABLE company');
         $this->addSql('DROP TABLE customer');

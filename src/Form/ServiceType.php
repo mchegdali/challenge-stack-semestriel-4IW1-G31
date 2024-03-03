@@ -11,11 +11,25 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityRepository;
 
 class ServiceType extends AbstractType
 {
+
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        $user = $this->security->getUser();
+        $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
+        
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom',
@@ -47,6 +61,15 @@ class ServiceType extends AbstractType
                 'class' => 'App\Entity\Tax',
                 'choice_label' => 'value',
                 'placeholder' => 'Sélectionner une taxe',
+                'query_builder' => function (EntityRepository $er) use ($isAdmin, $user) {
+                    $qb = $er->createQueryBuilder('c');
+                    if (!$isAdmin) {
+                        $company = $user->getCompany();
+                        $qb->where('c.company = :company')
+                           ->setParameter('company', $company);
+                    }
+                    return $qb;
+                },
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Ajouter',

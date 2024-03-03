@@ -15,27 +15,45 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityRepository;
 
 class InvoiceItemType extends AbstractType
 {
+
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        $user = $this->security->getUser();
+        $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
+
         $builder
-            ->add('service', EntityType::class, [
-                'label' => 'Service',
-                'placeholder' => '-- Choisir un service --',
-                'class' => Service::class,
-                'choice_label' => function (Service $service) {
-                    return sprintf('%s (€%s)', $service->getName(), $service->getPrice());
-                },
-                'choice_attr' => function (Service $service) {
-                    return ['data-price' => $service->getPrice()];
-                },
-                'query_builder' => function (ServiceRepository $serviceRepository) {
-                    return $serviceRepository->createQueryBuilder('s')
-                        ->where('s.isArchived is null')
-                        ->orWhere('s.isArchived = false')
-                        ; // On ne retient pas les services archivés
+
+        ->add('service', EntityType::class, [
+            'label' => 'Service',
+            'placeholder' => '-- Choisir un service --',
+            'class' => Service::class,
+            'choice_label' => function (Service $service) {
+                return sprintf('%s (€%s)', $service->getName(), $service->getPrice());
+            },
+            'choice_attr' => function (Service $service) {
+                return ['data-price' => $service->getPrice()];
+            },
+            'query_builder' => function (EntityRepository $er) use ($isAdmin, $user) {
+                $qb = $er->createQueryBuilder('c');
+                    if (!$isAdmin) {
+                        $company = $user->getCompany();
+                        $qb->where('c.company = :company')
+                           ->setParameter('company', $company);
+                    }
+                    return $qb;
                 },
             ])
             ->add('priceExcludingTax', MoneyType::class, [
@@ -45,12 +63,19 @@ class InvoiceItemType extends AbstractType
                 'label' => 'Quantité',
             ])
             ->add('tax', EntityType::class, [
-                'label' => 'Tax',
-                'placeholder' => '-- Choisir une tax --',
-                'class' => Tax::class,
-                'choice_label' => function (Tax $tax) {
-                    return $tax->getValue();
-                }
+                'label' => "Taxe",
+                'class' => 'App\Entity\Tax',
+                'choice_label' => 'value',
+                'placeholder' => 'Sélectionner une taxe',
+                'query_builder' => function (EntityRepository $er) use ($isAdmin, $user) {
+                    $qb = $er->createQueryBuilder('c');
+                    if (!$isAdmin) {
+                        $company = $user->getCompany();
+                        $qb->where('c.company = :company')
+                           ->setParameter('company', $company);
+                    }
+                    return $qb;
+                },
             ]);
             //pour priceIncludingTax faire calcul dans controller
             //pour taxAmount faire calcul dans controller
