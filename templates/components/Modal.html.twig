@@ -1,8 +1,8 @@
-{% props title %}
+{% props title, id %}
 
 <!-- Modale -->
-<div id="myModal"
-     class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+<div id="{{ id }}"
+     class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 items-center justify-center">
     <div class="bg-white dark:bg-blue-darker p-8 rounded shadow-lg w-full max-w-screen-md">
         <header class="w-full flex items-center justify-between">
             <h1 class="text-3xl font-bold">{{ title }}</h1>
@@ -15,19 +15,16 @@
     </div>
 </div>
 
-{% block javascripts %}
-    <script>
-        const modal = document.getElementById('myModal')
+<script>
+    console.log("toto")
 
-        function openModal(event) {
-            event.preventDefault();
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
+    function openModal() {
+        document.getElementById('{{ id }}').classList.remove('hidden');
+        document.getElementById('{{ id }}').classList.add('flex');
+    }
 
-        function closeModal() {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-    </script>
-{% endblock %}
+    function closeModal() {
+        document.getElementById('{{ id }}').classList.add('hidden');
+        document.getElementById('{{ id }}').classList.remove('flex');
+    }
+</script>

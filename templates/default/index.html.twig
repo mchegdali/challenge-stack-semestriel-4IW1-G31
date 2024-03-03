@@ -14,7 +14,7 @@
         <h2>Non échues ({{ unpaidInvoicesCount }})</h2>
         <h2>En retard (- de 30 jours) ({{ invoiceCountLate1 }})</h2>
         <h2>En retard (+ de 30 jours) ({{ invoiceCountLate2 }})</h2>
-        <div class="h-screen flex justify-center items-center">
+        <div class="w-full flex justify-center items-center">
             <div class="w-1/2">
                 <canvas id="myChartRound" class="w-full h-full"></canvas>
             </div>
@@ -33,7 +33,7 @@
         <h2>{{ totalInvoices }} €</h2>
         <h2>Somme d'argent en attente</h2>
         <h2>{{ amountToReceive }} €</h2>
-        <div class="h-screen flex justify-center items-center">
+        <div class="w-full flex justify-center items-center">
             <div class="w-1/2">
                 <canvas id="myChartBar" class="w-full h-full"></canvas>
                 {# TODO #}
@@ -48,8 +48,8 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var ctx = document.getElementById('myChartRound').getContext('2d');
-            var myChart = new Chart(ctx, {
+            const ctx = document.getElementById('myChartRound').getContext('2d');
+            const myChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
                     labels: ['Non échues', 'Non payées', 'Payées'],

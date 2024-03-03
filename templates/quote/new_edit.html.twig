@@ -12,39 +12,53 @@
 {% block body %}
 
 
-    <main class="mx-auto container px-4 pt-2 sm:px-0 space-y-2">
-        <header class="px-1 sm:px-0">
-            <h1 class="text-3xl font-bold">
-                {% if type == "new" %}
-                    Créer un nouveau devis
-                {% elseif type == "edit" %}
-                    Modification de devis
-                {% endif %}
-            </h1>
-        </header>
-        <twig:Card>
-            {{ form_start(form) }}
-            <a href="#" onclick="openModal(event)" class="text-primary hover:underline">Nouveau client</a>
-            <!-- Bouton pour ouvrir le modal -->
-            {{ form_row(form.customer) }}
-            {{ form_label(form.status) }}
-            {{ form_widget(form.status) }}
-            <div id="quoteitem" data-prototype="{{ form_row(form.quoteitems.vars.prototype)|e('html_attr') }}">
-                {{ form_row(form.quoteitems) }}
-                <span id="lignesItems"></span>
-            </div>
-            {{ form_end(form) }}
-        </twig:Card>
-    </main>
+    <header class="px-1 sm:px-0">
+        <h1 class="text-3xl font-bold">
+            {% if type == "new" %}
+                Créer un nouveau devis
+            {% elseif type == "edit" %}
+                Modification de devis
+            {% endif %}
+        </h1>
+    </header>
+    <twig:Card class="space-y-2">
+        <button onclick="openModal()"
+                class="font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25">
+            Créer un client
+        </button>
+        {{ form_start(form) }}
+        {{ form_row(form.customer) }}
+        {{ form_row(form.status) }}
+        <div id="quoteitem" data-prototype="{{ form_row(form.quoteitems.vars.prototype)|e('html_attr') }}">
+            {{ form_row(form.quoteitems) }}
+            <span id="lignesItems"></span>
+        </div>
+        {{ form_end(form) }}
+    </twig:Card>
+    <twig:Modal title="Ajout d'un client" id="clientModal">
+        {% block form %}
+            {{ form_start(customerForm, {'attr': {'id': 'customerForm', 'data-type': typeDocument}}) }}
+            {{ form_row(customerForm.name) }}
+            {{ form_row(customerForm.email) }}
+            {{ form_row(customerForm.address) }}
+            {{ form_row(customerForm.postal_code) }}
+            {{ form_row(customerForm.city) }}
 
-
-    {% include "components/ModalCustomer.html.twig" %}
+            <span class='flex gap-4 justify-end w-full mt-4'>
+            {{ form_row(customerForm.submit) }}
+            <button onclick="closeModal()"
+                    class="font-bold py-2 px-4 rounded text-sm bg-error hover:bg-red-900 dark:hover:bg-red-dark text-white">
+                Fermer
+            </button>
+        </span>
+            {{ form_end(customerForm) }}
+        {% endblock %}
+    </twig:Modal>
 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('quotes') }}
-    {{ encore_entry_script_tags('modal-customer') }}
     {{ encore_entry_script_tags('dropdown-customer') }}
 {% endblock %}

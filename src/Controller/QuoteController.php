@@ -229,7 +229,8 @@ class QuoteController extends AbstractController
             'form' => $form->createView(),
             'quote' => $quote,
             'customerForm' => $customerForm->createView(),
-            'type' => $type
+            'type' => $type,
+            'typeDocument' => 'quote'
         ]);
     }
 
