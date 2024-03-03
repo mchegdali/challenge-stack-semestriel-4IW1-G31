@@ -10,11 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-<<<<<<<< HEAD:migrations/Version20240303190822.php
-final class Version20240303190822 extends AbstractMigration
-========
-final class Version20240303174757 extends AbstractMigration
->>>>>>>> afd9243 (add company_id on tax / user of company can only see their own data):migrations/Version20240303174757.php
+final class Version20240303222822 extends AbstractMigration
 {
     public function getDescription(): string
     {
