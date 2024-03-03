@@ -47,13 +47,14 @@ class InvoiceItemType extends AbstractType
                 return ['data-price' => $service->getPrice()];
             },
             'query_builder' => function (EntityRepository $er) use ($isAdmin, $user) {
-                $qb = $er->createQueryBuilder('c');
-                    if (!$isAdmin) {
-                        $company = $user->getCompany();
-                        $qb->where('c.company = :company')
-                           ->setParameter('company', $company);
-                    }
-                    return $qb;
+                $qb = $er->createQueryBuilder('c')
+                ->where('c.isArchived is null OR c.isArchived = false'); 
+                if (!$isAdmin) {
+                    $company = $user->getCompany();
+                    $qb->where('c.company = :company')
+                       ->setParameter('company', $company);
+                }
+                return $qb;
                 },
             ])
             ->add('priceExcludingTax', MoneyType::class, [

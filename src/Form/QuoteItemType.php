@@ -42,7 +42,8 @@ class QuoteItemType extends AbstractType
                     return ['data-price' => $service->getPrice()];
                 },
                 'query_builder' => function (EntityRepository $er) use ($isAdmin, $user) {
-                    $qb = $er->createQueryBuilder('c');
+                    $qb = $er->createQueryBuilder('c')
+                    ->where('c.isArchived is null OR c.isArchived = false'); 
                         if (!$isAdmin) {
                             $company = $user->getCompany();
                             $qb->where('c.company = :company')
