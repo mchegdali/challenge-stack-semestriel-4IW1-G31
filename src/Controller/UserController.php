@@ -3,39 +3,40 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\AdminCreateAccountType;
-use App\Form\CompanyCreateAccountType;
+use App\Form\MyAccountType;
+use App\Form\CreateAccountType;
 
 
 use App\Form\RegistrationFormType;
-use App\Form\CompanyUserRegistrationFormType;
-use App\Form\CreateAccountType;
-use App\Form\MyAccountType;
 use App\Repository\UserRepository;
 use App\Utility\PasswordGenerator;
+use Symfony\Component\Mime\Address;
+use App\Form\AdminCreateAccountType;
+use App\Form\CompanyCreateAccountType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\CompanyUserRegistrationFormType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Symfony\Component\Security\Core\User\UserInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Security;
-
 // Dans le contrôleur
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
 class UserController extends AbstractController
 {
     #[Route('/user-admin', name: 'app_list_user_admin')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted("ROLE_ADMIN")]
     public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $user = new User();

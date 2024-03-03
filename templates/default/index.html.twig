@@ -8,38 +8,47 @@
         <h1 class="font-bold text-3xl">{{ app.user.company.name|default('Plumbill') }}</h1>
     </header>
 
-    <section class="bg-white dark:bg-blue-darker flex gap-4 flex-wrap w-full px-4 py-6 shadow-md rounded-xl">
-        <a href="{{ path('invoice_new') }}"><h2>Créer une facture</h2></a>
-        <h2>Factures ({{ invoiceCount }})</h2>
-        <h2>Non échues ({{ unpaidInvoicesCount }})</h2>
-        <h2>En retard (- de 30 jours) ({{ invoiceCountLate1 }})</h2>
-        <h2>En retard (+ de 30 jours) ({{ invoiceCountLate2 }})</h2>
-        <div class="w-full flex justify-center items-center">
-            <div class="w-1/2">
-                <canvas id="myChartRound" class="w-full h-full"></canvas>
+    {% if is_granted('ROLE_COMPTABLE') %}
+        <section class="bg-white dark:bg-blue-darker flex gap-4 flex-wrap w-full px-4 py-6 shadow-md rounded-xl">
+            <a href="{{ path('invoice_new') }}"><h2>Créer une facture</h2></a>
+            <h2>Factures ({{ invoiceCount }})</h2>
+            <h2>Non échues ({{ unpaidInvoicesCount }})</h2>
+            <h2>En retard (- de 30 jours) ({{ invoiceCountLate1 }})</h2>
+            <h2>En retard (+ de 30 jours) ({{ invoiceCountLate2 }})</h2>
+            <div class="w-full flex justify-center items-center">
+                <div class="w-1/2">
+                    <canvas id="myChartRound" class="w-full h-full"></canvas>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="bg-white dark:bg-blue-darker flex gap-4 flex-wrap w-full px-4 py-6 shadow-md rounded-xl">
-        <h2>Ventes ({{ invoiceCount }})</h2>
-        <h2>12 derniers mois</h2>
-        <h2>{{ paymentLast12Months }} €</h2>
-        <h2>Ce mois</h2>
-        <h2>{{ paymentThisMonth }} €</h2>
-        <h2>Total argent entrant</h2>
-        <h2>{{ amountReceivedAllTimes }} €</h2>
-        <h2>Total factures</h2>
-        <h2>{{ totalInvoices }} €</h2>
-        <h2>Somme d'argent en attente</h2>
-        <h2>{{ amountToReceive }} €</h2>
-        <div class="w-full flex justify-center items-center">
-            <div class="w-1/2">
-                <canvas id="myChartBar" class="w-full h-full"></canvas>
-                {# TODO #}
+        <section class="bg-white dark:bg-blue-darker flex gap-4 flex-wrap w-full px-4 py-6 shadow-md rounded-xl">
+            <h2>Ventes ({{ invoiceCount }})</h2>
+            <h2>12 derniers mois</h2>
+            <h2>{{ paymentLast12Months }} €</h2>
+            <h2>Ce mois</h2>
+            <h2>{{ paymentThisMonth }} €</h2>
+            <h2>Total argent entrant</h2>
+            <h2>{{ amountReceivedAllTimes }} €</h2>
+            <h2>Total factures</h2>
+            <h2>{{ totalInvoices }} €</h2>
+            <h2>Somme d'argent en attente</h2>
+            <h2>{{ amountToReceive }} €</h2>
+            <div class="w-full flex justify-center items-center">
+                <div class="w-1/2">
+                    <canvas id="myChartBar" class="w-full h-full"></canvas>
+                    {# TODO #}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    {% else %}
+        <section class="bg-white dark:bg-blue-darker flex gap-4 flex-wrap w-full px-4 py-6 shadow-md rounded-xl">
+            <p>Vous ne pouvez pas avoir accès aux statistiques liées aux factures, car vous n'êtes pas comptable.</p>
+        </section>
+    {% endif %}
+    
+
+    
 {% endblock %}
 
 

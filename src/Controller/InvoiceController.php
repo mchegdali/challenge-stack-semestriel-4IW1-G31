@@ -29,7 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/invoices', name: 'invoice_')]
-#[IsGranted("ROLE_USER")]
+#[IsGranted("ROLE_COMPTABLE")]
 class InvoiceController extends AbstractController
 {
     private $mailer;
