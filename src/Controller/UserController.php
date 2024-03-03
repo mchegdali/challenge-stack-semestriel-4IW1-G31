@@ -310,8 +310,6 @@ class UserController extends AbstractController
         $em = $doctrine->getManager();
 
         $em->flush();
-
-        return $this->redirectToRoute('gerer_profil');
     }
 
     return $this->render('my-account/index.html.twig', ['form' => $form->createView(), 'utilisateur' => $utilisateurConnecte]);

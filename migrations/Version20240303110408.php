@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240227222821 extends AbstractMigration
+final class Version20240303110408 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -28,13 +28,15 @@ final class Version20240227222821 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN company.id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE customer (id UUID NOT NULL, name VARCHAR(255) NOT NULL, address VARCHAR(255) NOT NULL, postal_code VARCHAR(10) NOT NULL, city VARCHAR(255) NOT NULL, customer_number VARCHAR(255) DEFAULT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN customer.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE invoice (id UUID NOT NULL, customer_id UUID NOT NULL, company_id UUID NOT NULL, status_id INT NOT NULL, invoice_number VARCHAR(255) NOT NULL, due_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE invoice (id UUID NOT NULL, customer_id UUID NOT NULL, company_id UUID NOT NULL, status_id INT NOT NULL, quote_id UUID DEFAULT NULL, invoice_number VARCHAR(255) NOT NULL, due_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_906517449395C3F3 ON invoice (customer_id)');
         $this->addSql('CREATE INDEX IDX_90651744979B1AD6 ON invoice (company_id)');
         $this->addSql('CREATE INDEX IDX_906517446BF700BD ON invoice (status_id)');
+        $this->addSql('CREATE INDEX IDX_90651744DB805178 ON invoice (quote_id)');
         $this->addSql('COMMENT ON COLUMN invoice.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN invoice.customer_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN invoice.company_id IS \'(DC2Type:uuid)\'');
+        $this->addSql('COMMENT ON COLUMN invoice.quote_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN invoice.due_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('CREATE TABLE invoice_item (id UUID NOT NULL, invoice_id UUID NOT NULL, service_id UUID NOT NULL, tax_id UUID NOT NULL, quantity INT NOT NULL, price_excluding_tax DOUBLE PRECISION NOT NULL, price_including_tax DOUBLE PRECISION NOT NULL, tax_amount DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_1DDE477B2989F1FD ON invoice_item (invoice_id)');
@@ -44,7 +46,7 @@ final class Version20240227222821 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN invoice_item.invoice_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN invoice_item.service_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN invoice_item.tax_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE invoice_status (id INT NOT NULL, name VARCHAR(255) NOT NULL, display_name VARCHAR(255) NOT NULL, border_color VARCHAR(255) NOT NULL, text_color VARCHAR(255) NOT NULL, bg_color VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE invoice_status (id INT NOT NULL, name VARCHAR(255) NOT NULL, display_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE password_reset_token (id INT NOT NULL, email VARCHAR(180) NOT NULL, token VARCHAR(255) NOT NULL, expires_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_6B7BA4B6E7927C74 ON password_reset_token (email)');
         $this->addSql('CREATE TABLE payment (id UUID NOT NULL, payment_method_id INT DEFAULT NULL, invoice_id UUID DEFAULT NULL, paid_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, amount DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
@@ -69,11 +71,13 @@ final class Version20240227222821 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN quote_item.quote_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN quote_item.service_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN quote_item.tax_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE quote_status (id INT NOT NULL, name VARCHAR(255) NOT NULL, bg_color VARCHAR(255) NOT NULL, text_color VARCHAR(255) NOT NULL, border_color VARCHAR(255) NOT NULL, display_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE service (id UUID NOT NULL, tax_id UUID NOT NULL, name VARCHAR(255) NOT NULL, price DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE quote_status (id INT NOT NULL, name VARCHAR(255) NOT NULL, display_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE service (id UUID NOT NULL, tax_id UUID NOT NULL, company_id UUID DEFAULT NULL, name VARCHAR(255) NOT NULL, price DOUBLE PRECISION NOT NULL, is_archived BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_E19D9AD2B2A824D8 ON service (tax_id)');
+        $this->addSql('CREATE INDEX IDX_E19D9AD2979B1AD6 ON service (company_id)');
         $this->addSql('COMMENT ON COLUMN service.id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN service.tax_id IS \'(DC2Type:uuid)\'');
+        $this->addSql('COMMENT ON COLUMN service.company_id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE tax (id UUID NOT NULL, value DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN tax.id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, company_id UUID DEFAULT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, is_verified BOOLEAN NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
@@ -99,6 +103,7 @@ final class Version20240227222821 extends AbstractMigration
         $this->addSql('ALTER TABLE invoice ADD CONSTRAINT FK_906517449395C3F3 FOREIGN KEY (customer_id) REFERENCES customer (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE invoice ADD CONSTRAINT FK_90651744979B1AD6 FOREIGN KEY (company_id) REFERENCES company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE invoice ADD CONSTRAINT FK_906517446BF700BD FOREIGN KEY (status_id) REFERENCES invoice_status (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE invoice ADD CONSTRAINT FK_90651744DB805178 FOREIGN KEY (quote_id) REFERENCES quote (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE invoice_item ADD CONSTRAINT FK_1DDE477B2989F1FD FOREIGN KEY (invoice_id) REFERENCES invoice (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE invoice_item ADD CONSTRAINT FK_1DDE477BED5CA9E6 FOREIGN KEY (service_id) REFERENCES service (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE invoice_item ADD CONSTRAINT FK_1DDE477BB2A824D8 FOREIGN KEY (tax_id) REFERENCES tax (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
@@ -111,6 +116,7 @@ final class Version20240227222821 extends AbstractMigration
         $this->addSql('ALTER TABLE quote_item ADD CONSTRAINT FK_8DFC7A94ED5CA9E6 FOREIGN KEY (service_id) REFERENCES service (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE quote_item ADD CONSTRAINT FK_8DFC7A94B2A824D8 FOREIGN KEY (tax_id) REFERENCES tax (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE service ADD CONSTRAINT FK_E19D9AD2B2A824D8 FOREIGN KEY (tax_id) REFERENCES tax (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE service ADD CONSTRAINT FK_E19D9AD2979B1AD6 FOREIGN KEY (company_id) REFERENCES company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE "user" ADD CONSTRAINT FK_8D93D649979B1AD6 FOREIGN KEY (company_id) REFERENCES company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
@@ -125,6 +131,7 @@ final class Version20240227222821 extends AbstractMigration
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_906517449395C3F3');
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_90651744979B1AD6');
         $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_906517446BF700BD');
+        $this->addSql('ALTER TABLE invoice DROP CONSTRAINT FK_90651744DB805178');
         $this->addSql('ALTER TABLE invoice_item DROP CONSTRAINT FK_1DDE477B2989F1FD');
         $this->addSql('ALTER TABLE invoice_item DROP CONSTRAINT FK_1DDE477BED5CA9E6');
         $this->addSql('ALTER TABLE invoice_item DROP CONSTRAINT FK_1DDE477BB2A824D8');
@@ -137,6 +144,7 @@ final class Version20240227222821 extends AbstractMigration
         $this->addSql('ALTER TABLE quote_item DROP CONSTRAINT FK_8DFC7A94ED5CA9E6');
         $this->addSql('ALTER TABLE quote_item DROP CONSTRAINT FK_8DFC7A94B2A824D8');
         $this->addSql('ALTER TABLE service DROP CONSTRAINT FK_E19D9AD2B2A824D8');
+        $this->addSql('ALTER TABLE service DROP CONSTRAINT FK_E19D9AD2979B1AD6');
         $this->addSql('ALTER TABLE "user" DROP CONSTRAINT FK_8D93D649979B1AD6');
         $this->addSql('DROP TABLE company');
         $this->addSql('DROP TABLE customer');
