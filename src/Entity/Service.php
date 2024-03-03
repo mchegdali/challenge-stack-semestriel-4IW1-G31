@@ -29,6 +29,9 @@ class Service
     #[ORM\Column(nullable: true)]
     private ?bool $isArchived = null;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Company $company = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -85,6 +88,18 @@ class Service
     public function setIsArchived(?bool $isArchived): static
     {
         $this->isArchived = $isArchived;
+
+        return $this;
+    }
+    
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
 
         return $this;
     }

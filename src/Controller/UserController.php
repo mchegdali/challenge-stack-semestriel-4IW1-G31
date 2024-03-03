@@ -12,8 +12,7 @@ use App\Form\CompanyUserRegistrationFormType;
 use App\Form\CreateAccountType;
 use App\Form\MyAccountType;
 use App\Repository\UserRepository;
-use App\Security\EmailVerifier;
-use App\Security\LoginFormAuthenticator;
+use App\Utility\PasswordGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,13 +21,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
-
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -39,36 +35,44 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class UserController extends AbstractController
 {
     #[Route('/user-admin', name: 'app_list_user_admin')]
-    public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $user = new User();
         $form = $this->createForm(AdminCreateAccountType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $randomPassword = PasswordGenerator::generatePassword();
+
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $randomPassword
                 )
             );
 
+            $user->setIsVerified(true);
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
+                ->to($user->getEmail())
+                ->subject('Vos identifiants PlumBill')
+                ->htmlTemplate('emails/create-account.html.twig')
+                ->context([
+                    'lastName' => $user->getLastName(),
+                    'firstName' => $user->getFirstName(),
+                    'emailAdresse' => $user->getEmail(),
+                    'password' => $randomPassword,
+                ]);
+
+            $mailer->send($email);
+
             $entityManager->persist($user);
             $entityManager->flush();
-
-            // $this->emailVerifier->sendEmailConfirmation(
-            //     'app_verify_email',
-            //     $user,
-            //     (new TemplatedEmail())
-            //         ->from(new Address('register@plumbill.fr', 'Plumbill'))
-            //         ->to($user->getEmail())
-            //         ->subject('Please Confirm your Email')
-            //         ->htmlTemplate('registration/confirmation_email.html.twig')
-            // );
         }
 
         $loggedInUser = $this->getUser();
-        // dd($loggedInUser);
         $userId = $loggedInUser->getId();
 
         $users = $doctrine->getManager()->getRepository(User::class)->createQueryBuilder('u')
@@ -83,48 +87,59 @@ class UserController extends AbstractController
         ]);
     }
 
-
     #[Route('/request-company-account', name: 'app_list_request_company_account')]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function requestCompanyAccount(EntityManagerInterface $entityManager): Response
     {
         $users = $entityManager->getRepository(User::class)->findBy(['isVerified' => false]);
-
         return $this->render('requestCompanyAccount/index.html.twig', [
             'users' => $users,
         ]);
     }
 
     #[Route('/user', name: 'app_list_user')]
-    // #[Security("is_granted('ROLE_ADMIN')")]
-    public function companyCreateUser(UserRepository $userRepository, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
+    #[Security("is_granted('ROLE_COMPANY')")]
+    public function companyCreateUser(UserRepository $userRepository, Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $loggedInUser = $this->getUser();
-
-        // $comptableRole = "ROLE_COMPTABLE";
 
         $existingComptable = $userRepository
             ->createQueryBuilder('u')
             ->select('COUNT(u.id)')
             ->where('u.company = :companyName')
-            // ->andWhere('u.roles LIKE :role')
             ->setParameter('companyName', $loggedInUser->getCompany())
-            // ->setParameter('role', '%' . $comptableRole . '%')
             ->getQuery()
-            // ->getSingleScalarResult();
             ->getResult();
-
 
         $user = new User();
         $form = $this->createForm(CompanyCreateAccountType::class, $user);
         $form->handleRequest($request);
 
+        $randomPassword = PasswordGenerator::generatePassword();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $randomPassword
                 )
             );
+
+            $user->setIsVerified(true);
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
+                ->to($user->getEmail())
+                ->subject('Vos identifiants PlumBill')
+                ->htmlTemplate('emails/create-account.html.twig')
+                ->context([
+                    'lastName' => $user->getLastName(),
+                    'firstName' => $user->getFirstName(),
+                    'emailAdresse' => $user->getEmail(),
+                    'password' => $randomPassword,
+                ]);
+
+            $mailer->send($email);
 
             $user->setCompany($loggedInUser->getCompany());
 
@@ -133,22 +148,11 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // $this->emailVerifier->sendEmailConfirmation(
-            //     'app_verify_email',
-            //     $user,
-            //     (new TemplatedEmail())
-            //         ->from(new Address('register@plumbill.fr', 'Plumbill'))
-            //         ->to($user->getEmail())
-            //         ->subject('Please Confirm your Email')
-            //         ->htmlTemplate('registration/confirmation_email.html.twig')
-            // );
-
             return new RedirectResponse($this->generateUrl('app_list_user'));
         }
 
         $userId = $loggedInUser->getId();
         $companyName = $loggedInUser->getCompany();
-
 
         $users = $doctrine->getManager()->getRepository(User::class)->createQueryBuilder('u')
             ->where('u.id != :userId')
@@ -165,9 +169,9 @@ class UserController extends AbstractController
         ]);
     }
 
-
-    #[Route('/user-details/{id}', name: 'app_user_details')]
-    public function companyDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
+    #[Route('/user-details-admin/{id}', name: 'app_user_details-admin')]
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function adminUserDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
     {
         $userRepository = $doctrine->getManager()->getRepository(User::class);
 
@@ -193,7 +197,37 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/user-details/{id}', name: 'app_user_details')]
+    #[Security("is_granted('ROLE_COMPANY')")]
+    public function companyUserDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
+    {
+        $userRepository = $doctrine->getManager()->getRepository(User::class);
+
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Company not found');
+        }
+
+        $form = $this->createForm(CompanyCreateAccountType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $doctrine->getManager();
+            $em->persist($user);
+            $em->flush();
+        }
+
+        return $this->render('user/UserDetails.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
+    }
+
+
     #[Route('/user-admin/{id}/delete', name: 'delete_user_admin')]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function deleteUser(PersistenceManagerRegistry $doctrine, User $user): Response
     {
         $em = $doctrine->getManager();
@@ -214,24 +248,51 @@ class UserController extends AbstractController
     }
 
     #[Route('/request-company-account/{id}/delete', name: 'delete_request_company_account')]
-    public function deleteRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user): Response
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function deleteRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user, MailerInterface $mailer): Response
     {
         $em = $doctrine->getManager();
         $em->remove($user);
         $em->flush();
 
+        $email = (new TemplatedEmail())
+            ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
+            ->to($user->getEmail())
+            ->subject('Information concernant votre demande de compte entreprise')
+            ->htmlTemplate('emails/refuse-request-company-account.html.twig')
+            ->context([
+                'lastName' => $user->getLastName(),
+                'firstName' => $user->getFirstName(),
+                'company' => $user->getCompany()->getName(),
+            ]);
+
+        $mailer->send($email);
+
         return $this->redirectToRoute('app_list_request_company_account');
     }
 
     #[Route('/request-company-account/{id}/accept', name: 'accept_request_company_account')]
-    public function acceptRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user): Response
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function acceptRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user, MailerInterface $mailer): Response
     {
-
         $user->setIsVerified(true);
 
         $em = $doctrine->getManager();
 
         $em->flush();
+
+        $email = (new TemplatedEmail())
+            ->from(new Address('challengesemestre@hotmail.com', 'PlumBill'))
+            ->to($user->getEmail())
+            ->subject('Compte confirmer')
+            ->htmlTemplate('emails/confirm-request-company-account.html.twig')
+            ->context([
+                'lastName' => $user->getLastName(),
+                'firstName' => $user->getFirstName(),
+                'company' => $user->getCompany()->getName(),
+            ]);
+
+        $mailer->send($email);
 
         return $this->redirectToRoute('app_list_request_company_account');
     }

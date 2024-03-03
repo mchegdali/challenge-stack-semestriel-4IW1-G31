@@ -13,18 +13,20 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 #[Route('/tax', name: 'tax_')]
-#[IsGranted("ROLE_USER")]
 class TaxController extends AbstractController
 {
     #[Route('', name: 'index')]
     public function createTax(Request $request, PersistenceManagerRegistry $doctrine): Response
     {
+        $loggedInUser = $this->getUser();
+
         $tax = new Tax();
         $form = $this->createForm(TaxType::class, $tax);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $tax->setCompany($loggedInUser->getCompany());
             $em = $doctrine->getManager();
             $em->persist($tax);
             $em->flush();

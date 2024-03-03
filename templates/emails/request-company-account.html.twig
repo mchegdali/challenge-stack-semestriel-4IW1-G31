@@ -1,0 +1,27 @@
+{% block body %}
+	<style>
+		body {
+			background-color: #ffffff;
+			margin: 0;
+			padding: 20px;
+			font-family: Arial, sans-serif;
+		}
+
+		.content-container {
+			max-width: 600px;
+			margin: 0 auto;
+		}
+	</style>
+
+	<div class="content-container">
+		<p>Cher(e) {{firstName}} {{lastName}},</p>
+
+		<p>Nous vous informons que votre demande de compte entreprise a bien été reçue. Notre équipe traitera votre demande dans les plus brefs délais et vous tiendra informé(e) dès que le processus sera complété.</p>
+
+		<p>Nous vous remercions de votre intérêt et restons à votre disposition pour toute question supplémentaire.</p>
+
+		<p>Bien à vous,</p>
+
+		<p>L'équipe PlumBill</p>
+	</div>
+{% endblock %}

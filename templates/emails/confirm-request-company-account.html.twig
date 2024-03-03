@@ -1,0 +1,41 @@
+{% block body %}
+<style>
+    body {
+        background-color: #ffffff;
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .content-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 20px;
+        background-color: #4CAF50;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="content-container">
+     <p>Cher(e) {{firstName}} {{lastName}},</p>
+
+    <p>Nous sommes ravis de vous informer que votre demande de compte pour l'entreprise {{company}} a été acceptée avec succès!</p>
+
+    <p>Vous pouvez maintenant accéder à notre plateforme en utilisant les informations de connexion que vous avez fournies lors de votre demande.</p>
+
+    <p>Nous sommes impatients de vous accueillir sur notre plateforme. Si vous avez des questions ou des préoccupations, n'hésitez pas à nous contacter.</p>
+
+    <p>Merci pour votre confiance.</p>
+
+    <p>Bien à vous,</p>
+
+    <p>L'équipe PlumBill</p>
+</div>
+{% endblock %}

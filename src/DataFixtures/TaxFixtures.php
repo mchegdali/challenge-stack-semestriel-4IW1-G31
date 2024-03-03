@@ -10,6 +10,7 @@ class TaxFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
+        
         $taxes = [0., 5.5, 10, 20];
 
         foreach ($taxes as $value) {
@@ -20,4 +21,5 @@ class TaxFixtures extends Fixture
 
         $manager->flush();
     }
+
 }

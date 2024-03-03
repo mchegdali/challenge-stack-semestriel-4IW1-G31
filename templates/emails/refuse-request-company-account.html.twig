@@ -1,0 +1,33 @@
+{% block body %}
+<style>
+    body {
+        background-color: #ffffff;
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .content-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+</style>
+
+<div class="content-container">
+    <p>Cher(e) {{firstName}} {{lastName}},</p>
+
+    <p>Nous vous remercions d'avoir soumis votre demande de compte pour votre entreprise {{company}}.</p>
+
+    <p>Après une analyse approfondie, nous regrettons de vous informer que votre demande n'a pas été approuvée à ce stade.</p>
+
+    <p>Nous comprenons que cette décision peut être décevante, et nous tenons à vous assurer que cela ne reflète en aucun cas la qualité de votre entreprise. Nos critères de sélection sont basés sur divers facteurs, et malheureusement, nous ne pouvons pas approuver toutes les demandes.</p>
+
+    <p>Si vous avez des questions ou si vous souhaitez discuter davantage de cette décision, n'hésitez pas à nous contacter. Nous sommes là pour vous aider.</p>
+
+    <p>Nous vous remercions de votre intérêt pour notre plateforme.</p>
+
+    <p>Cordialement,</p>
+
+    <p>L'équipe PlumBill</p>
+</div>
+{% endblock %}
