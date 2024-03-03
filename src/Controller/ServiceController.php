@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
 #[Route('/services', name: 'service_')]
-#[IsGranted('ROLE_USER')]
+#[IsGranted('ROLE_COMPANY')]
 class ServiceController extends AbstractController
 {
     #[Route('', name: 'index')]
