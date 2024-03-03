@@ -16,10 +16,7 @@ use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/service', name: 'service_')]
-<<<<<<< HEAD
-=======
-#[IsGranted('ROLE_COMPANY')]
->>>>>>> ed239da (debut home page fix role company, passwordreset , invoice, quote)
+#[IsGranted('ROLE_USER')]
 class ServiceController extends AbstractController
 {
     #[Route('', name: 'index')]
