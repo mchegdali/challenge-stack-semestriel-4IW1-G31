@@ -33,7 +33,9 @@ class InvoiceItemType extends AbstractType
                 },
                 'query_builder' => function (ServiceRepository $serviceRepository) {
                     return $serviceRepository->createQueryBuilder('s')
-                        ->where('s.isArchived != true'); // On ne retient pas les services archivés
+                        ->where('s.isArchived is null')
+                        ->orWhere('s.isArchived = false')
+                        ; // On ne retient pas les services archivés
                 },
             ])
             ->add('priceExcludingTax', MoneyType::class, [
