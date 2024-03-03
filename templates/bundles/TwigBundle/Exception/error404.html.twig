@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée{% endblock %}
+
+{% block body %}
+	
+	<div class="flex items-center justify-center flex-col mt-40">
+		<h1 class="text-4xl text-red-500 mb-4 text-center font-bold">Erreur 404 - Page non trouvée</h1>
+		<p class="text-lg text-gray-700 mb-1 text-center">Désolé, la page que vous recherchez est introuvable.</p>
+        		<p class="text-lg text-gray-700 text-center">Assurez-vous que l'URL est correcte ou retournez à la page d'accueil.</p>
+		<div class="flex justify-center">
+			<img class="w-1/2" src="{{ asset('img/error.png') }}" alt="Image Logo">
+		</div>
+        <p class="text-center mt-4 text-primary"><a href="javascript:history.back()">Retour à la page précédente</a></p>
+	</div>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur interne du serveur{% endblock %}
+
+{% block body %}
+	
+	<div class="flex items-center justify-center flex-col mt-40">
+		<h1 class="text-4xl text-red-500 mb-4 text-center font-bold">Erreur 500 - Erreur interne du serveur</h1>
+		<p class="text-lg text-gray-700 mb-1 text-center">Désolé, une erreur interne du serveur s'est produite.</p>
+		<p class="text-lg text-gray-700 mb-1 text-center">Nous travaillons à résoudre ce problème.</p>
+		<p class="text-lg text-gray-700 text-center">Veuillez réessayer plus tard.</p>
+		<div class="flex justify-center">
+			<img class="w-1/2" src="{{ asset('img/error.png') }}" alt="Image Logo">
+		</div>
+		<p class="text-center mt-4 text-primary"><a href="javascript:history.back()">Retour à la page précédente</a></p>
+	</div>
+
+{% endblock %}

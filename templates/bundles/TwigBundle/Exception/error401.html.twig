@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Non autorisé{% endblock %}
+
+{% block body %}
+	
+	<div class="flex items-center justify-center flex-col mt-40">
+		<h1 class="text-4xl text-red-500 mb-4 text-center font-bold">Erreur 401 - Non autorisé</h1>
+		<p class="text-lg text-gray-700 mb-1 text-center">Désolé, vous n'êtes pas autorisé à accéder à cette page.</p>
+		<p class="text-lg text-gray-700 text-center">Veuillez vous connecter avec les informations appropriées.</p>
+		<div class="flex justify-center">
+			<img class="w-1/2" src="{{ asset('img/error.png') }}" alt="Image Logo">
+		</div>
+		<p class="text-center mt-4 text-primary"><a  href="{{ path('app_login') }}">Retour à la page de connexion</a></p>
+	</div>
+
+{% endblock %}
