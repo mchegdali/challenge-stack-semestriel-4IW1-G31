@@ -3,8 +3,24 @@
 {% block title %}Plumbill{% endblock %}
 
 {% block body %}
-    <header class="px-1 sm:px-0">
-        <h1 class="text-3xl md:text-4xl font-bold">Facture</h1>
+    <header class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="{{ path('quote_index') }}"
+               class="rounded-full hover:bg-grey-light/50 size-8 relative transition-all duration-200 cursor-pointer">
+                <i class="material-symbols-outlined -translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2">arrow_left</i>
+            </a>
+            <h1 class="text-3xl md:text-4xl font-bold">Facture</h1>
+        </div>
+        <div class="flex gap-2 h-fit">
+            <a href="{{ path('invoice_pdf', {'id': invoice.id}) }}"
+               class="w-full text-nowrap flex items-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15 rounded px-2 py-1 font-semibold text-sm">
+                Visualiser la facture
+            </a>
+            <a href="{{ path('invoice_sendpdf', {'id': invoice.id}) }}"
+               class="w-full text-nowrap flex items-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15 rounded px-2 py-1 font-semibold text-sm">
+                Envoyer la facture
+            </a>
+        </div>
     </header>
     <article class="px-1 sm:px-0 space-y-2">
         <twig:Card class="space-y-2">
@@ -74,14 +90,4 @@
         </twig:Card>
         <twig:Invoice:InvoicePaymentCard :invoice="invoice"/>
     </article>
-    <section class="flex justify-center gap-2 text-center p-3">
-        <a href="{{ path('invoice_pdf', {'id': invoice.id}) }}"
-           class="w-full font-semibold py-2 px-4 rounded border border-blue-800 bg-blue-800 hover:bg-blue-900 text-white">
-            Visualiser la facture
-        </a>
-        <a href="{{ path('invoice_sendpdf', {'id': invoice.id}) }}"
-           class="w-full font-semibold py-2 px-4 rounded border border-blue-800 bg-blue-800 hover:bg-blue-900 text-white">
-            Envoyer la facture
-        </a>
-    </section>
 {% endblock %}
