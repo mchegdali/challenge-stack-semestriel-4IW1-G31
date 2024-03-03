@@ -4,11 +4,11 @@
 {% endblock %}
 
 {% block body %}
-{% include 'components/Navbar.html.twig' %}
 
 
 
-	<div class="flex mt-6 mx-6">
+
+    <div class="flex mt-6 mx-6">
 
 	{% if is_granted('ROLE_ADMIN') %}
 				<a href="{{ path('app_list_user_admin')}}">

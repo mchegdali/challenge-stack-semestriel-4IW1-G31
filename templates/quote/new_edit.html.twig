@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'components/Navbar.html.twig' %}
+
 
     <main class="mx-auto container px-4 pt-2 sm:px-0 space-y-2">
         <header class="px-1 sm:px-0">
@@ -24,7 +24,7 @@
         </header>
         <twig:Card>
             {{ form_start(form) }}
-            <a href="#" onclick="openModal(event)" class="text-blue-600 hover:underline">Nouveau client</a>
+            <a href="#" onclick="openModal(event)" class="text-primary hover:underline">Nouveau client</a>
             <!-- Bouton pour ouvrir le modal -->
             {{ form_row(form.customer) }}
             {{ form_label(form.status) }}

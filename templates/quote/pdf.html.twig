@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Devis {{ quotes.id }}</title>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            
+        }
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* Ombrage léger pour le titre */
+        }
+        .section, .totals-row, .item-row {
+            margin-bottom: 12px;
+        }
+        .section p, .totals-row, .item-row {
+            font-size: 0.875rem;
+        }
+        .hr {
+            border-top: 1px solid #4299e1;
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+  
+        }
+        td {
+            padding: 8px;
+            text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.1); /* Ombrage léger pour le texte des cellules */
+        }
+        .totals-table {
+            margin-top: 24px;
+        }
+        .totals-table td {
+            text-align: right;
+        }
+        .header-row td {
+            font-weight: bold;
+        }
+        .items {
+            background: #f4f4f4;
+            min-height: 450px;
+        }
+    </style>
+
+</head>
+<body>
+<main>
+    <h1 class="title">Devis n°{{ quotes.id }}</h1>
+    <table>
+        <tr>
+            <td>
+                <h3>Professionnel</h3>
+                <p>{{ quotes.company.name }}</p>
+                <p>{{ quotes.company.address }}</p>
+                <p>{{ quotes.company.getPostalCode() }}, {{ quotes.company.city }}</p>
+            </td>
+            <td>
+                <h3>Devis pour</h3>
+                <p>{{ quotes.customer.name }}</p>
+                <p>{{ quotes.customer.address }}</p>
+                <p>{{ quotes.customer.getPostalCode() }}, {{ quotes.customer.city }}</p>
+            </td>
+        </tr>
+    </table>
+    <div class="section">
+        <h3>Date du devis</h3>
+        <p>{{ quotes.createdAt | date('Y-m-d') }}</p>
+    </div>
+    <hr class="hr">
+    <table class="items">
+        <tr class="header-row">
+            <td>Description</td>
+            <td>Quantité</td>
+            <td>Prix Unitaire</td>
+            <td>Tax</td>
+            <td>Prix H.T</td>
+            <td>Prix T.T.C</td>
+        </tr>
+        {% for item in quotes.quoteItems %}
+        <tr class="item-row">
+            <td>{{ item.service.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.service.price }}</td>
+            <td>{{ item.tax.value }}%</td>
+            <td>{{ item.priceExcludingTax * item.quantity }}</td>
+            <td>{{ item.priceIncludingTax * item.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <table class="totals-table" align="right">
+        <tr class="totals-row">
+            <td>Total H.T</td>
+            <td>{{ quotes.getTotalExcludingTax }}</td>
+        </tr>
+        <tr class="totals-row">
+            <td>Total T.T.C</td>
+            <td>{{ quotes.getTotalIncludingTax }}</td>
+        </tr>
+    </table>
+</main>
+</body>
+</html>

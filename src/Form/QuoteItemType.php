@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Tax;
 use App\Entity\Service;
 use App\Entity\QuoteItem;
+use App\Repository\ServiceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -28,6 +29,10 @@ class QuoteItemType extends AbstractType
                 'choice_attr' => function (Service $service) {
                     return ['data-price' => $service->getPrice()];
                 },
+                'query_builder' => function (ServiceRepository $serviceRepository) {
+                    return $serviceRepository->createQueryBuilder('s')
+                        ->where('s.isArchived != true'); // On ne retient pas les services archivés
+                },
             ])
             ->add('priceExcludingTax', MoneyType::class, [
                 'label' => 'Prix HT',
@@ -43,9 +48,6 @@ class QuoteItemType extends AbstractType
                     return $tax->getValue();
                 }
             ]);
-        //pour priceIncludingTax faire calcul dans controller
-        //pour taxAmount faire calcul dans controller
-        //on attribue quote dans le controller
     }
 
     public function configureOptions(OptionsResolver $resolver): void

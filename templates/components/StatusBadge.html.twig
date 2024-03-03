@@ -1,5 +1,28 @@
 {% props status %}
 
-<div class="px-1.5 py-1 rounded-md justify-center items-center flex h-fit w-fit bg-{{ status.bgColor }} dark:bg-{{ status.textColor }} dark:border dark:border-{{ status.borderColor }}">
-    <span class="text-{{ status.textColor }} dark:text-{{ status.bgColor }} text-center text-xs font-semibold leading-none">{{ status.displayName }}</span>
-</div>
+{% if status.name == 'cancelled' or  status.name == 'draft' %}
+    {% set textColor = 'text-white' %}
+    {% set bgColor = 'bg-black' %}
+    {% set borderColor = 'border-black' %}
+{% elseif status.name == 'created' or  status.name == 'sent' %}
+    {% set textColor = 'text-white' %}
+    {% set bgColor = 'bg-primary' %}
+    {% set borderColor = 'border-primary' %}
+{% elseif status.name == 'paid'  or  status.name == 'accepted' %}
+    {% set textColor = 'text-white' %}
+    {% set bgColor = 'bg-success' %}
+    {% set borderColor = 'border-success' %}
+{% elseif status.name == 'late' or  status.name == 'refused' %}
+    {% set textColor = 'text-white' %}
+    {% set bgColor = 'bg-error' %}
+    {% set borderColor = 'border-error' %}
+{% elseif status.name == 'refund' %}
+    {% set textColor = 'text-white' %}
+    {% set bgColor = 'bg-grey' %}
+    {% set borderColor = 'border-grey' %}
+{% endif %}
+
+<span class="cursor-default px-1.5 py-1 rounded-md justify-center items-center tracking-wide flex max-h-fit max-w-fit {{ bgColor|default("bg-transparent") }}
+border {{ borderColor }} {{ textColor }} text-center text-xs font-semibold leading-none">
+    {{ status.displayName }}
+</span>

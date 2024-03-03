@@ -1,8 +1,6 @@
-<div class="bg-white p-4 mx-6 my-2 rounded-lg flex flex-col">
-	<div class='flex gap-2 justify-between'>
-		<div class='flex gap-2 flex-col '>
-
-
+<section class="bg-white dark:bg-blue-darker p-4 rounded-lg flex flex-col">
+    <div class='flex gap-2 justify-between'>
+        <div class='flex gap-2 flex-col '>
 			<span class='flex gap-2'>
 				<p class='font-bold'>Nom</p>
 				<p class=''>
@@ -10,86 +8,97 @@
 				</p>
 			</span>
 
-			<span class='flex gap-2'>
+            <span class='flex gap-2'>
 				<p class='font-bold'>Email</p>
 				<p class=''>
 					{{ customer.email }}
 				</p>
 			</span>
 
-			<span class='flex gap-2'>
+            <span class='flex gap-2'>
 				<p class='font-bold'>Adresse</p>
 				<p class=''>
 					{{ customer.address }}
 				</p>
 			</span>
 
-			<span class='flex gap-2'>
+            <span class='flex gap-2'>
 				<p class='font-bold'>Ville</p>
 				<p class=''>
 					{{ customer.city }}
 				</p>
 			</span>
 
-			<span class='flex gap-2'>
-				<p class='font-bold'>Code Postale</p>
+            <span class='flex gap-2'>
+				<p class='font-bold'>Code Postal</p>
 				<p class=''>
 					{{ customer.postalCode }}
 				</p>
 			</span>
 
 
-		</div>
-		<div>
-			<a href="#" onclick="openModal(event)" class='text-blue-800 '>
-				<i class="material-icons">edit</i>
-			</a>
-		</div>
+        </div>
+        <div>
+            <a href="#" onclick="openModal(event)" class='text-primary '>
+                <i class="material-icons">edit</i>
+            </a>
+        </div>
 
-		<!-- Modale -->
-		<div id="myModal" class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
-			<div class="bg-white p-8 rounded shadow-lg">
-				<h2 class="text-lg font-bold mb-4">Modifier les informations</h2>
-				{{ form_start(form)}}
-				{{ form_row(form.name)}}
-				{{ form_row(form.email)}}
-				{{ form_row(form.address)}}
-				{{ form_row(form.postal_code)}}
-				{{ form_row(form.city)}}
+        <!-- Modale -->
+        <div id="myModal"
+             class="fixed inset-0 z-50 hidden overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-8 rounded shadow-lg">
+                <h2 class="text-lg font-bold mb-4">Modifier les informations</h2>
+                {{ form_start(form) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.email) }}
+                {{ form_row(form.address) }}
+                {{ form_row(form.postal_code) }}
+                {{ form_row(form.city) }}
 
-				<span class='flex gap-4 justify-end w-full mt-4'>
-					{{ form_row(form.submit, {'attr': {'class': 'rounded px-4 py-2 flex-1 bg-blue-800 font-bold text-white'}}) }}
-					{{ form_end(form) }}
-					<button onclick="closeModal()" class="bg-white flex-1 text-blue-800 font-bold p-2 rounded border border-blue-800">
+                <span class='flex gap-4 justify-end w-full mt-4'>
+					{{ form_row(form.submit, {'attr': {'class': 'rounded px-4 py-2 flex-1 bg-primary font-bold text-white'}}) }}
+                    {{ form_end(form) }}
+					<button onclick="closeModal()"
+                            class="bg-white flex-1 text-primary font-bold p-2 rounded border border-primary">
 						Fermer
 					</button>
 				</span>
 
-			</div>
+            </div>
 
-		</div>
+        </div>
 
-		<script>
-			const modal = document.getElementById("myModal");
+        <script>
+            const modal = document.getElementById("myModal");
 
-function openModal() {
-modal.classList.remove("hidden");
-}
+            function openModal() {
+                modal.classList.remove("hidden");
+            }
 
-function closeModal() {
-modal.classList.add("hidden");
-}
+            function closeModal() {
+                modal.classList.add("hidden");
+            }
 
-window.onclick = function (event) {
-if (event.target === modal) {
-closeModal();
-}
-};
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
 
-closeButton.onclick = function () {
-closeModal();
-};
-		</script>
+            closeButton.onclick = function () {
+                closeModal();
+            };
+        </script>
 
-	</div>
-</div>
+    </div>
+
+</section>
+
+<section class="mb-2">
+    <h1 class="text-xl font-bold">Les factures de {{ customer.name }}</h1>
+    <div class="w-full gap-2 grid grid-cols-1 md:grid-cols-2 md:gap-2 xl:grid-cols-4 xl:gap-3 2xl:grid-cols-4 2xl:gap-4">
+        {% for invoice in customer.invoices %}
+            <twig:Invoice:InvoiceListItem :invoice="invoice"/>
+        {% endfor %} </div>
+</section>

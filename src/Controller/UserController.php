@@ -5,7 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\AdminCreateAccountType;
 use App\Form\CompanyCreateAccountType;
-use Symfony\Component\Mailer\MailerInterface;
+
+
+use App\Form\RegistrationFormType;
+use App\Form\CompanyUserRegistrationFormType;
+use App\Form\CreateAccountType;
+use App\Form\MyAccountType;
 use App\Repository\UserRepository;
 use App\Utility\PasswordGenerator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,8 +22,15 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Security;
+
+// Dans le contrôleur
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 
 class UserController extends AbstractController
 {
@@ -284,4 +296,24 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('app_list_request_company_account');
     }
+
+    #[Route('/my-account', name: 'my_account')]
+    public function gererProfil(Request $request, TokenStorageInterface $tokenStorage, PersistenceManagerRegistry $doctrine)
+{
+    $utilisateurConnecte = $tokenStorage->getToken()->getUser();
+
+    $form = $this->createForm(MyAccountType::class, $utilisateurConnecte);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+      
+        $em = $doctrine->getManager();
+
+        $em->flush();
+
+        return $this->redirectToRoute('gerer_profil');
+    }
+
+    return $this->render('my-account/index.html.twig', ['form' => $form->createView(), 'utilisateur' => $utilisateurConnecte]);
+}
 }

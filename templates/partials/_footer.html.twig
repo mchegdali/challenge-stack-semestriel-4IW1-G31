@@ -1,0 +1,23 @@
+<nav id="appbar"
+     class="sticky bottom-0 sm:hidden w-full px-6 py-2 bg-white dark:bg-blue-darker border-t border-grey-light/5 justify-around items-center flex fill-mode-forwards">
+    <a class="flex-col justify-start items-center gap-1 inline-flex group" href="{{ path('invoice_index') }}">
+        <span class="material-symbols-outlined text-grey group-hover:text-primary">receipt</span>
+        <div class="text-center text-grey text-sm font-normal leading-none group-hover:text-primary">Factures</div>
+    </a>
+    <a class="flex-col justify-start items-center gap-1 inline-flex group" href="{{ path('quote_index') }}">
+        <span class="material-symbols-outlined text-grey group-hover:text-primary">request_quote</span>
+        <div class="text-center text-grey text-sm font-normal leading-none group-hover:text-primary">Devis</div>
+    </a>
+    <a class="flex-col justify-start items-center gap-1 inline-flex group" href="{{ path('customer_index') }}">
+        <span class="material-symbols-outlined text-grey group-hover:text-primary">group</span>
+        <div class="text-center text-grey text-sm font-normal leading-none group-hover:text-primary">Clients</div>
+    </a>
+    <div class="flex-col justify-start items-center gap-1 inline-flex group cursor-pointer">
+        <span class="material-symbols-outlined text-grey group-hover:text-primary">more_horiz</span>
+        <div class="text-center text-grey text-sm font-normal leading-none group-hover:text-primary">Plus</div>
+    </div>
+</nav>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('layout') }}
+{% endblock %}

@@ -4,16 +4,16 @@
 		<h1 class='text-2xl font-bold'>Utilisateurs</h1>
 
 		{% if is_granted('ROLE_ADMIN') %}
-			<button onclick="openModal()" class="bg-blue-800 text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
+			<button onclick="openModal()" class="bg-primary text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
 				<p>Ajouter un utilisateur</p>
 			</button>
 		{% else %}
 			{% if existingComptable is defined and existingComptable[0][1] > 1 %}
-				<button disabled onclick="openModal()" title="Un compte comptable a déjà été créé. Il n'est possible d'avoir qu'un seul compte comptable." class="bg-gray-300 text-gray-400 font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm cursor-not-allowed">
+				<button disabled onclick="openModal()" title="Un compte comptable a déjà été créé. Il n'est possible d'avoir qu'un seul compte comptable." class="bg-grey text-grey font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm cursor-not-allowed">
 					<p>Ajouter un utilisateur</p>
 				</button>
 			{% else %}
-				<button onclick="openModal()" class="bg-blue-800 text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
+				<button onclick="openModal()" class="bg-primary text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm">
 					<p>Ajouter un utilisateur</p>
 				</button>
 			{% endif %}

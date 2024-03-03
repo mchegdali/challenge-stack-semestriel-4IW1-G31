@@ -1,0 +1,13 @@
+<div class="sticky flex items-center justify-between px-2 py-2 md:py-4 bg-white dark:bg-blue-darker border-b border-grey-light/5 ">
+    <div>
+        <a href="{{ path('default_index') }}"><img src="{{ asset('img/logo.png') }}" alt="image logo"></a>
+    </div>
+    <div class="space-x-4 text-primary md:flex hidden">
+        <a href="{{ path('invoice_index') }}" class="hover:underline">FACTURES</a>
+        <a href="{{ path('service_index') }}" class="hover:underline">SERVICES</a>
+        <a href="{{ path('quote_index') }}" class="hover:underline">DEVIS</a>
+        <a href="{{ path('customer_index') }}" class="hover:underline">CLIENTS</a>
+        <a href="{{ path('my_account') }}"class="hover:underline">MON COMPTE</a>
+        <a href="{{ path('app_logout') }}" class="hover:underline">DECONNEXION</a>
+    </div>
+</div>

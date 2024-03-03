@@ -59,7 +59,7 @@ class ServiceController extends AbstractController
     {
         $em->remove($service);
         $em->flush();
-    
+
         return $this->redirectToRoute('service_index');
     }
 
@@ -67,18 +67,27 @@ class ServiceController extends AbstractController
     public function updateService(Request $request, EntityManagerInterface $em, Service $service): Response
     {
         $form = $this->createForm(ServiceType::class, $service);
-    
+
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-    
+
             return $this->redirectToRoute('service_index');
         }
-    
+
         return $this->render('default/UpdateService.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-    
+
+    #[Route('/{id}/archive', name: 'archive')]
+    public function archiveService(EntityManagerInterface $em, Service $service): Response
+    {
+        $service->setIsArchived(true);
+        $em->flush();
+
+        return $this->redirectToRoute('service_index');
+    }
+
 }

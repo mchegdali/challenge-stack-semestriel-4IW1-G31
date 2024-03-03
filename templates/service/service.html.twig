@@ -4,14 +4,14 @@
 {% endblock %}
 
 {% block body %}
-{% include 'components/Navbar.html.twig' %}
-	{% include 'components/ServiceHeader.html.twig' %}
 
-	<h1 class='px-6 font-bold'>Liste des services</h1>
-	{% for service in services %}
-		{% include 'components/ServiceData.html.twig' %}
-	{% endfor %}
-	<div class="navigation flex justify-center mb-8">
-		{{ knp_pagination_render(services, 'components/TailwindPagination.html.twig') }}
-	</div>
+    {% include 'components/ServiceHeader.html.twig' %}
+
+    <h1 class='px-6 font-bold'>Liste des services</h1>
+    {% for service in services %}
+        {% include 'components/ServiceData.html.twig' %}
+    {% endfor %}
+    <div class="navigation flex justify-center mb-8">
+        {{ knp_pagination_render(services, 'components/TailwindPagination.html.twig') }}
+    </div>
 {% endblock %}

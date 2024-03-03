@@ -1,184 +1,109 @@
-{# templates/invoices/pdf.html.twig #}
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Facture {{ invoices.id }}</title>
-    <style>
-<style>
-    /* Equivalent de m-6 */
-    .m-6 {
-        margin: 1.5rem;
-    }
-
-    /* Equivalent de text-2xl */
-    .text-2xl {
-        font-size: 1.5rem;
-        line-height: 2rem;
-    }
-
-    /* Equivalent de font-bold */
-    .font-bold {
-        font-weight: bold;
-    }
-
-    /* Equivalent de text-xs */
-    .text-xs {
-        font-size: 0.75rem;
-        line-height: 1rem;
-    }
-
-    /* Equivalent de text-small (Tailwind n'a pas de classe text-small par défaut, donc je suppose une taille personnalisée) */
-    .text-small {
-        font-size: 0.875rem; /* Tailwind .text-sm est 0.875rem */
-    }
-
-    /* Equivalent de flex */
-    .flex {
-        display: flex;
-    }
-
-    /* Equivalent de justify-between */
-    .justify-between {
-        justify-content: space-between;
-    }
-
-    /* Equivalent de justify-center */
-    .justify-center {
-        justify-content: center;
-    }
-
-    /* Equivalent de gap-2 */
-    .gap-2 {
-        gap: 0.5rem;
-    }
-
-    /* Equivalent de w-11/12 */
-    .w-11\/12 {
-        width: 91.666667%;
-    }
-
-    /* Equivalent de border-1, border-t, et border-blue-500 */
-    .border-1 {
-        border-width: 1px;
-    }
-    .border-t {
-        border-top-width: 1px;
-    }
-    .border-blue-500 {
-        border-color: #3b82f6;
-    }
-
-    /* Equivalent de flex-auto */
-    .flex-auto {
-        flex: 1 1 auto;
-    }
-
-    /* Equivalent de w-6/12 */
-    .w-6\/12 {
-        width: 50%;
-    }
-
-    /* Equivalent de w-1/6 */
-    .w-1\/6 {
-        width: 16.666667%;
-    }
-
-    /* Equivalent de min-h-250 (Tailwind n'a pas de classe min-h-250, donc je suppose une hauteur minimale personnalisée) */
-    .min-h-250 {
-        min-height: 250px;
-    }
-
-    /* Equivalent de pl-3 */
-    .pl-3 {
-        padding-left: 0.75rem;
-    }
-
-    /* Equivalent de py-3 */
-    .py-3 {
-        padding-top: 0.75rem;
-        padding-bottom: 0.75rem;
-    }
-
-    /* Pour les items-end et flex-col, qui sont des spécificités de flexbox */
-    .items-end {
-        align-items: flex-end;
-    }
-    .flex-col {
-        flex-direction: column;
-    }
-
-    /* Styles supplémentaires pour la clarté */
-    body, html {
-        font-family: Arial, sans-serif;
-    }
-</style>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            
+        }
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* Ombrage léger pour le titre */
+        }
+        .section, .totals-row, .item-row {
+            margin-bottom: 12px;
+        }
+        .section p, .totals-row, .item-row {
+            font-size: 0.875rem;
+        }
+        .hr {
+            border-top: 1px solid #4299e1;
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+  
+        }
+        td {
+            padding: 8px;
+            text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.1); /* Ombrage léger pour le texte des cellules */
+        }
+        .totals-table {
+            margin-top: 24px;
+        }
+        .totals-table td {
+            text-align: right;
+        }
+        .header-row td {
+            font-weight: bold;
+        }
+        .items {
+            background: #f4f4f4;
+            min-height: 450px;
+        }
+    </style>
 
 </head>
 <body>
 <main>
-
-    <h1 class="m-6 text-2xl font-bold">Facture n°{{invoices.id}}</h1>
-    <section class="m-6 flex justify-between">
-
-        <div class="">  
-            <h3 class="text-xs font-bold">Professionnel</h3>
-            <p class="text-small">{{invoices.company.name }}</p>
-            <p class="text-small">{{invoices.company.address}}</p>
-            <p class="text-small">{{invoices.company.getPostalCode()}}, {{invoices.company.city}}</p>
-        </div>
-        <div>  
-            <h3 class="text-xs font-bold">Facturé à </h3>
-            <p class="text-small">{{invoices.customer.name }}</p>
-            <p class="text-small">{{invoices.customer.address}}</p>
-            <p class="text-small">{{invoices.customer.getPostalCode()}}, {{invoices.customer.city}}</p>
-        </div>
-    </section>
-    <div class="m-6">
-        <h3 class="text-xs font-bold">Date   de la facture</h3>
-        <p class="text-small">  {{invoices.createdAt | date('Y-m-d') }}</p>
+    <h1 class="title">Facture n°{{ invoices.id }}</h1>
+    <table>
+        <tr>
+            <td>
+                <h3>Professionnel</h3>
+                <p>{{ invoices.company.name }}</p>
+                <p>{{ invoices.company.address }}</p>
+                <p>{{ invoices.company.getPostalCode() }}, {{ invoices.company.city }}</p>
+            </td>
+            <td>
+                <h3>Facturé à</h3>
+                <p>{{ invoices.customer.name }}</p>
+                <p>{{ invoices.customer.address }}</p>
+                <p>{{ invoices.customer.getPostalCode() }}, {{ invoices.customer.city }}</p>
+            </td>
+        </tr>
+    </table>
+    <div class="section">
+        <h3>Date de la facture</h3>
+        <p>{{ invoices.createdAt | date('Y-m-d') }}</p>
     </div>
-    <div class="flex justify-center">
-        <hr class="w-11/12 border-1 border-t border-blue-500">
-    </div>
-    <div class="flex gap-2 mt-6 ml-6">
-        <span class="flex-auto w-6/12 text-xs font-bold">Description</span>
-        <span class="flex-auto w-1/6 text-xs font-bold">Quantité</span>
-        <span class="flex-auto w-1/6  text-xs font-bold">Prix Unitaire</span>
-        <span class="flex-auto w-1/6 text-xs font-bold">Prix H.T</span>
-    </div>
-    {% for item in invoices.invoiceItems %}
-    <div class="flex  bg-white min-h-250 m-3 pl-3 py-3">
-        <span class="flex-auto w-6/12 text-small">{{item.service.name}}</span>
-        <span class="flex-auto w-1/6 text-small">{{item.quantity}}</span>
-        <span class="flex-auto w-1/6 text-small">{{item.service.price}}</span>
-        <span class="flex-auto w-1/6 text-small">{{item.priceExcludingTax * item.quantity}}</span>
-    </div>
-    {% endfor %}
-    <section class="w-11/12 flex items-end flex-col justify-between">
-        <div class="w-1/3 flex justify-between">
-            <div>
-                <span class="text-small">Total H.T</span>
-            </div>
-            <div>
-                <span class="text-small">{{invoices.getTotalExcludingTax}}</span>
-            </div>
-        </div>
-        <div class="w-1/3 flex">
-           
-        </div>
-        <div class="w-1/3 flex justify-between">
-            <div>
-                <span class="text-small">Total T.T.C</span>
-            </div>
-            <div>
-                <span class="text-small">{{invoices.getTotalIncludingTax}}</span>
-            </div>
-        </div>
-    </section>
-
+    <hr class="hr">
+    <table class="items">
+        <tr class="header-row">
+            <td>Description</td>
+            <td>Quantité</td>
+            <td>Prix Unitaire</td>
+            <td>Tax</td>
+            <td>Prix H.T</td>
+            <td>Prix T.T.C</td>
+        </tr>
+        {% for item in invoices.invoiceItems %}
+        <tr class="item-row">
+            <td>{{ item.service.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.service.price }}</td>
+            <td>{{ item.tax.value }}%</td>
+            <td>{{ item.priceExcludingTax * item.quantity }}</td>
+            <td>{{ item.priceIncludingTax * item.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <table class="totals-table" align="right">
+        <tr class="totals-row">
+            <td>Total H.T</td>
+            <td>{{ invoices.getTotalExcludingTax }}</td>
+        </tr>
+        <tr class="totals-row">
+            <td>Total T.T.C</td>
+            <td>{{ invoices.getTotalIncludingTax }}</td>
+        </tr>
+    </table>
 </main>
-
 </body>
 </html>

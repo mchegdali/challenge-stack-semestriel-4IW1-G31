@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Form\CompanyUserRegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +31,7 @@ class RegistrationController extends AbstractController
 
     #[Route('/register', name: 'app_register')]
     public function register(
-        Request $request,
+        Request                     $request,
         UserPasswordHasherInterface $userPasswordHasher,
         MailerInterface $mailer,
         EntityManagerInterface $entityManager

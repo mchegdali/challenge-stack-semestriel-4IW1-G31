@@ -41,10 +41,13 @@ class QuoteCreateType extends AbstractType
                 'class' => QuoteStatus::class,
                 'choice_label' => 'displayName'
             ])
-            ->add('valider', SubmitType::class, [
-//                'attr' => [
-//                    'class' => 'bg-blue-800 text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm mt-4',
-//                ],
+            ->add(
+                'valider',
+                SubmitType::class,
+                [
+                    //                'attr' => [
+                    //                    'class' => 'bg-primary text-white font-bold py-2 px-4 rounded w-auto items-center flex justify-center gap-2 text-sm mt-4',
+                    //                ],
                 ]
             );
     }

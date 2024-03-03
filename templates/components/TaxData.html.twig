@@ -4,13 +4,13 @@
 			<p class=''>{{ tax.value }}%</p>
 		</div>
 		<div>
-			{# <a href="{{ path('update_tax', {'id': tax.id}) }}" class='text-blue-800'>
+			{# <a href="{{ path('update_tax', {'id': tax.id}) }}" class='text-primary'>
 				<i class="material-icons">edit</i>
 			</a> #}
 
 			{# Seuls les admins peuvent supprimer une taxe #}
 			{% if is_granted('ROLE_ADMIN') %}
-				<a href="{{ path('tax_delete', {'id': tax.id}) }}" class='text-red-500'>
+				<a href="{{ path('tax_delete', {'id': tax.id}) }}" class='text-error'>
 				<i class="material-icons">delete_outline</i>
 			</a>
 			{% endif %}

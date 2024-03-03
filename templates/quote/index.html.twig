@@ -4,21 +4,23 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'components/Navbar.html.twig' %}
-
-
     <main class="container mx-auto space-y-2 px-4 pt-4 md:px-0">
-        <header>
+        <header class="flex justify-between flex-row">
             <h1 class="font-bold text-3xl">Liste des devis</h1>
+            <a href="{{ path('quote_new') }}"
+               class="font-semibold py-2 px-4 rounded border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-primary/20 dark:border-primary/15">
+                Créer un nouveau devis
+            </a>
         </header>
-        <section class="px-4 py-2 bg-white shadow-sm rounded-lg">
-            <details class="animate-details">
+        <section class="bg-white dark:bg-blue-darker flex gap-4 flex-wrap w-full p-4 shadow-md rounded-xl">
+            <details class="font-bold cursor-pointer">
                 <summary class="font-bold">Filtres</summary>
-                {{ form_start(searchForm, {'method': 'POST' }) }}
+                {{ form_start(searchForm, {'method': 'POST', 'attr': {'class': 'animate-in fade-in duration-300'}}) }}
                 {{ form_row(searchForm.status) }}
                 {{ form_rest(searchForm) }}
                 <button type="submit" id="quote_search_submit"
-                        class="rounded px-2 py-1 bg-blue-800 font-bold text-white disabled:bg-blue-200">Filtrer
+                        class="rounded px-2 py-1 bg-primary font-bold text-white disabled:bg-blue-lighter animate-in fade-in duration-300">
+                    Filtrer
                 </button>
                 {{ form_end(searchForm) }}
             </details>
@@ -43,11 +45,7 @@
         submitBtn.disabled = isFormEmpty();
 
         formEl.addEventListener("input", function (e) {
-            if (isFormEmpty()) {
-                submitBtn.disabled = true;
-            } else {
-                submitBtn.disabled = false;
-            }
+            submitBtn.disabled = isFormEmpty();
         });
 
         function isFormEmpty() {

@@ -24,15 +24,6 @@ class QuoteStatus
 
 
     #[ORM\Column(length: 255)]
-    private ?string $bgColor = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $textColor = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $borderColor = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $displayName = null;
 
 
@@ -66,42 +57,6 @@ class QuoteStatus
         return $this->quotes;
     }
 
-
-    public function getBgColor(): ?string
-    {
-        return $this->bgColor;
-    }
-
-    public function setBgColor(string $bgColor): static
-    {
-        $this->bgColor = $bgColor;
-
-        return $this;
-    }
-
-    public function getTextColor(): ?string
-    {
-        return $this->textColor;
-    }
-
-    public function setTextColor(string $textColor): static
-    {
-        $this->textColor = $textColor;
-
-        return $this;
-    }
-
-    public function getBorderColor(): ?string
-    {
-        return $this->borderColor;
-    }
-
-    public function setBorderColor(string $borderColor): static
-    {
-        $this->borderColor = $borderColor;
-
-        return $this;
-    }
 
     public function getDisplayName(): ?string
     {

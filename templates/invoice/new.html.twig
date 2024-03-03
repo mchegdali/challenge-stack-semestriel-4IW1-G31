@@ -10,39 +10,32 @@
 {% endblock %}
 
 {% block body %}
-	{% include 'components/Navbar.html.twig' %}
 
-		<main class="mx-auto container px-4 pt-2 sm:px-0 space-y-2">
-			<header class="px-1 sm:px-0">
-				<h1 class="text-3xl font-bold">
-					{% if type == "new" %}
-						Créer une nouvelle facture
-					{% elseif type == "edit" %}
-						Modification de facture
-					{% endif %}
-				</h1>
-			</header>
-			<twig:Card>
-				{{form_start(form)}}
-					<a href="#" onclick="openModal(event)" class="text-blue-600 hover:underline">Nouveau client</a>
-					{{ form_row(form.customer) }}
-					{{ form_label(form.status) }}
-					{{ form_widget(form.status) }}
+    <main class="mx-auto container px-4 pt-2 sm:px-0 space-y-2">
+        <header class="px-1 sm:px-0">
+            <h1 class="text-3xl font-bold">
+                {% if type == "new" %}
+                    Créer une nouvelle facture
+                {% elseif type == "edit" %}
+                    Modification de facture
+                {% endif %}
+            </h1>
+        </header>
+        <twig:Card>
+            {{ form_start(form) }}
+            <a href="#" onclick="openModal(event)" class="text-primary hover:underline">Nouveau client</a>
+            {{ form_row(form.customer) }}
+            {{ form_label(form.status) }}
+            {{ form_widget(form.status) }}
 
-					<div id="invoiceitem" data-prototype="{{ form_row(form.invoiceitems.vars.prototype)|e('html_attr')}}">
-						{{form_row(form.invoiceitems)}}
-						<span id="lignesItems"></span>
-					</div>
-				{{form_end(form)}}
-			</twig:Card>
-			
-			
-		</main>
-
-
-        {% include "components/ModalCustomer.html.twig" %}
-
-	</div>
+            <div id="invoiceitem" data-prototype="{{ form_row(form.invoiceitems.vars.prototype)|e('html_attr') }}">
+                {{ form_row(form.invoiceitems) }}
+                <span id="lignesItems"></span>
+            </div>
+            {{ form_end(form) }}
+        </twig:Card>
+    </main>
+    {% include "components/ModalCustomer.html.twig" %}
 
 {% endblock %}
 
@@ -51,6 +44,4 @@
     {{ encore_entry_script_tags('invoices') }}
     {{ encore_entry_script_tags('modal-customer') }}
     {{ encore_entry_script_tags('dropdown-customer') }}
-	
-
 {% endblock %}
