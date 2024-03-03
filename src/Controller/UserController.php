@@ -236,15 +236,15 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_list_request_company_account');
     }
 
-    #[Route('/my-account', name: 'afficher_profil')]
-    public function afficherProfil(TokenStorageInterface $tokenStorage)
-    {
-        $utilisateurConnecte = $tokenStorage->getToken()->getUser();
+    // #[Route('/my-account', name: 'afficher_profil')]
+    // public function afficherProfil(TokenStorageInterface $tokenStorage)
+    // {
+    //     $utilisateurConnecte = $tokenStorage->getToken()->getUser();
         
-        return $this->render('my-account/index.html.twig', ['utilisateur' => $utilisateurConnecte]);
-    }
+    //     return $this->render('my-account/index.html.twig', ['utilisateur' => $utilisateurConnecte]);
+    // }
 
-    #[Route('/gerer', name: 'gerer_profil')]
+    #[Route('/my-account', name: 'my_account')]
     public function gererProfil(Request $request, TokenStorageInterface $tokenStorage, PersistenceManagerRegistry $doctrine)
 {
     $utilisateurConnecte = $tokenStorage->getToken()->getUser();
@@ -258,9 +258,9 @@ class UserController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('afficher_profil');
+        return $this->redirectToRoute('gerer_profil');
     }
 
-    return $this->render('my-account/gerer.html.twig', ['form' => $form->createView()]);
+    return $this->render('my-account/index.html.twig', ['form' => $form->createView(), 'utilisateur' => $utilisateurConnecte]);
 }
 }

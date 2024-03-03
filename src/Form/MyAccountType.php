@@ -41,7 +41,7 @@ class MyAccountType extends AbstractType
             ])
            
             ->add('submit', SubmitType::class, [
-                'label' => 'Confirmer les modifications',
+                'label' => 'Confirmer',
             ]);
     }
 
