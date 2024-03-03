@@ -35,23 +35,7 @@ class InvoiceItemType extends AbstractType
         $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
 
         $builder
-<<<<<<< HEAD
-            ->add('service', EntityType::class, [
-                'label' => 'Service',
-                'placeholder' => '-- Choisir un service --',
-                'class' => Service::class,
-                'choice_label' => function (Service $service) {
-                    return sprintf('%s (€%s)', $service->getName(), $service->getPrice());
-                },
-                'choice_attr' => function (Service $service) {
-                    return ['data-price' => $service->getPrice()];
-                },
-                'query_builder' => function (ServiceRepository $serviceRepository) {
-                    return $serviceRepository->createQueryBuilder('s')
-                        ->where('s.isArchived is null')
-                        ->orWhere('s.isArchived = false')
-                        ; // On ne retient pas les services archivés
-=======
+
         ->add('service', EntityType::class, [
             'label' => 'Service',
             'placeholder' => '-- Choisir un service --',
@@ -70,7 +54,6 @@ class InvoiceItemType extends AbstractType
                            ->setParameter('company', $company);
                     }
                     return $qb;
->>>>>>> afd9243 (add company_id on tax / user of company can only see their own data)
                 },
             ])
             ->add('priceExcludingTax', MoneyType::class, [
