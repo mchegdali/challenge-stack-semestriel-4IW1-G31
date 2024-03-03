@@ -236,14 +236,6 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_list_request_company_account');
     }
 
-    // #[Route('/my-account', name: 'afficher_profil')]
-    // public function afficherProfil(TokenStorageInterface $tokenStorage)
-    // {
-    //     $utilisateurConnecte = $tokenStorage->getToken()->getUser();
-        
-    //     return $this->render('my-account/index.html.twig', ['utilisateur' => $utilisateurConnecte]);
-    // }
-
     #[Route('/my-account', name: 'my_account')]
     public function gererProfil(Request $request, TokenStorageInterface $tokenStorage, PersistenceManagerRegistry $doctrine)
 {
