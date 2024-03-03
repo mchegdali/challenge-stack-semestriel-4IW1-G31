@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DefaultController extends AbstractController
 {
     #[Route('/', name: 'default_index')]
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('ROLE_COMPTABLE')]
     public function index(InvoiceRepository $invoiceRepository, PaymentRepository $paymentRepository): Response
     {
 
