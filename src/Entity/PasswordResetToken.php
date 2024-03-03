@@ -23,7 +23,7 @@ class PasswordResetToken
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $expiresAt;
 
-    public function getId(): ?Uuid
+    public function getId(): ?int
     {
         return $this->id;
     }
