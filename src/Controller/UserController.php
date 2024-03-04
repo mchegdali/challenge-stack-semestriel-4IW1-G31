@@ -35,7 +35,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class UserController extends AbstractController
 {
-    #[Route('/user-admin', name: 'app_list_user_admin')]
+    #[Route('/users-admin', name: 'app_list_user_admin')]
     #[IsGranted("ROLE_ADMIN")]
     public function adminCreateUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
@@ -89,7 +89,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/request-company-account', name: 'app_list_request_company_account')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted("ROLE_ADMIN")]
     public function requestCompanyAccount(EntityManagerInterface $entityManager): Response
     {
         $users = $entityManager->getRepository(User::class)->findBy(['isVerified' => false]);
@@ -98,8 +98,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user', name: 'app_list_user')]
-    #[Security("is_granted('ROLE_COMPANY')")]
+    #[Route('/users', name: 'app_list_user')]
+    #[IsGranted("ROLE_COMPANY")]
     public function companyCreateUser(UserRepository $userRepository, Request $request, UserPasswordHasherInterface $userPasswordHasher, MailerInterface $mailer, EntityManagerInterface $entityManager, PersistenceManagerRegistry $doctrine): Response
     {
         $loggedInUser = $this->getUser();
@@ -170,8 +170,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user-details-admin/{id}', name: 'app_user_details-admin')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[Route('/users-details-admin/{id}', name: 'app_user_details-admin')]
+    #[IsGranted("ROLE_ADMIN")]
     public function adminUserDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
     {
         $userRepository = $doctrine->getManager()->getRepository(User::class);
@@ -198,8 +198,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user-details/{id}', name: 'app_user_details')]
-    #[Security("is_granted('ROLE_COMPANY')")]
+    #[Route('/users-details/{id}', name: 'app_user_details')]
+    #[IsGranted("ROLE_COMPANY")]
     public function companyUserDetails(Request $request, PersistenceManagerRegistry $doctrine, $id): Response
     {
         $userRepository = $doctrine->getManager()->getRepository(User::class);
@@ -227,8 +227,8 @@ class UserController extends AbstractController
     }
 
 
-    #[Route('/user-admin/{id}/delete', name: 'delete_user_admin')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[Route('/users-admin/{id}/delete', name: 'delete_user_admin')]
+    #[IsGranted("ROLE_ADMIN")]
     public function deleteUser(PersistenceManagerRegistry $doctrine, User $user): Response
     {
         $em = $doctrine->getManager();
@@ -238,7 +238,7 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_list_user_admin');
     }
 
-    #[Route('/user/{id}/delete', name: 'delete_user')]
+    #[Route('/users/{id}/delete', name: 'delete_user')]
     public function deleteUserCompany(PersistenceManagerRegistry $doctrine, User $user): Response
     {
         $em = $doctrine->getManager();
@@ -249,7 +249,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/request-company-account/{id}/delete', name: 'delete_request_company_account')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted("ROLE_ADMIN")]
     public function deleteRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user, MailerInterface $mailer): Response
     {
         $em = $doctrine->getManager();
@@ -273,7 +273,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/request-company-account/{id}/accept', name: 'accept_request_company_account')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted("ROLE_ADMIN")]
     public function acceptRequestCompanyAccount(PersistenceManagerRegistry $doctrine, User $user, MailerInterface $mailer): Response
     {
         $user->setIsVerified(true);

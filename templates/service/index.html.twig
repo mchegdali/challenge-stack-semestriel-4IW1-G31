@@ -1,15 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Service
-{% endblock %}
+{% block title %}Service{% endblock %}
 
 {% block body %}
 
     {% include 'components/ServiceHeader.html.twig' %}
 
-    <h1 class='px-6 font-bold'>Liste des services</h1>
+    <h1 class='px-6 font-bold mb-4'>Liste des services</h1>
+     <section class="bg-white dark:bg-blue-darker flex gap-4 flex-wrap w-full p-4 shadow-md rounded-xl">
+            <details class="font-bold cursor-pointer">
+                <summary class="font-bold">Filtres</summary>
+                {{ form_start(filterForm, {'method': 'POST', 'attr': {'class': 'animate-in fade-in duration-300'}}) }}
+                {{ form_row(filterForm.isArchived) }}
+                {{ form_rest(filterForm) }}
+                <button type="submit" id="quote_search_submit"
+                        class="rounded px-2 py-1 bg-primary font-bold text-white disabled:bg-blue-lighter animate-in fade-in duration-300">
+                    Filtrer
+                </button>
+                {{ form_end(filterForm) }}
+            </details>
+        </section>
+        <section>
+            {% if services|length == 0 %}
+                <p class="mt-2">Aucun service archivé</p>
+            {% endif %}
+        </section>
     {% for service in services %}
-        {% include 'components/ServiceData.html.twig' %}
+        {% include 'components/ServiceData.html.twig' with {'service': service} %}
     {% endfor %}
     <div class="navigation flex justify-center mb-8">
         {{ knp_pagination_render(services, 'components/TailwindPagination.html.twig') }}

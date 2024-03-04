@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Service;
+use App\Form\ServiceSearchType;
 use App\Form\ServiceType;
 use App\Repository\ServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,41 +21,60 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ServiceController extends AbstractController
 {
     #[Route('', name: 'index')]
-    public function createService(Request $request, ServiceRepository $serviceRepository, PersistenceManagerRegistry $doctrine, PaginatorInterface $paginator, EntityManagerInterface $em): Response
+    public function index(Request $request, ServiceRepository $serviceRepository, PaginatorInterface $paginator): Response
+    {
+        $loggedInUser = $this->getUser();
+
+        $filterForm = $this->createForm(ServiceSearchType::class);
+        $filterForm->handleRequest($request);
+
+        $servicesQuery = $serviceRepository->createQueryBuilder('u')
+            ->where('u.company = :companyName')
+            ->setParameter('companyName', $loggedInUser->getCompany());
+
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            $isArchived = $filterForm->get('isArchived')->getData();
+
+            if ($isArchived !== null) {
+                $servicesQuery->andWhere('u.isArchived = :isArchived')
+                    ->setParameter('isArchived', $isArchived);
+            }
+        }
+
+        $services = $paginator->paginate(
+            $servicesQuery->getQuery(),
+            $request->query->getInt('page', 1),
+            20
+        );
+
+        return $this->render('service/index.html.twig', [
+            'filterForm' => $filterForm->createView(),
+            'services' => $services,
+        ]);
+    }
+
+
+
+    #[Route('/new', name: 'new')]
+    public function createService(Request $request, EntityManagerInterface $em): Response
     {
         $loggedInUser = $this->getUser();
 
         $service = new Service();
         $form = $this->createForm(ServiceType::class, $service);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $service->setCompany($loggedInUser->getCompany());
             $em->persist($service);
             $em->flush();
+
+            $this->addFlash('success', 'Service ajouté avec succès.');
+            return $this->redirectToRoute('service_index');
         }
 
-        if ($this->isGranted('ROLE_ADMIN')) {
-            $services = $serviceRepository->findAll();
-        } else {
-            $company = $loggedInUser->getCompany();
-            $services = $serviceRepository->createQueryBuilder('u')
-                ->Where('u.company = :companyName')
-                ->setParameter('companyName', $company)
-                ->getQuery()
-                ->getResult();
-        }
-
-        $services = $paginator->paginate(
-            $services,
-            $request->query->getInt('page', 1),
-            20
-        );
-
-        return $this->render('service/index.html.twig', [
+        return $this->render('service/add_service.html.twig', [
             'form' => $form->createView(),
-            'services' => $services,
         ]);
     }
 

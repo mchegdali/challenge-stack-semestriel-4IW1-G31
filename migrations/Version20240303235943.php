@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240303222822 extends AbstractMigration
+final class Version20240303235943 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -74,7 +74,7 @@ final class Version20240303222822 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN quote_item.service_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN quote_item.tax_id IS \'(DC2Type:uuid)\'');
         $this->addSql('CREATE TABLE quote_status (id INT NOT NULL, name VARCHAR(255) NOT NULL, display_name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE service (id UUID NOT NULL, tax_id UUID NOT NULL, company_id UUID DEFAULT NULL, name VARCHAR(255) NOT NULL, price DOUBLE PRECISION NOT NULL, is_archived BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE service (id UUID NOT NULL, tax_id UUID NOT NULL, company_id UUID DEFAULT NULL, name VARCHAR(255) NOT NULL, price DOUBLE PRECISION NOT NULL, is_archived BOOLEAN NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_E19D9AD2B2A824D8 ON service (tax_id)');
         $this->addSql('CREATE INDEX IDX_E19D9AD2979B1AD6 ON service (company_id)');
         $this->addSql('COMMENT ON COLUMN service.id IS \'(DC2Type:uuid)\'');

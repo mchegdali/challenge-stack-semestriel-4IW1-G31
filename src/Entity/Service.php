@@ -26,8 +26,8 @@ class Service
     #[ORM\JoinColumn(nullable: false)]
     private ?Tax $tax = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $isArchived = null;
+    #[ORM\Column(type: 'boolean')]
+    private $isArchived = false;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     private ?Company $company = null;

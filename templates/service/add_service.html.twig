@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un service{% endblock %}
+
+{% block body %}
+    {% include 'components/ServiceHeader.html.twig' %}
+
+    <h1 class='px-6 font-bold mb-4'>Ajouter un service</h1>
+
+      <twig:Card class="space-y-2">
+        {{ form_start(form) }}
+        {{ form_row(form.name, {'attr': {'class': 'mb-4'}}) }}
+        {{ form_row(form.price, {'attr': {'class': 'mb-4'}}) }}
+        {{ form_row(form.tax, {'attr': {'class': 'mb-4'}}) }}
+        {{ form_end(form) }}
+    </twig:Card>
+{% endblock %}
