@@ -301,9 +301,10 @@ class UserController extends AbstractController
     #[Route('/my-account', name: 'my_account')]
     public function gererProfil(Request $request, TokenStorageInterface $tokenStorage, PersistenceManagerRegistry $doctrine)
 {
-    $utilisateurConnecte = $tokenStorage->getToken()->getUser();
+    
+    $loggedInUser = $this->getUser();
 
-    $form = $this->createForm(MyAccountType::class, $utilisateurConnecte);
+    $form = $this->createForm(MyAccountType::class, $loggedInUser);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
@@ -313,6 +314,6 @@ class UserController extends AbstractController
         $em->flush();
     }
 
-    return $this->render('my-account/index.html.twig', ['form' => $form->createView(), 'utilisateur' => $utilisateurConnecte]);
+    return $this->render('my-account/index.html.twig', ['form' => $form->createView(), 'user' => $loggedInUser]);
 }
 }

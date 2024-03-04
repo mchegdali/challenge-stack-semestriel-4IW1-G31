@@ -8,3 +8,5 @@
 **Choix du secteur : Plombier**
 
 ## Listing des fonctionnalités du projet
+
+- Antonin : Archivage des services, pagination, Création de devis, sécurité, graphiques de stats avec chart js

@@ -34,7 +34,6 @@ class DefaultController extends AbstractController
         $unpaidInvoicesCount = $invoiceRepository->countUnpaindInvoices(); //factures non échues
 
         //bloc Ventes
-        
 
         $paymentLast12Months = $paymentRepository->findTotalPaymentsForCompany($user->getCompany(), 'last_12_months');
         $paymentThisMonth = $paymentRepository->findTotalPaymentsForCompany($user->getCompany(), 'current_month');

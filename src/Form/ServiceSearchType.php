@@ -2,18 +2,13 @@
 
 namespace App\Form;
 
-use App\Entity\QuoteStatus;
-use App\Validator\MaxDate;
-use App\Validator\PriceMax;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class ServiceSearchType extends AbstractType
 {
@@ -27,7 +22,7 @@ class ServiceSearchType extends AbstractType
                     'Non archivé' => false,
                 ],
                 'required' => false,
-                'expanded' => false,
+                'expanded' => true, 
                 'multiple' => false,
             ]);
     }
@@ -36,7 +31,6 @@ class ServiceSearchType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => null,
-
         ]);
     }
 }
