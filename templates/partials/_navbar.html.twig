@@ -2,7 +2,11 @@
     <div>
         <a href="{{ path('default_index') }}"><img src="{{ asset('img/logo.png') }}" alt="image logo"></a>
     </div>
+    
     <div class="space-x-4 text-primary md:flex hidden">
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('admin_dashboard') }}" class="hover:underline">DASHBOARD ADMIN</a>
+        {% endif %}
         <a href="{{ path('invoice_index') }}" class="hover:underline">FACTURES</a>
         <a href="{{ path('service_index') }}" class="hover:underline">SERVICES</a>
         <a href="{{ path('quote_index') }}" class="hover:underline">DEVIS</a>

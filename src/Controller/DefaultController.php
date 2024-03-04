@@ -32,8 +32,7 @@ class DefaultController extends AbstractController
         }
 
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
-            return $this->render('admin/dashboard.html.twig', [
-            ]);
+            return $this->redirectToRoute('admin_dashboard');
         }
 
         $paymentLast12Months = $paymentRepository->findTotalPaymentsForCompany($user->getCompany(), 'last_12_months');
