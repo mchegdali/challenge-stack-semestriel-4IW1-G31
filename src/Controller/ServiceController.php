@@ -28,9 +28,13 @@ class ServiceController extends AbstractController
         $filterForm = $this->createForm(ServiceSearchType::class);
         $filterForm->handleRequest($request);
 
-        $servicesQuery = $serviceRepository->createQueryBuilder('u')
-            ->where('u.company = :companyName')
-            ->setParameter('companyName', $loggedInUser->getCompany());
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $servicesQuery = $serviceRepository->createQueryBuilder('u'); // Use QueryBuilder for admin
+        } else {
+            $servicesQuery = $serviceRepository->createQueryBuilder('u')
+                ->where('u.company = :companyName')
+                ->setParameter('companyName', $loggedInUser->getCompany());
+        }
 
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
             $isArchived = $filterForm->get('isArchived')->getData();
@@ -42,7 +46,7 @@ class ServiceController extends AbstractController
         }
 
         $services = $paginator->paginate(
-            $servicesQuery->getQuery(),
+            $servicesQuery, // Remove ->getQuery()
             $request->query->getInt('page', 1),
             20
         );
