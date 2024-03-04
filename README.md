@@ -42,3 +42,21 @@
 
 - Mise en place des rôles
 - Filtrage des services archivés ou non archivés
+
+**Moustapha**
+- Création de controllers
+  - Invoices et items
+  - Quotes et items
+
+- Update code autres controllers
+
+- Filtres invoices et quotes
+
+- Code sécurité
+
+- Figma (sauf page facture desktop)
+
+- Theming avec Tailwind
+
+
+  
