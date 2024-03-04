@@ -10,8 +10,8 @@
         </div>
         <h1 class="font-bold text-3xl md:text-4xl">Création de compte entreprise</h1>
     </header>
-    <main class="pb-2 mx-auto container">
-        <twig:Card class="p-4 bg-white shadow-md md:rounded-xl max-w-screen-sm flex flex-col">
+    <main class="pb-2 mx-auto container flex justify-center">
+        <twig:Card class="p-4 bg-white shadow-md md:rounded-xl max-w-screen-md w-full flex flex-col">
             <div class="flex flex-col w-full gap-3">
                 {% for flash_error in app.flashes('verify_email_error') %}
                     <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
