@@ -47,6 +47,15 @@ class InvoiceController extends AbstractController
     ): Response
     {
 
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé ou non connecté.');
+        }
+
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            return $this->redirectToRoute('admin_dashboard');
+        }
+        
         $form = $this->createForm(InvoiceSearchType::class, null, ["method" => "POST"]);
         $form->handleRequest($request);
 
@@ -86,6 +95,10 @@ class InvoiceController extends AbstractController
     #[Route('/new', name: 'new')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
         $invoice = new Invoice;
 
         $form = $this->createForm(InvoiceCreateType::class, $invoice);
