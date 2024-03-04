@@ -30,6 +30,12 @@ class DefaultController extends AbstractController
         if (!$user) {
             throw $this->createNotFoundException('Utilisateur non trouvé ou non connecté.');
         }
+
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            return $this->render('admin/dashboard.html.twig', [
+            ]);
+        }
+
         $paymentLast12Months = $paymentRepository->findTotalPaymentsForCompany($user->getCompany(), 'last_12_months');
         $paymentThisMonth = $paymentRepository->findTotalPaymentsForCompany($user->getCompany(), 'current_month');
 
