@@ -19,24 +19,24 @@ class CustomerType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom',
-                // 'constraints' => [
-                //     new Regex([
-                //         'pattern' => '/^[a-zA-Z]+(?:\s[a-zA-Z]+)?$/',
-                //         'message' => 'Veuillez renseigner un nom valide',
-                //     ])
-                // ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z]+(?:\s[a-zA-Z]+)?$/',
+                        'message' => 'Veuillez renseigner un nom valide',
+                    ])
+                ],
             ])
             ->add('address', TextType::class, [
                 'label' => "Adresse",
                 'attr' => [
                     'placeholder' => 'Ex: 12 rue des fontaines',
                 ],
-                // 'constraints' => [
-                //     new Regex([
-                //         'pattern' => '/^(\d+\s*,?\s*\w+(?:\s+\w+)*\d*\s+[A-Za-z\s]+)$/',
-                //         'message' => 'Veuillez renseigner une adresse valide',
-                //     ])
-                // ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^(\d+\s*,?\s*\w+(?:\s+\w+)*\d*\s+[A-Za-z\s]+)$/',
+                        'message' => 'Veuillez renseigner une adresse valide',
+                    ])
+                ],
             ])
             ->add('postal_code', NumberType::class, [
                 'label' => "Code postal",
