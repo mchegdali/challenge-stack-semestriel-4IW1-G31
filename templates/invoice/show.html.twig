@@ -20,6 +20,11 @@
                class="w-full text-nowrap flex items-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25 rounded px-2 py-1 font-semibold text-sm">
                 Envoyer la facture
             </a>
+            <a href="{{ path('invoice_edit', {'id': invoice.id}) }}"
+               class="text-center border border-primary bg-primary text-white hover:bg-blue-dark hover:border-blue-dark dark:bg-blue-light/5 dark:border-primary/25 dark:hover:bg-primary/25 rounded px-2 py-1 font-semibold text-sm flex items-center gap-1">
+                Modifier
+                <i class="material-symbols-outlined">update</i>
+            </a>
         </div>
     </header>
     <article class="px-1 sm:px-0 space-y-2">
