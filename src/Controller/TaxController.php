@@ -14,11 +14,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 
 #[Route('/tax', name: 'tax_')]
-#[IsGranted("ROLE_USER")]
+#[IsGranted("ROLE_COMPANY")]
 class TaxController extends AbstractController
 {
     #[Route('', name: 'index')]
-    public function createTax(Request $request,TaxRepository $taxRepository ,PersistenceManagerRegistry $doctrine): Response
+    public function createTax(Request $request, TaxRepository $taxRepository, PersistenceManagerRegistry $doctrine): Response
     {
         $loggedInUser = $this->getUser();
 
