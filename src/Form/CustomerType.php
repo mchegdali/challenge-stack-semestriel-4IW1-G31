@@ -41,33 +41,45 @@ class CustomerType extends AbstractType
             ->add('postal_code', NumberType::class, [
                 'label' => "Code postal",
                 'invalid_message' => 'Veuillez saisir un nombre valide pour le code postal',
-                // 'constraints' => [
-                //     new Regex([
-                //         'pattern' => '/^[0-9]{5}$/',
-                //         'message' => 'Veuillez renseigner un code postal valide',
-                //     ]),
-                // ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[0-9]{5}$/',
+                        'message' => 'Veuillez renseigner un code postal valide',
+                    ]),
+                ],
             ])
             ->add('city', TextType::class, [
                 'label' => "Ville",
                 'attr' => [
                     'placeholder' => 'Entrer une ville',
                 ],
-                // 'constraints' => [
-                //     new Regex([
-                //         'pattern' => '/^[A-Za-z\s-]+$/',
-                //         'message' => 'Veuillez renseigner une ville valide',
-                //     ]),
-                // ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[A-Za-z\s-]+$/',
+                        'message' => 'Veuillez renseigner une ville valide',
+                    ]),
+                ],
             ])
             ->add('email', TextType::class, [
-                // 'constraints' => [
-                //     new Regex([
-                //         'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
-                //         'message' => 'Veuillez renseigner un email valide',
-                //     ])
-                // ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                        'message' => 'Veuillez renseigner un email valide',
+                    ])
+                ],
             ])
+            ->add('phoneNumber', TextType::class, [
+                'label' => "Numéro de téléphone",
+                'required' => false, // Set this to true if the phone number is mandatory
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^\+?[0-9]+$/',
+                        'message' => 'Veuillez renseigner un numéro de téléphone valide',
+                    ]),
+                ],
+            ])
+
+
             ->add('submit', SubmitType::class, [
                 'label' => 'Ajouter',
             ]);;
