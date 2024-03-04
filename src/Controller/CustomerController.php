@@ -12,8 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/customer', name: 'customer_')]
+#[Route('/customers', name: 'customer_')]
+#[IsGranted("ROLE_COMPANY")]
 class CustomerController extends AbstractController
 {
     #[Route('', name: 'index')]
@@ -23,7 +25,6 @@ class CustomerController extends AbstractController
         $customerForm = $this->createForm(CustomerType::class, $customer);
 
         $customerForm->handleRequest($request);
-
 
         $company = null;
 
@@ -42,8 +43,6 @@ class CustomerController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('customer_index');
         }
-
-       
 
         $customers = $paginator->paginate(
             $customers,
